@@ -225,26 +225,64 @@ wmRT_out <- t.test(behavData$WM_High_RT,  behavData$WM_Low_RT, paired = TRUE, al
 vsAcc_out <- t.test(behavData$VS_High_Acc, behavData$VS_Low_Acc, paired = TRUE, alternative = "two.sided")
 vsRT_out <- t.test(behavData$VS_High_RT, behavData$VS_Low_RT, paired = TRUE, alternative = "two.sided")
 
-# Make bar graph table
-Load <- c("High", "Low")
-WM_RT <- c(mean(behavData$WM_High_RT), mean(behavData$WM_Low_RT))
-WM_Acc <- c(mean(behavData$WM_High_Acc), mean(behavData$WM_Low_Acc))
-VS_RT <- c(mean(behavData$VS_High_RT), mean(behavData$VS_Low_RT))
-VS_Acc <- c(mean(behavData$VS_High_Acc), mean(behavData$VS_Low_Acc))
-WM_RT.se <- c(se(behavData$WM_High_RT), se(behavData$WM_Low_RT))
-WM_Acc.se <- c(se(behavData$WM_High_Acc), se(behavData$WM_Low_Acc))
-VS_RT.se <- c(se(behavData$VS_High_RT), se(behavData$VS_Low_RT))
-VS_Acc.se <- c(se(behavData$VS_High_Acc), se(behavData$VS_Low_Acc))
-behavTable <- data.frame(Load, WM_RT, WM_Acc, VS_RT, VS_Acc, WM_RT.se, WM_Acc.se, VS_RT.se, VS_Acc.se)
+#Make violin plot data
+WMRT = filter(longBehav, Task == "WM" & Measure == "RT")
+WMAcc = filter(longBehav, Task == "WM" & Measure == "Acc")
+VSRT = filter(longBehav, Task == "VS" & Measure == "RT")
+VSAcc = filter(longBehav, Task == "VS" & Measure == "Acc")
 
-# Create bar plots
-WMRT.bar <- ggplot(data=behavTable, aes(x=Load, y=WM_RT)) +geom_bar(stat = "identity") +geom_errorbar(aes(min=WM_RT-WM_RT.se, max=WM_RT+WM_RT.se), width = 0.2) +theme_apa()
-WMAcc.bar <- ggplot(data=behavTable, aes(x=Load, y=WM_Acc)) +geom_bar(stat = "identity") +geom_errorbar(aes(min=WM_Acc-WM_Acc.se, max=WM_Acc+WM_Acc.se), width = 0.2) +theme_apa()
-VSRT.bar <- ggplot(data=behavTable, aes(x=Load, y=VS_RT)) +geom_bar(stat = "identity") +geom_errorbar(aes(min=VS_RT-VS_RT.se, max=VS_RT+VS_RT.se), width = 0.2) +theme_apa()
-VSAcc.bar <- ggplot(data=behavTable, aes(x=Load, y=VS_Acc)) +geom_violin()
+## Make bar graph table
+#Load <- c("High", "Low")
+#WM_RT <- c(mean(behavData$WM_High_RT), mean(behavData$WM_Low_RT))
+#WM_Acc <- c(mean(behavData$WM_High_Acc), mean(behavData$WM_Low_Acc))
+#VS_RT <- c(mean(behavData$VS_High_RT), mean(behavData$VS_Low_RT))
+#VS_Acc <- c(mean(behavData$VS_High_Acc), mean(behavData$VS_Low_Acc))
+#WM_RT.se <- c(se(behavData$WM_High_RT), se(behavData$WM_Low_RT))
+#WM_Acc.se <- c(se(behavData$WM_High_Acc), se(behavData$WM_Low_Acc))
+#VS_RT.se <- c(se(behavData$VS_High_RT), se(behavData$VS_Low_RT))
+#VS_Acc.se <- c(se(behavData$VS_High_Acc), se(behavData$VS_Low_Acc))
+#behavTable <- data.frame(Load, WM_RT, WM_Acc, VS_RT, VS_Acc, WM_RT.se, WM_Acc.se, VS_RT.se, VS_Acc.se)
+
+# Create violin plots
+WMRT.violin <- ggplot(data=WMRT, aes( x=Load,y=value)) +
+  geom_violin(trim=FALSE, fill="gray") +
+  labs( y = "Working memory RT(ms)") +
+  #ylim(50,100) +
+  #geom_dotplot(binaxis='y', stackdir='center', dotsize=1) +
+  geom_boxplot(width=0.1) +
+  theme_apa()
+WMAcc.violin <- ggplot(data=WMAcc, aes( x=Load,y=value)) +
+  geom_violin(trim=FALSE, fill="gray") +
+  labs( y = "Working memory Acc(%)") +
+  ylim(50,100) +
+  #geom_dotplot(binaxis='y', stackdir='center', dotsize=1) +
+  geom_boxplot(width=0.1)+
+  theme_apa()
+VSRT.violin <- ggplot(data=VSRT, aes( x=Load,y=value)) +
+  geom_violin(trim=FALSE, fill="gray") +
+  labs( y = "Visual Search RT(ms)") +
+  #ylim(50,100) +
+  #geom_dotplot(binaxis='y', stackdir='center', dotsize=1) +
+  geom_boxplot(width=0.1)+
+  theme_apa()
+VSAcc.violin <- ggplot(data=VSAcc, aes( x=Load,y=value)) +
+  geom_violin(trim=FALSE, fill="gray") +
+  labs( y = "Visual Search Acc(%)") +
+  ylim(50,100) +
+  #geom_dotplot(binaxis='y', stackdir='center', dotsize=1) +
+  geom_boxplot(width=0.1) +
+  theme_apa()
+pdf("C:/Users/dhen061/Desktop/ThesisWriting/Figures/behavViolinPlot.pdf", width = 7, paper = "special")
+plot_grid(WMRT.violin, WMAcc.violin, VSRT.violin, VSAcc.violin, labels = c("A","B","C","D"))
+dev.off()
 ```
 
-Mean response times and percent correct are shown as a function of working memory load for each task ( working memory and visual search) in figure .X. Paired samples T-tests were carried out to test the effect of working memory load on response times(ms) and accuracy(%) in both the working memory and visual search tasks. The results of the T-tests showed that the high load condition did result in both significantly slower (`r apa_print(wmRT_out)$full`) and less accurate (`r apa_print(wmAcc_out)$full`) responses to the working memory task. The results also showed that participants were significantly slower on the visual search task under high working memory load (`r apa_print(vsRT_out)$full`) however there was no significant effect of working memory load on visual search accuracy (`r apa_print(vsAcc_out)$full`). These data confirm firstly that the working memory task effectively manipulated the load on a participant's working memory, and secondly that this manipulation also effected performance on a concurrent visual search task.
+
+```{r violinPlots, fig.cap = "This is where I'd put the figure caption.", fig.align = "center"}
+include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/behavViolinPlot.pdf", auto_pdf = TRUE)
+```
+
+Mean response times and percent correct are shown as a function of working memory load for each task ( working memory and visual search) in figure\ \@ref(fig:violinPlots). Paired samples T-tests were carried out to test the effect of working memory load on response times(ms) and accuracy(%) in both the working memory and visual search tasks. The results of the T-tests showed that the high load condition did result in both significantly slower (`r apa_print(wmRT_out)$full`) and less accurate (`r apa_print(wmAcc_out)$full`) responses to the working memory task. The results also showed that participants were significantly slower on the visual search task under high working memory load (`r apa_print(vsRT_out)$full`) however there was no significant effect of working memory load on visual search accuracy (`r apa_print(vsAcc_out)$full`). These data confirm firstly that the working memory task effectively manipulated the load on a participant's working memory, and secondly that this manipulation also effected performance on a concurrent visual search task.
 
 ## Within-subject electrophysiological measures
 
@@ -424,17 +462,19 @@ In order to investigate the relationship between lateralised activity and behavi
 
 # Discussion
 
-Reintroduce.
-
 Our results show that within individuals, increased working memory load leads to slowed responses on a concurrent visual search task. The lateralised neural response to targets and distractors in these visual search displays shows that this appears to be the result of changes in the way that salient distractors are being processed as working memory load increases. Target processing on the other hand is unaffected by working memory load. The presence of a main effect of load on distractors, but no interaction between load and component means that it is difficult to specify the attentional process (whether capture by distractors, or disengagement form distractors) that is being effected. Follow-up analyses suggest that the best candidate is the distractor Ptc which indexes distractor disengagement and is significantly reduced under high working memory load. Taken together, these results support the suggestion by @fukuda_individual_2011 that working memory load specifically impacts on an individual's ability to disengage from salient distractors and that this is what underlies the observation of behavioural impairments under increasing working memory load.
 
 The presence of the main effect of load on distractor component raises some interesting questions around the dynamics of lateralised positivities that have been recorded in this task and others. While it is possible that this is the result of a number of independent distractor related processes being effected as load increases, it is parsimoniously explained by positing the presence of an extended positivity to distractors in the average ERP which overlaps with all other components. At the single trial level this could reflect the presence of a sustained lateralised positivity, the bulk of which is masked by a series of overlapping, punctuated, lateralised negativities. In this case, the Ptc and Pd would represent those portions of time at which the positivity is observable over competing negativities. Alternatively, the lateralised positivity we record may be short in duration but highly variable in latency across trials, and therefore the sustained positivity in the average waveform is the product of convolving this variable signal across the epoch. In both cases, the interpretation of our results remains the same, however this does support the use of signed area approaches for quantifying the amplitude of these lateralised positivities as suggested by @sawaki_common_2012.
 
 With respect to individual differences in performance on these tasks, the effects are more broad. Under low load, individuals who perform faster on the visual search task appear to have larger lateralised positivities in response to both targets and distractors, as well as smaller lateralised negativities to distractors. This indicates that an important individual trait which predicts response times under low load is stimulus disengagement. Whether that object is a target or distractor, the larger the disengagement signal, the faster a participant can respond in the visual search task. It's worth nothing that this does not appear to come at the expense of accuracy on the task as demonstrated by the lack of a correlation between speed and accuracy. The correlation with distractor negativities also confirms an intuitive effect, that individuals who attend to and store the distractor representation less, gain an advantage in target response times. Under high load, these relationships disappear and instead we see only that increased target negativity is related to more accurate responses on the visual search task. These results are consistent with the within-subject effects in that they demonstrate that increased lateralised positivities are associated with better performance, however they introduce the possibility of target disengagement being an important factor for dissociating individuals.
 
-Previous research by @gaspar_inability_2016 has taken advantage of lateralised ERP components in order to interrogate the relationship between working memory capacity and selective attention. In their experiment, working memory capacity was measured in a change detection task which was performed separate to the visual search task used to evoke the lateralised components. Their results showed that the positivity to distractors was correlated with working memory capacity whereas there was no evidence for a relationship between target processing and working memory capacity. At first glance, our between subjects analyses appear to contradict the results of @gaspar_inability_2016 as we show relationships between individual performance and the processing of both target and distractors. Differences exist however in both task design and analysis which could account for these differences and should therefore be emphasised. Firstly, the correlations we have discussed so far have explored the relationship between component amplitudes and performance on the visual search task, not the working memory task. In fact, when we do look at the relationship between component amplitude and working memory performance, the only significant effect we observe is between distractor processing and working memory response times in the low load condition. Secondly, Gaspar and colleagues correlated ERP measures and performance across two independent tasks, whereas our tasks were performed concurrently. The changes in relationships between component and behaviour that we observe across load conditions in our task suggest that we wouldn't necessarily expect the relationships to be consistent between our task and the task used by @gaspar_inability_2016 (which would represent a no load condition).
+Previous research by @gaspar_inability_2016 has taken advantage of lateralised ERP components in order to interrogate the relationship between working memory capacity and selective attention. In their experiment, working memory capacity was measured in a change detection task which was performed separate to the visual search task used to evoke the lateralised components. Their results showed that the positivity to distractors was correlated with working memory capacity whereas there was no evidence for a relationship between target processing and working memory capacity. At first glance, our between subjects analyses appear to contradict the results of @gaspar_inability_2016 as we show relationships between individual performance and the processing of both target and distractors. Differences exist however in both task design and analysis which could account for these differences and should therefore be emphasised. Firstly, the correlations we have discussed so far have explored the relationship between component amplitudes and performance on the visual search task, not the working memory task. In fact, when we do look at the relationship between component amplitude and working memory performance, the only significant effect we observe is between distractor processing and working memory response times in the low load condition. Secondly, Gaspar and colleagues correlated ERP measures and performance across two independent tasks, whereas our tasks were performed concurrently. The changes we observe in these correlations across load conditions in our task suggest that we wouldn't necessarily expect the relationships to be consistent between our task and the task used by @gaspar_inability_2016 (which would represent a no load condition).
 
-Our within-subject design complements these results and confirm a framework for working memory and selective attention interactions which focuses on the concept of working memory availability. @gaspar_inability_2016 demonstrate that individuals with low working memory availability have impaired distractor disengagement, and our results demonstrate that when working memory availability is manipulated within an individual, it is similarly their ability to disengage from distractors which is impaired.
+An unexpected feature of our results was the detection of an early posivtivity in the lateralised response to targets. While the P1pc has been observed in other paradigms, its functional role is less well understood and current hypotheses don't clearly apply to the current context. One explanation could be sensory imbalance across the display, however the colours used for targets were also used for distractors in the exact same proportions and we observe no P1pc to distractors in our task. Growing evidence suggests that P1pc may represent a response to stimulus change, and while the target colour does change across trials there are a couple of reasons that this isn't the likely explanation for P1pc in our task. Firstly, they change at the exact same frequency as the distractors which again do not elicit a P1pc, secondly the target-decoy task used to evoke the lateralised ERPs is a direct replication of Hilimire 2011 .X. who did not record any P1pc to targets. This suggests that the P1pc we observe in our task is a result of the addition of the concurrent working memory task.
+
+One possibility is that the P1pc that we measured in our task is functionally distinct from the P1pc that has been investigated in other experiments. The P1pc in our task occurs slightly later than the typical P1pc and may be related to the process of stimulus disengagement that we typically associate with the Ptc. One potential source of evicence for this is that the target positivity appears to have similar relationships to other measures that we observe for the distractor positivity. For example, the target positivity is inversely correlated with the target negativity which is also the case for the distractor positivity and distractor negativity. The Target posivitity is also correlated with  the same behavioural measures as the distractor positivity, and the correlation is in the same direction. Another source of evidence is that under low load, the correlation between target and distractor positivity is approaching significance (as indicated in table\ \@ref(tab:lowCorrelationTable)), such that individuals with larger distractor positivities also tend to have larger target positivities. While a Ptc has been elicited by targets in the past, it has not been observed in such an early time window. The role that the concurrent working memory task has in eliciting this early, target related positivity, and the functional significance of this component requires further investigation.
+
+Our within-subject design complements these results and supports a framework for working memory and selective attention interactions which focuses on the concept of working memory availability. @gaspar_inability_2016 demonstrate that individuals with low working memory availability have impaired distractor disengagement, and our results demonstrate that when working memory availability is manipulated within an individual, it is similarly their ability to disengage from distractors which is impaired. 
 
 # Notes
 
