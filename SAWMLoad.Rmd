@@ -38,7 +38,7 @@ lineno            : no
 mask              : no
 
 class             : "man"
-output            : papaja::apa6_pdf #apa6_word or apa6_wordpdf
+output            : papaja::apa6_word #apa6_word or apa6_wordpdf
 ---
 
 \raggedbottom
@@ -474,7 +474,9 @@ An unexpected feature of our results was the detection of an early posivtivity i
 
 One possibility is that the P1pc that we measured in our task is functionally distinct from the P1pc that has been investigated in other experiments. The P1pc in our task occurs slightly later than the typical P1pc and may be related to the process of stimulus disengagement that we typically associate with the Ptc. One potential source of evicence for this is that the target positivity appears to have similar relationships to other measures that we observe for the distractor positivity. For example, the target positivity is inversely correlated with the target negativity which is also the case for the distractor positivity and distractor negativity. The Target posivitity is also correlated with  the same behavioural measures as the distractor positivity, and the correlation is in the same direction. Another source of evidence is that under low load, the correlation between target and distractor positivity is approaching significance (as indicated in table\ \@ref(tab:lowCorrelationTable)), such that individuals with larger distractor positivities also tend to have larger target positivities. While a Ptc has been elicited by targets in the past, it has not been observed in such an early time window. The role that the concurrent working memory task has in eliciting this early, target related positivity, and the functional significance of this component requires further investigation.
 
-Our within-subject design complements these results and supports a framework for working memory and selective attention interactions which focuses on the concept of working memory availability. @gaspar_inability_2016 demonstrate that individuals with low working memory availability have impaired distractor disengagement, and our results demonstrate that when working memory availability is manipulated within an individual, it is similarly their ability to disengage from distractors which is impaired. 
+# Conclusion
+
+Research investigating the relationship between working memory and selective attention has been equivocal about the specific attentional process which is impaired by reduced working memory availability. The ERP literature has now identified a set of components which allow us to measure specific attentional processes that are otherwise difficult to dissociate. Recent research by @fukuda_individual_2011 and @Gaspar_inability_2016 has started to converge on the idea that individual working memory capacity is specifically related to processes of distractor disengagement. Our design complements these results and supports a framework for working memory and selective attention interactions which focuses on the concept of working memory availability. Not only do individuals with low working memory availability have impaired distractor disengagement, our results demonstrate that when working memory availability is manipulated within an individual, it is similarly their ability to disengage from distractors which is impaired.
 
 # Notes
 
