@@ -38,7 +38,7 @@ lineno            : no
 mask              : no
 
 class             : "man"
-output            : papaja::apa6_word #apa6_word or apa6_wordpdf
+output            : papaja::apa6_pdf #apa6_word or apa6_wordpdf
 ---
 
 \raggedbottom
@@ -158,8 +158,7 @@ longDist$Load[longDist$Load == "Low_"] <- "Low"
 longTarg$Load = substr(longTarg$variable,start=6,stop=9)
 longTarg = mutate(longTarg, Component = substr(variable, start=nchar(as.character(variable))-3, stop=nchar(as.character(variable))))
 # Tidy columns
-longTarg$Component[longTarg$Component == "_Ptc"] <- "Ptc"
-longDist$Component[longDist$Component == "SPCN"] <- "SPCNa"
+longTarg$Component[longTarg$Component == "SPCN"] <- "SPCNa"
 longTarg$Component[longTarg$Component == "PCN2"] <- "SPCNb"
 longTarg$Load[longTarg$Load == "Low_"] <- "Low"
 
@@ -433,7 +432,7 @@ print(xtable(corstars(lowAreaData,method="pearson",removeTriangle = "upper", res
       caption.placement = "top",
       latex.environments = "flushleft",
       add.to.row = list(list(8),  
-"\\hline  \\multicolumn{6}{l}{\\text{Note: }
+"\\hline  \\multicolumn{8}{l}{\\text{Note: }
 p < .001 '****'; p < .01 '***'; p < .05 '**'; p < .1 '*'} \\\\"), comment = FALSE)
 
 print(xtable(corstars(highAreaData,method="pearson",removeTriangle = "upper", result = "none"),
@@ -442,7 +441,7 @@ print(xtable(corstars(highAreaData,method="pearson",removeTriangle = "upper", re
       caption.placement = "top",
       latex.environments = "flushleft",
       add.to.row = list(list(8),
-"\\hline  \\multicolumn{6}{l}{\\text{Note: }
+"\\hline  \\multicolumn{8}{l}{\\text{Note: }
 p < .001 '****'; p < .01 '***'; p < .05 '**'; p < .1 '*'} \\\\"), comment = FALSE)
 ```
 
@@ -476,7 +475,7 @@ One possibility is that the P1pc that we measured in our task is functionally di
 
 # Conclusion
 
-Research investigating the relationship between working memory and selective attention has been equivocal about the specific attentional process which is impaired by reduced working memory availability. The ERP literature has now identified a set of components which allow us to measure specific attentional processes that are otherwise difficult to dissociate. Recent research by @fukuda_individual_2011 and @Gaspar_inability_2016 has started to converge on the idea that individual working memory capacity is specifically related to processes of distractor disengagement. Our design complements these results and supports a framework for working memory and selective attention interactions which focuses on the concept of working memory availability. Not only do individuals with low working memory availability have impaired distractor disengagement, our results demonstrate that when working memory availability is manipulated within an individual, it is similarly their ability to disengage from distractors which is impaired.
+Research investigating the relationship between working memory and selective attention has been equivocal about the specific attentional process which is impaired by reduced working memory availability. The ERP literature has now identified a set of components which allow us to measure specific attentional processes that are otherwise difficult to dissociate. Recent research by @fukuda_individual_2011 and @gaspar_inability_2016 has started to converge on the idea that individual working memory capacity is specifically related to processes of distractor disengagement. Our design complements these results and supports a framework for working memory and selective attention interactions which focuses on the concept of working memory availability. Not only do individuals with low working memory availability have impaired distractor disengagement, our results demonstrate that when working memory availability is manipulated within an individual, it is similarly their ability to disengage from distractors which is impaired.
 
 # Notes
 
