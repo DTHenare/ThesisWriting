@@ -109,69 +109,68 @@ corstars <-function(x, method=c("pearson", "spearman"), removeTriangle=c("upper"
 # Seed for random number generation
 set.seed(4609948)
 # Load the behavioural data along with the subtracted data
-subData <-read.table("P:/dhen061/Experiment_1.1/EEG_Data/Output/Subtracted  Explore/SubtractedStatsAll.txt", header = TRUE)
+subData <-read.table("P:/dhen061/Experiment_1.1/EEG_Data/Output/Subtracted  Explore/non-GFPStats.txt", header = TRUE)
 
-# Divides data up into subsets
-distData = subset(subData, select = c(1,2,3,4,5,6,7,8))
-targData = subset(subData, select = c(9,10,11,12,13,14,15,16))
-behavData = subset(subData, select = c(17,18,19,20,21,22,23,24))
-highAreaData = subset(subData, select = c(17,21,19,23,26,30,25,29))
-lowAreaData = subset(subData, select = c(18,22,20,24,28,32,27,31))
+distData <- subset(subData, select = c(1,2,3,4))
+targData <- subset(subData, select = c(5,6,7,8))
+behavData <- subset(subData, select = c(9,10,11,12,13, 14,15,16))
+yesAreaData <- subset(subData, select = c(9,13,11,15, 18,22,17,21))
+noAreaData <- subset(subData, select = c(10,14,12,16, 20,24,19,23))
+yesLatData <- subset(subData, select = c(9,13,11,15, 30,34,29,33))
+noLatData <- subset(subData, select = c(10,14,12,16, 32,36,31,35))
+latData <- subset(subData, select = c(29,30,33,34, 31,32,35,36))
 
 # Add participant ID column to each subset
 PID = c(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18)
 distData$PID = PID
 targData$PID = PID
 behavData$PID = PID
+latData$PID = PID
 
 # Convert accuracies to %
-behavData$WM_High_Acc = behavData$WM_High_Acc*100
-behavData$WM_Low_Acc = behavData$WM_Low_Acc*100
-behavData$VS_High_Acc = behavData$VS_High_Acc*100
-behavData$VS_Low_Acc = behavData$VS_Low_Acc*100
+behavData$WM_YES_Acc = behavData$WM_YES_Acc*100
+behavData$WM_NOO_Acc = behavData$WM_NOO_Acc*100
+behavData$VS_YES_Acc = behavData$VS_YES_Acc*100
+behavData$VS_NOO_Acc = behavData$VS_NOO_Acc*100
 
 # Convert from wide to long form dataframe
 longDist = melt(distData, id="PID")
 longTarg = melt(targData, id="PID")
 longBehav = melt(behavData, id="PID")
+longLat =melt(latData, id="PID")
 
 # Create Task, Load, and Measure columns for bahveioural data
 longBehav$Task <- substr(longBehav$variable,start=1,stop=2)
-longBehav = mutate(longBehav, Measure = substr(variable, start=nchar(as.character(variable))-2, stop=nchar(as.character(variable))))
-longBehav = mutate(longBehav, Load = substr(variable, start=nchar(as.character(variable))-6, stop=nchar(as.character(variable))-4))
+longBehav$Cond <- substr(longBehav$variable,start=4,stop=6)
+longBehav$Measure <- substr(longBehav$variable,start=8,stop=9)
 #Tidy the variable names
-longBehav$Measure[longBehav$Measure == "_RT"] <- "RT"
-longBehav$Load[longBehav$Load == "igh"] <- "No Dist"
-longBehav$Load[longBehav$Load == "Hig"] <- "No Dist"
-longBehav$Load[longBehav$Load == "_Lo"] <- "Dist"
-longBehav$Load[longBehav$Load == "Low"] <- "Dist"
+longBehav$Measure[longBehav$Measure == "Ac"] <- "Accuracy"
+longBehav$Cond[longBehav$Cond == "NOO"] <- "NO"
 
 # Create a Load and Variable column
-longDist$Load = substr(longDist$variable,start=6,stop=9)
-longDist = mutate(longDist, Component = substr(variable, start=nchar(as.character(variable))-3, stop=nchar(as.character(variable))))
+longDist$Cond = substr(longDist$variable,start=1,stop=3)
+longDist$Component = substr(longDist$variable,start=10,stop=12)
 # Tidy the variable Names
-longDist$Component[longDist$Component == "N2pc"] <- "P1pc"
-longDist$Component[longDist$Component == "_Ptc"] <- "N2pc"
-longDist$Component[longDist$Component == "SPCN"] <- "Ptc"
-longDist$Component[longDist$Component == "PCN2"] <- "SPCN"
-longDist$Load[longDist$Load == "Low_"] <- "No Dist"
-longDist$Load[longDist$Load == "High"] <- "Dist"
+longDist$Component[longDist$Component == "N2p"] <- "N2pc"
+longDist$Cond[longDist$Cond == "NOO"] <- "NO"
 
-# Do the same for targets
-longTarg$Load = substr(longTarg$variable,start=6,stop=9)
-longTarg = mutate(longTarg, Component = substr(variable, start=nchar(as.character(variable))-3, stop=nchar(as.character(variable))))
-# Tidy columns\
-longTarg$Component[longTarg$Component == "N2pc"] <- "SPCNa"
-longTarg$Component[longTarg$Component == "P1pc"] <- "N2pc"
-longTarg$Component[longTarg$Component == "SPCN"] <- "SPCNb"
-longTarg$Component[longTarg$Component == "PCN2"] <- "SPCNc"
-longTarg$Load[longTarg$Load == "Low_"] <- "No Dist"
-longTarg$Load[longTarg$Load == "High"] <- "Dist"
+# Create Cond, and Comp for targets
+longTarg$Cond = substr(longTarg$variable,start=1,stop=3)
+longTarg$Component = substr(longTarg$variable,start=10,stop=12)
+# Tidy the variable Names
+longTarg$Component[longTarg$Component == "N2p"] <- "N2pc"
+longTarg$Cond[longTarg$Cond == "NOO"] <- "NO"
+
+# Do the same for latencies
+longLat$Load = substr(longLat$variable,start=1,stop=1)
+longLat$Stim = substr(longLat$variable,start=2,stop=5)
+longLat$Sign = substr(longLat$variable,start=7,stop=7)
 
 # Delete redundant column
 longDist$variable <- NULL
 longTarg$variable <- NULL
 longBehav$variable <- NULL
+longLat$variable <- NULL
 ```
 
 # Introduction
@@ -225,69 +224,57 @@ All statistical anaysis was performed in version 1.1.423 of RStudio [@rstudio_de
 ## Behavioural measures
 
 ```{r behavioural_stats, include=FALSE}
-wmAcc_out <- t.test(behavData$WM_High_Acc, behavData$WM_Low_Acc, paired = TRUE, alternative = "two.sided")
-wmRT_out <- t.test(behavData$WM_High_RT,  behavData$WM_Low_RT, paired = TRUE, alternative = "two.sided")
-vsAcc_out <- t.test(behavData$VS_High_Acc, behavData$VS_Low_Acc, paired = TRUE, alternative = "two.sided")
-vsRT_out <- t.test(behavData$VS_High_RT, behavData$VS_Low_RT, paired = TRUE, alternative = "two.sided")
+wmAcc_out <- t.test(behavData$WM_YES_Acc, behavData$WM_NOO_Acc, paired = TRUE, alternative = "two.sided")
+wmRT_out <- t.test(behavData$WM_YES_RT,  behavData$WM_NOO_RT, paired = TRUE, alternative = "two.sided")
+vsAcc_out <- t.test(behavData$VS_YES_Acc, behavData$VS_NOO_Acc, paired = TRUE, alternative = "two.sided")
+vsRT_out <- t.test(behavData$VS_YES_RT, behavData$VS_NOO_RT, paired = TRUE, alternative = "two.sided")
 
 #Make violin plot data
 WMRT = filter(longBehav, Task == "WM" & Measure == "RT")
-WMAcc = filter(longBehav, Task == "WM" & Measure == "Acc")
+WMAcc = filter(longBehav, Task == "WM" & Measure == "Accuracy")
 VSRT = filter(longBehav, Task == "VS" & Measure == "RT")
-VSAcc = filter(longBehav, Task == "VS" & Measure == "Acc")
-
-## Make bar graph table
-#Load <- c("High", "Low")
-#WM_RT <- c(mean(behavData$WM_High_RT), mean(behavData$WM_Low_RT))
-#WM_Acc <- c(mean(behavData$WM_High_Acc), mean(behavData$WM_Low_Acc))
-#VS_RT <- c(mean(behavData$VS_High_RT), mean(behavData$VS_Low_RT))
-#VS_Acc <- c(mean(behavData$VS_High_Acc), mean(behavData$VS_Low_Acc))
-#WM_RT.se <- c(se(behavData$WM_High_RT), se(behavData$WM_Low_RT))
-#WM_Acc.se <- c(se(behavData$WM_High_Acc), se(behavData$WM_Low_Acc))
-#VS_RT.se <- c(se(behavData$VS_High_RT), se(behavData$VS_Low_RT))
-#VS_Acc.se <- c(se(behavData$VS_High_Acc), se(behavData$VS_Low_Acc))
-#behavTable <- data.frame(Load, WM_RT, WM_Acc, VS_RT, VS_Acc, WM_RT.se, WM_Acc.se, VS_RT.se, VS_Acc.se)
+VSAcc = filter(longBehav, Task == "VS" & Measure == "Accuracy")
 
 # Create violin plots
-WMRT.violin <- ggplot(data=WMRT, aes( x=Load,y=value)) +
+WMRT.violin <- ggplot(data=WMRT, aes( x=Cond,y=value)) +
   geom_violin(trim=FALSE, fill="gray") +
   labs( y = "Working memory RT(ms)") +
   #ylim(50,100) +
   #geom_dotplot(binaxis='y', stackdir='center', dotsize=1) +
   geom_boxplot(width=0.1) +
   theme_apa()
-WMAcc.violin <- ggplot(data=WMAcc, aes( x=Load,y=value)) +
+WMAcc.violin <- ggplot(data=WMAcc, aes( x=Cond,y=value)) +
   geom_violin(trim=FALSE, fill="gray") +
   labs( y = "Working memory Acc(%)") +
   ylim(50,100) +
   #geom_dotplot(binaxis='y', stackdir='center', dotsize=1) +
   geom_boxplot(width=0.1)+
   theme_apa()
-VSRT.violin <- ggplot(data=VSRT, aes( x=Load,y=value)) +
+VSRT.violin <- ggplot(data=VSRT, aes( x=Cond,y=value)) +
   geom_violin(trim=FALSE, fill="gray") +
   labs( y = "Visual Search RT(ms)") +
   #ylim(50,100) +
   #geom_dotplot(binaxis='y', stackdir='center', dotsize=1) +
   geom_boxplot(width=0.1)+
   theme_apa()
-VSAcc.violin <- ggplot(data=VSAcc, aes( x=Load,y=value)) +
+VSAcc.violin <- ggplot(data=VSAcc, aes( x=Cond,y=value)) +
   geom_violin(trim=FALSE, fill="gray") +
   labs( y = "Visual Search Acc(%)") +
   ylim(50,100) +
   #geom_dotplot(binaxis='y', stackdir='center', dotsize=1) +
   geom_boxplot(width=0.1) +
   theme_apa()
-pdf("C:/Users/dhen061/Desktop/ThesisWriting/Figures/behavViolinPlot.pdf", width = 7, paper = "special")
+pdf("C:/Users/dhen061/Desktop/ThesisWriting/Figures/SAWMDIST_behavViolinPlot.pdf", width = 7, paper = "special")
 plot_grid(WMRT.violin, WMAcc.violin, VSRT.violin, VSAcc.violin, labels = c("A","B","C","D"))
 dev.off()
 ```
 
 
 ```{r violinPlots, fig.cap = "This is where I'd put the figure caption.", fig.align = "center"}
-include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/behavViolinPlot.pdf", auto_pdf = TRUE)
+include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/SAWMDIST_behavViolinPlot.pdf", auto_pdf = TRUE)
 ```
 
-Mean response times and percent correct are shown as a function of working memory load for each task ( working memory and visual search) in figure\ \@ref(fig:violinPlots). Paired samples T-tests were carried out to test the effect of working memory load on response times(ms) and accuracy(%) in both the working memory and visual search tasks. The results of the T-tests showed that the high load condition did result in both significantly slower (`r apa_print(wmRT_out)$full`) and less accurate (`r apa_print(wmAcc_out)$full`) responses to the working memory task. The results also showed that participants were significantly slower on the visual search task under high working memory load (`r apa_print(vsRT_out)$full`) however there was no significant effect of working memory load on visual search accuracy (`r apa_print(vsAcc_out)$full`). These data confirm firstly that the working memory task effectively manipulated the load on a participant's working memory, and secondly that this manipulation also effected performance on a concurrent visual search task.
+Mean response times and percent correct are shown as a function of working memory distractr presence for each task ( working memory and visual search) in figure\ \@ref(fig:violinPlots). Paired samples T-tests were carried out to test the effect of working memory distractor presence on response times(ms) and accuracy(%) in both the working memory and visual search tasks. The results of the T-tests showed that the hpresence of a distractor in the working memory task did result in both significantly slower (`r apa_print(wmRT_out)$full`) and less accurate (`r apa_print(wmAcc_out)$full`) responses to the working memory test display. The results also showed that participants were significantly less accurate on the visual search task when a working memory distractor had been presented (`r apa_print(vsAcc_out)$full`) however there was no significant effect of working memory distractor presence on visual search response times (`r apa_print(vsRT_out)$full`). These data confirm firstly that the presence of a distractor during working memory encoding and retrieval effected performance on the working memory task, and secondly that this manipulation also effected performance on a concurrent visual search task.
 
 ## Within-subject electrophysiological measures
 
@@ -297,32 +284,26 @@ dist.aov <- aov_ez(
   data = longDist,
   dv = "value",
   id = "PID", 
-  within = c("Load", "Component")
+  within = c("Cond", "Component")
 )
-dist.load.emmeans <- emmeans(dist.aov, ~ Load)
-dist.component.emmeans <- emmeans(dist.aov, ~ Component)
-dist.interaction.load.emmeans <- emmeans(dist.aov, ~Load|Component)
-dist.load.posthoc <- pairs(dist.load.emmeans)
-dist.component.posthoc <- pairs(dist.component.emmeans)
-dist.interaction.load.posthoc <- pairs(dist.interaction.load.emmeans)
 
 # Descriptives for distractors
 #summaryBy(value ~ Load + Component, data = longDist, FUN = function(x) { c(Mean = mean(x), SD = sd(x)) } )
 dist.comp.d <- summaryBy(value ~ Component, data = longDist, FUN = function(x) { c(Mean = mean(x), SD = sd(x)) } )
-dist.load.d <- summaryBy(value ~ Load, data = longDist, FUN = function(x) { c(Mean = mean(x), SD = sd(x)) } )
+dist.cond.d <- summaryBy(value ~ Cond, data = longDist, FUN = function(x) { c(Mean = mean(x), SD = sd(x)) } )
 
 targ.aov <- aov_ez(
   data = longTarg,
   dv = "value",
   id = "PID",
-  within = c("Load", "Component")
+  within = c("Cond", "Component")
 )
 targ.component.emmeans <- emmeans(targ.aov, ~ Component)
 targ.component.posthoc <- pairs(targ.component.emmeans)
 
-targ.interaction.load.emmeans <- emmeans(targ.aov, ~Load|Component)
-targ.interaction.load.posthoc <- pairs(targ.interaction.load.emmeans)
-targ.interaction.component.emmeans <- emmeans(targ.aov, ~Component|Load)
+targ.interaction.cond.emmeans <- emmeans(targ.aov, ~Cond|Component)
+targ.interaction.cond.posthoc <- pairs(targ.interaction.cond.emmeans)
+targ.interaction.component.emmeans <- emmeans(targ.aov, ~Component|Cond)
 targ.interaction.component.posthoc <- pairs(targ.interaction.component.emmeans)
 
 # ANOVA tanles
@@ -331,75 +312,70 @@ targ.result <- apa_print(targ.aov)
 
 # Follow-up tables
 targ.component.posthoc.table <- xtable(summary(targ.component.posthoc), caption = "This is the table caption", label = "tab:followupTargetComponentTable")
-targ.interaction.load.posthoc.table <- xtable(summary(targ.interaction.load.posthoc), caption = "This is the table caption", label = "tab:TIntLoadLabel")
+targ.interaction.cond.posthoc.table <- xtable(summary(targ.interaction.cond.posthoc), caption = "This is the table caption", label = "tab:TIntLoadLabel")
 targ.interaction.component.posthoc.table <- xtable(summary(targ.interaction.component.posthoc), caption = "This is the table caption", label = "tab:TIntCompLabel")
-dist.component.posthoc.table <- xtable(summary(dist.component.posthoc), caption = "This is the component main effect for distractors", label = "tab:componentMainEffectDistractors")
 
 ```
 
 ```{r targANOVATable, results = 'asis'}
-apa_table(targ.result$table, caption = "This is the subtracted LoadxComponent target ANOVA", escape = FALSE)
+apa_table(targ.result$table, caption = "This is the subtracted CondxComponent target ANOVA", escape = FALSE)
 ```
 
 ```{r targANOVAcomponentTable, results = 'asis'}
-print(targ.interaction.load.posthoc.table, comment=FALSE, caption.placement = "top", latex.environments="flushleft")
+print(targ.interaction.cond.posthoc.table, comment=FALSE, caption.placement = "top", latex.environments="flushleft")
 print(targ.interaction.component.posthoc.table, comment=FALSE, caption.placement = "top", latex.environments="flushleft")
 ```
 
-In order to test for the effect of working memory load on lateralised ERP components related to target and distractor processing, two repeated measures ANOVAs were performed. For lateralised targets, the repeated measures factors were working memory load (high and low), and target component (P1pc, N2pc, SPCNa, and SPCNb) whereas for lateralised distractors the repeated measures factors were working memory load (high and low), and distractor component (N2pc, Ptc, SPCNa, and SPCNb). Greenhouse-Geisser corrected values are used in all cases. The results for targets showed a significant main effect of component (`r targ.result$full$Component`), but no significant main effect of working memory load (`r targ.result$full$Load`), nor any significant interaction between working memory load and component (`r targ.result$full$Load_Component`). Pairwise comparisons using Tukey correction were performed in order to follow up the main effect of component. The results showed that the P1pc is significantly more positive in amplitude (M = 0.55, SE = 0.09) when compared to the N2pc (M = -0.71, SE = 0.15,  p <  0.001), SPCNa (M = -1.22, SE = 0.19, p < 0.001), and SPCNb (M = -0.77, SE = 0.13, p < 0.001). The N2pc is significantly smaller in amplitude than the SPCNa (p < 0.001), but there is no significant difference in comparison to the SPCNb (p > 0.05). Finally, there is also no significant difference between SPCNa and SPCNb (p > 0.05). Full results shown in table\ \@ref(tab:followupTargetComponentTable).
+In order to test for the effect of working memory load on lateralised ERP components related to target and distractor processing, two repeated measures ANOVAs were performed, one for lateralised targets and one for lateralised distractors. For both analyses, the repeated measures factors were working memory distractor (present and absent), and component (N2pc, and Ptc). Greenhouse-Geisser corrected values are used in all cases. The results for targets showed no significant main effect of either component (`r targ.result$full$Component`), nor working memory distractor presence (`r targ.result$full$Cond`). There was however a significant interaction between component and working memory distractino (`r targ.result$full$Cond_Component`) and pairwise comparisons using Tukey correction were performed in order to follow up this effect.. The results showed that when a working memory distractor is absent, N2pc elicited by the visual search displays is significantly more negative than the Ptc, however there is no significant difference between N2pc and Ptc when the working memory distractor is present. These results lso show that the N2pc is significantly larger uwhen the working memory distractor is present than when it is absent, however there is no effect of working memory distractor presence on Ptc amplitude. Full results shown in table\ \@ref(tab:followupTargetComponentTable).
 
 ```{r distANOVATable, results='asis'}
-apa_table(dist.result$table, caption = "This is the subtracted LoadxComponent distractor ANOVA", escape = FALSE)
+apa_table(dist.result$table, caption = "This is the subtracted CondxComponent distractor ANOVA", escape = FALSE)
 ```
 
-```{r distANOVAinteractionTable, results='asis'}
-print(dist.component.posthoc.table, comment=FALSE, caption.placement = "top", latex.environments="flushleft")
-```
-
-The results for distractors showed a significant main effect of component (`r dist.result$full$Component`), and a significant main effect of working memory load (`r dist.result$full$Load`) indicating that the response to distractors under high load is significantly more negative (M =`r printnum(dist.load.d$value.Mean[dist.load.d$Load == "Dist"])`, SD = `r printnum(dist.load.d$value.SD[dist.load.d$Load == "No Dist"])`) than the response to distractors under low load (M = `r printnum(dist.load.d$value.Mean[dist.load.d$Load == "No Dist"])`, SD = `r printnum(dist.load.d$value.SD[dist.load.d$Load == "No Dist"])`). There was no significant interaction between working memory load and component (`r dist.result$full$Load_Component`). Pairwise comparisons using Tukey correction were performed in order to follow up the main effect of component. The results showed that the Ptc is significantly more positive in amplitude (M = 0.75, SE = 0.13) when compared to the N2pc (M = -0.63, SE = 0.09,  p <  0.001), SPCNa (M = -0.74, SE = 0.13, p < 0.001), and SPCNb (M = -0.56, SE = 0.11, p < 0.001). There were no other significant differences between the N2pc, SPCNa, and SPCNb (see table\ \@ref(tab:componentMainEffectDistractors)). In order to check for specifity of the effect we performed pairwise comparisons which compared the amplitude of each component under high versus low load. These comparisons suggest that the only component which was significantly effected by working memory load was the Ptc amplitude which was smaller under high load (see table\ \@ref(tab:dableLabel)) however the lack of an interaction between load and component in the ANOVA suggests this specific effect could be accounted for by a generally more positive lateralised response to the distractor under low load.
+The results for distractors showed a significant main effect of component (`r dist.result$full$Component`) with N2pc being more negative than Ptc, but no significant main effect of working memory distractor presence (`r dist.result$full$Cond`), nor a significant interaction between component and working memory distractor presence (`r dist.result$full$Cond_Component`) (see table\ \@ref(tab:componentMainEffectDistractors)).
 
 ## Between-subject electrophysiological measures
 
 ```{r correlograms, echo=FALSE, warning=FALSE, include=FALSE}
 areaColumns <- c("WMAcc", "WMRT", "VSAcc", "VSRT", "TargP", "TargN", "DistP", "DistN")
-colnames(lowAreaData) <- areaColumns
-colnames(highAreaData) <- areaColumns
+colnames(noAreaData) <- areaColumns
+colnames(yesAreaData) <- areaColumns
 
-low.area.corr <- rcorr(as.matrix(lowAreaData))
-high.area.corr <- rcorr(as.matrix(highAreaData))
-colnames(low.area.corr$r) <- areaColumns
-colnames(high.area.corr$r) <- areaColumns
-rownames(low.area.corr$r) <- areaColumns
-rownames(high.area.corr$r) <- areaColumns
-pdf("C:/Users/dhen061/Desktop/ThesisWriting/Figures/lowCorrelogram.pdf", width = 7, paper = "special")
-corrplot(low.area.corr$r, method = "ellipse", type = "lower",p.mat = low.area.corr$P, sig.level = 0.05, insig = "blank")
+no.area.corr <- rcorr(as.matrix(noAreaData))
+yes.area.corr <- rcorr(as.matrix(yesAreaData))
+colnames(no.area.corr$r) <- areaColumns
+colnames(yes.area.corr$r) <- areaColumns
+rownames(no.area.corr$r) <- areaColumns
+rownames(yes.area.corr$r) <- areaColumns
+pdf("C:/Users/dhen061/Desktop/ThesisWriting/Figures/SAWMDIST_noCorrelogram.pdf", width = 7, paper = "special")
+corrplot(no.area.corr$r, method = "ellipse", type = "lower",p.mat = no.area.corr$P, sig.level = 0.05, insig = "blank")
 dev.off()
-pdf("C:/Users/dhen061/Desktop/ThesisWriting/Figures/highCorrelogram.pdf", width = 7, paper = "special")
-corrplot(high.area.corr$r, method = "ellipse", type = "lower",p.mat = high.area.corr$P, sig.level = 0.05, insig = "blank")
+pdf("C:/Users/dhen061/Desktop/ThesisWriting/Figures/SAWMDIST_yesCorrelogram.pdf", width = 7, paper = "special")
+corrplot(yes.area.corr$r, method = "ellipse", type = "lower",p.mat = yes.area.corr$P, sig.level = 0.05, insig = "blank")
 dev.off()
 
 # Scatterplots
-VSRTbyDISTP <- ggplot(lowAreaData, aes(x=VSRT, y=DistP)) + geom_point() +geom_smooth(method=lm) +theme_apa()
-VSRTbyDISTN <- ggplot(lowAreaData, aes(x=VSRT, y=DistN)) + geom_point() +geom_smooth(method=lm) +theme_apa()
-VSRTbyTARGP <- ggplot(lowAreaData, aes(x=VSRT, y=TargP)) + geom_point() +geom_smooth(method=lm) +theme_apa()
-WMRTbyDISTP <- ggplot(lowAreaData, aes(x=WMRT, y=DistP)) + geom_point() +geom_smooth(method=lm) +theme_apa()
-pdf("C:/Users/dhen061/Desktop/ThesisWriting/Figures/lowScatterPlot.pdf", width = 7, paper = "special")
+VSRTbyDISTP <- ggplot(noAreaData, aes(x=VSRT, y=DistP)) + geom_point() +geom_smooth(method=lm) +theme_apa()
+VSRTbyDISTN <- ggplot(noAreaData, aes(x=VSRT, y=DistN)) + geom_point() +geom_smooth(method=lm) +theme_apa()
+VSRTbyTARGP <- ggplot(noAreaData, aes(x=VSRT, y=TargP)) + geom_point() +geom_smooth(method=lm) +theme_apa()
+WMRTbyDISTP <- ggplot(noAreaData, aes(x=WMRT, y=DistP)) + geom_point() +geom_smooth(method=lm) +theme_apa()
+pdf("C:/Users/dhen061/Desktop/ThesisWriting/Figures/SAWMDIST_noScatterPlot.pdf", width = 7, paper = "special")
 plot_grid(VSRTbyDISTP,VSRTbyDISTN,VSRTbyTARGP,WMRTbyDISTP, labels = c("A","B","C","D"))
 dev.off()
 ```
 
 ```{r correlationText, echo=FALSE, warning=FALSE, include=FALSE}
-low.RowLabels=c()
-low.ColLabels=c()
-high.RowLabels=c()
-high.ColLabels=c()
+no.RowLabels=c()
+no.ColLabels=c()
+yes.RowLabels=c()
+yes.ColLabels=c()
 # Automatically get stats for significant correlations for low load
 for (row in 5:8){
   for (col in 1:4){
     if (row > col){
-      if (low.area.corr$P[row,col] < 0.05){
-        low.RowLabels = c(low.RowLabels,rownames(low.area.corr$P)[row])
-        low.ColLabels = c(low.ColLabels,rownames(low.area.corr$P)[col])
+      if (no.area.corr$P[row,col] < 0.05){
+        no.RowLabels = c(no.RowLabels,rownames(no.area.corr$P)[row])
+        no.ColLabels = c(no.ColLabels,rownames(no.area.corr$P)[col])
       }
     }
   }
@@ -408,52 +384,52 @@ for (row in 5:8){
 for (row in 5:8){
   for (col in 1:4){
     if (row > col){
-      if (high.area.corr$P[row,col] < 0.05){
-        high.RowLabels = c(high.RowLabels,rownames(high.area.corr$P)[row])
-        high.ColLabels = c(high.ColLabels,rownames(high.area.corr$P)[col])
+      if (yes.area.corr$P[row,col] < 0.05){
+        yes.RowLabels = c(yes.RowLabels,rownames(yes.area.corr$P)[row])
+        yes.ColLabels = c(yes.ColLabels,rownames(yes.area.corr$P)[col])
       }
     }
   }
 }
 
 # Make low load reults strings
-if (length(low.RowLabels)>0) {
-low.results.string = c()
-for (i in 1:length(low.ColLabels)){
-row.match.log = rownames(low.area.corr$P)==low.RowLabels[i]
-col.match.log = colnames(low.area.corr$P)==low.ColLabels[i]
-curR <- toString(round(low.area.corr$r[row.match.log,col.match.log], 3))
-curP <- toString(round(low.area.corr$P[row.match.log,col.match.log], 3))
-low.results.string[i] <- paste("r  = ",curR, ", p = ", curP)
+if (length(no.RowLabels)>0) {
+no.results.string = c()
+for (i in 1:length(no.ColLabels)){
+row.match.log = rownames(no.area.corr$P)==no.RowLabels[i]
+col.match.log = colnames(no.area.corr$P)==no.ColLabels[i]
+curR <- toString(round(no.area.corr$r[row.match.log,col.match.log], 3))
+curP <- toString(round(no.area.corr$P[row.match.log,col.match.log], 3))
+no.results.string[i] <- paste("r  = ",curR, ", p = ", curP)
 }
 }
 # Make high load reults strings
-if (length(high.RowLabels)>0) {
-high.results.string = c()
-for (i in 1:length(high.ColLabels)){
-row.match.log = rownames(high.area.corr$P)==high.RowLabels[i]
-col.match.log = colnames(high.area.corr$P)==high.ColLabels[i]
-curR <- toString(round(high.area.corr$r[row.match.log,col.match.log], 3))
-curP <- toString(round(high.area.corr$P[row.match.log,col.match.log], 3))
-high.results.string[i] <- paste("r  = ",curR, ", p = ", curP)
+if (length(yes.RowLabels)>0) {
+yes.results.string = c()
+for (i in 1:length(yes.ColLabels)){
+row.match.log = rownames(yes.area.corr$P)==yes.RowLabels[i]
+col.match.log = colnames(yes.area.corr$P)==yes.ColLabels[i]
+curR <- toString(round(yes.area.corr$r[row.match.log,col.match.log], 3))
+curP <- toString(round(yes.area.corr$P[row.match.log,col.match.log], 3))
+yes.results.string[i] <- paste("r  = ",curR, ", p = ", curP)
 }
 }
 
 ```
 
 ```{r correlationTables, results='asis'}
-print(xtable(corstars(lowAreaData,method="pearson",removeTriangle = "upper", result = "none"),
-             caption = "Correlation matrix for the low load condition showing the relationships between all behavioural and ERP measures.", 
-             label = "tab:lowCorrelationTable"),
+print(xtable(corstars(noAreaData,method="pearson",removeTriangle = "upper", result = "none"),
+             caption = "Correlation matrix for the no distractor condition showing the relationships between all behavioural and ERP measures.", 
+             label = "tab:noCorrelationTable"),
       caption.placement = "top",
       latex.environments = "flushleft",
       add.to.row = list(list(8),  
 "\\hline  \\multicolumn{8}{l}{\\text{Note: }
 p < .001 '****'; p < .01 '***'; p < .05 '**'; p < .1 '*'} \\\\"), comment = FALSE)
 
-print(xtable(corstars(highAreaData,method="pearson",removeTriangle = "upper", result = "none"),
-             caption = "Correlation matrix for the high load condition showing the relationships between all behavioural and ERP measures.", 
-             label = "tab:highCorrelationTable"),
+print(xtable(corstars(yesAreaData,method="pearson",removeTriangle = "upper", result = "none"),
+             caption = "Correlation matrix for the yes distractor condition showing the relationships between all behavioural and ERP measures.", 
+             label = "tab:yesCorrelationTable"),
       caption.placement = "top",
       latex.environments = "flushleft",
       add.to.row = list(list(8),
@@ -462,18 +438,67 @@ p < .001 '****'; p < .01 '***'; p < .05 '**'; p < .1 '*'} \\\\"), comment = FALS
 ```
 
 ```{r lowScatterGraphing, fig.cap = "This is where I'd put the figure caption.", fig.align = "center"}
-include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/lowScatterPlot.pdf", auto_pdf = TRUE)
+include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/SAWMDIST_noScatterPlot.pdf", auto_pdf = TRUE)
 ```
 
 ```{r correlogramLow, fig.cap = "This is where I'd put the figure caption.", fig.align = "center"}
-include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/lowCorrelogram.pdf", auto_pdf = TRUE)
+include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/SAWMDIST_noCorrelogram.pdf", auto_pdf = TRUE)
 ```
 
 ```{r correlogramHigh, fig.cap = "This is where I'd put the figure caption.", fig.align = "center"}
-include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/highCorrelogram.pdf", auto_pdf = TRUE)
+include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/SAWMDIST_yesCorrelogram.pdf", auto_pdf = TRUE)
 ```
 
-In order to investigate the relationship between lateralised activity and behaviour in the tasks, a correlation matrix was made for each working memory load condition. Each matrix contained the behavioural measures (accuracy and response time) on both tasks (working memory task and visual search task), as well as the total lateralised positive area for each stimulus (targets and distractors) and the total lateralised negative area for each stimulus. Under low working memory load, there is a significant correlation between visual search response times and the positivity to targets, positivity to distractors, and the negativity to distractors. Individuals with larger positivities to targets appear to perform faster on the visual search task (.X.) as do individuals with larger positivities to distractors (.X.). Individuals with a larger negativity to distractors however, perform slower (.X.). There is also a significant correlation between working memory response times and the distractor negativity such that individuals with larger negativities to distractors perform slower on the working memory task (.X.). Scatter plots for these relationships are shown in figure\ \@ref(fig:lowScatterGraphing). Under high load however, these effects disappear and the only significant relationship between lateralised amplitude and behaviour shows that individuals with a larger target negativity tend to perform more accurately on the task  (.X.). While we have only reported on the relationships between amplitudes and behaviour here, all significant correlations are visualized for the low load condition in  figure\ \@ref(fig:correlogramLow) and for the high load condition in figure\ \@ref(fig:correlogramHigh). For the full correlation matrix for the low load condition see table\ \@ref(tab:lowCorrelationTable), and for the high load condition see table\ \@ref(tab:highCorrelationTable).
+In order to investigate the relationship between lateralised activity and behaviour in the tasks, a correlation matrix was made for each working memory load condition. Each matrix contained the behavioural measures (accuracy and response time) on both tasks (working memory task and visual search task), as well as the total lateralised positive area for each stimulus (targets and distractors) and the total lateralised negative area for each stimulus. Under low working memory load, there is a significant correlation between visual search response times and the positivity to targets, positivity to distractors, and the negativity to distractors. Individuals with larger positivities to targets appear to perform faster on the visual search task (.X.) as do individuals with larger positivities to distractors (.X.). Individuals with a larger negativity to distractors however, perform slower (.X.). There is also a significant correlation between working memory response times and the distractor negativity such that individuals with larger negativities to distractors perform slower on the working memory task (.X.). Scatter plots for these relationships are shown in figure\ \@ref(fig:lowScatterGraphing). Under high load however, these effects disappear and the only significant relationship between lateralised amplitude and behaviour shows that individuals with a larger target negativity tend to perform more accurately on the task  (.X.). While we have only reported on the relationships between amplitudes and behaviour here, all significant correlations are visualized for the low load condition in  figure\ \@ref(fig:correlogramLow) and for the high load condition in figure\ \@ref(fig:correlogramHigh). For the full correlation matrix for the low load condition see table\ \@ref(tab:noCorrelationTable), and for the high load condition see table\ \@ref(tab:highCorrelationTable).
+
+```{r latencyTtests}
+#LDistP.minus.HDistP.D <- mean(lowLatData$LDist_PLat-highLatData$HDist_PLat)
+#LDistP.minus.HDistP.se <- sqrt((19/20)*sum(((lowLatData$LDist_PLat-highLatData$HDist_PLat)-LDistP.minus.HDistP.D)^2))
+#LDistP.minus.HDistP.T <- LDistP.minus.HDistP.D/LDistP.minus.HDistP.se
+
+
+```
+
+```{r latcorrelograms, echo=FALSE, warning=FALSE, include=FALSE}
+#latColumns <- c("WMAcc", "WMRT", "VSAcc", "VSRT", "DistPLat", "TargPLat", "DistNLat", "TargNLat")
+#colnames(lowLatData) <- latColumns
+#colnames(highLatData) <- latColumns
+
+#low.lat.corr <- rcorr(as.matrix(lowLatData))
+#high.lat.corr <- rcorr(as.matrix(highLatData))
+#colnames(low.lat.corr$r) <- latColumns
+#colnames(high.lat.corr$r) <- latColumns
+#rownames(low.lat.corr$r) <- latColumns
+#rownames(high.lat.corr$r) <- latColumns
+#pdf("C:/Users/dhen061/Desktop/ThesisWriting/Figures/lowLatCorrelogram.pdf", width = 7, paper = "special")
+#corrplot(low.lat.corr$r, method = "ellipse", type = "lower",p.mat = low.lat.corr$P, sig.level = 0.05, insig = "blank")
+#dev.off()
+#pdf("C:/Users/dhen061/Desktop/ThesisWriting/Figures/highLatCorrelogram.pdf", width = 7, paper = "special")
+#corrplot(high.lat.corr$r, method = "ellipse", type = "lower",p.mat = high.lat.corr$P, sig.level = 0.05, insig = "blank")
+#dev.off()
+
+## Scatterplot
+#WMAccbyDISTPLat <- ggplot(lowLatData, aes(x=VSAcc, y=TargPLat)) +geom_point() +geom_smooth(method=lm) +theme_apa()
+#WMAccbyDISTNLat <- ggplot(highLatData, aes(x=VSAcc, y=TargPLat)) +geom_point() +geom_smooth(method=lm) +theme_apa()
+#WMRTbyTARGNLat <- ggplot(lowLatData, aes(x=WMRT, y=TargPLat)) +geom_point() +geom_smooth(method=lm) +theme_apa()
+#highWMAccbyDISTNLat <- ggplot(highLatData, aes(x=WMAcc, y=TargNLat)) +geom_point() +geom_smooth(method=lm) +theme_apa()
+#pdf("C:/Users/dhen061/Desktop/ThesisWriting/Figures/lowLatScatterPlot.pdf", width = 7, paper = "special")
+#plot_grid(WMAccbyDISTPLat,WMAccbyDISTNLat,WMRTbyTARGNLat,highWMAccbyDISTNLat, labels = c("A","B","C","D"))
+#dev.off()
+
+```
+
+```{r lowLatScatterGraphing, fig.cap = "This is where I'd put the figure caption.", fig.align = "center"}
+#include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/lowLatScatterPlot.pdf", auto_pdf = TRUE)
+```
+
+```{r correlogramLowLat, fig.cap = "This is where I'd put the figure caption lowLat.", fig.align = "center"}
+#include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/lowLatCorrelogram.pdf", auto_pdf = TRUE)
+```
+
+```{r correlogramHighLat, fig.cap = "This is where I'd put the figure caption highLat.", fig.align = "center"}
+#include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/highLatCorrelogram.pdf", auto_pdf = TRUE)
+```
 
 # Discussion
 
