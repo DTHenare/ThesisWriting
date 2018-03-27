@@ -498,10 +498,10 @@ corrplot(high.lat.corr$r, method = "ellipse", type = "lower",p.mat = high.lat.co
 dev.off()
 
 # Scatterplot
-WMAccbyDISTPLat <- ggplot(lowLatData, aes(x=WMAcc, y=TargNLat)) + geom_point() +geom_smooth(method=lm) +theme_apa()
-WMAccbyDISTNLat <- ggplot(lowLatData, aes(x=WMAcc, y=DistNLat)) + geom_point() +geom_smooth(method=lm) +theme_apa()
-WMRTbyTARGNLat <- ggplot(lowLatData, aes(x=WMRT, y=TargPLat)) + geom_point() +geom_smooth(method=lm) +theme_apa()
-highWMAccbyDISTNLat <- ggplot(highLatData, aes(x=WMAcc, y=TargNLat)) + geom_point() +geom_smooth(method=lm) +theme_apa()
+WMAccbyDISTPLat <- ggplot(lowLatData, aes(x=WMAcc, y=TargNLat)) +geom_point() +geom_smooth(method=lm) +theme_apa()
+WMAccbyDISTNLat <- ggplot(lowLatData, aes(x=WMAcc, y=DistNLat)) +geom_point() +geom_smooth(method=lm) +theme_apa()
+WMRTbyTARGNLat <- ggplot(lowLatData, aes(x=WMRT, y=TargPLat)) +geom_point() +geom_smooth(method=lm) +theme_apa()
+highWMAccbyDISTNLat <- ggplot(highLatData, aes(x=WMAcc, y=TargNLat)) +geom_point() +geom_smooth(method=lm) +theme_apa()
 pdf("C:/Users/dhen061/Desktop/ThesisWriting/Figures/lowLatScatterPlot.pdf", width = 7, paper = "special")
 plot_grid(WMAccbyDISTPLat,WMAccbyDISTNLat,WMRTbyTARGNLat,highWMAccbyDISTNLat, labels = c("A","B","C","D"))
 dev.off()
