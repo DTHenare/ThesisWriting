@@ -18,15 +18,13 @@ affiliation:
     institution   : "Univeristy of Auckland"
 
 author_note: |
-  Add complete departmental affiliations for each author here. Each new line herein must be indented, like this line.
-
-  Enter author note here.
+  School of Psychology, University of Auckland, Private Bag 92019, Auckland 1010, New Zealand
 
 abstract: |
-  Enter abstract here. Each new line herein must be indented, like this line.
+  While working memory and selective attention have traditionally been viewed as distinct processes in human cognition, there is now a growing body of literature which demonstrates significant overlap between these two constructs. Evidence linking these constructs has typically shown that as working memory availability decreases, individuals perform worse on attention-based tasks. The specific neural mechanisms involved in this interaction are still unknown, however three lateralised ERP components have been identified as ideal candidates for studying the neural underpinnings of attention processes. N2pc, Ptc, and SPCN have been associated with object selection, distractor disengagement, and short term maintenance of target features respectively. In this study we measured these components during the delay period of a working memory task in order to observe the effect of increased working memory load on their amplitudes. Our results show that increased working memory load impairs the processing of distractors, but not targets, and that it is specifically the neural index of distractor disengagement which is attenuated. The data also show that individual performance on the task is related to the neural response to both targets and distractors. These results demonstrate that within-subject manipulations of working memory availability impact on participants' ability to disengage from irrelevant stimuli, but that individual differences in visual search ability under load are related to both target and distractor processing.
 
-keywords          : "keywords"
-wordcount         : "X"
+keywords          : "attention, working memory, distraction, event-related potentials"
+wordcount         : "5872"
 
 bibliography      : ["r-references.bib"]
 
@@ -604,16 +602,6 @@ One possibility for how the working memory task could be causing a target P1pc i
 # Conclusion
 
 Research investigating the relationship between working memory and selective attention has been equivocal about the specific attentional process that is impaired by reduced working memory availability. The recent ERP literature has identified a set of components that allow us to measure specific attentional processes that are otherwise difficult to dissociate. Experiments by @fukuda_individual_2011 and @gaspar_inability_2016 have started to converge on the idea that individual working memory capacity is specifically related to processes of distractor disengagement. Our design complements these results and supports a framework for working memory and selective attention interactions which focuses on the concept of working memory availability. Not only do individuals with low working memory availability have impaired distractor disengagement, our results demonstrate that when working memory availability is manipulated within an individual, it is similarly their ability to disengage from distractors which is impaired.
-
-# Notes
-
------------------------
-This could reflect either a sustained positivity on a trial by trial basis, or a lot of variability in the latency of the positivity on a trial by trial basis. To dissociate this we could look at the variability of jack knifed ERPs within each person. To explore the general phenomenon, we could measure the proportion of positive to negative area on each trial (maybe jack knifed) and see whether that better reflects behavioural measures on a trial by trial basis (or see whether it better correlates with performance across individuals.
-
-EEG suggests that behavioural impairments under high load are a result of difficulties with distractor disengagement. Usually we see people perform worse in the target-decoy task when the target is lateralised, perhaps because pople preferentiialy search the the midline first. Taken together, this should mean that the effect of working memory load on behavioural performance should be larger for target lateralised trials than for distractor lateraliesd trials (in target lateralised trials, participants are much more likely to attend to the distracto first as it's on the midline, therefore their ability to disengage from distractors is more important).
-WAIT THOUGH! People are still responding to targets and it's those responses that are slowed so at a minimum N2pc latency should be effected by working memory load even if that's ultimately because of impaired distractor disengagement.
-
-
 
 \newpage 
 
