@@ -6,8 +6,8 @@ author:
   - name          : "Dion Henare"
     affiliation   : "1"
     corresponding : yes    # Define only one corresponding author
-    address       : "12E/18 Scotia Place, Auckland, New Zealand"
-    email         : "dionhenare@mail.com"
+    address       : "School of Psychology, University of Auckland, Private Bag 92019, Auckland 1010, New Zealand"
+    email         : "dion.henare@auckland.ac.nz"
   - name          : "Jude Buckley"
     affiliation   : "1"
   - name          : "Paul M Corballis"
@@ -24,7 +24,7 @@ author_note: |
 
 abstract: |
   Enter abstract here. Each new line herein must be indented, like this line.
-  
+
 keywords          : "keywords"
 wordcount         : "X"
 
@@ -37,8 +37,8 @@ footnotelist      : no
 lineno            : no
 mask              : no
 
-class             : "man"
-output            : papaja::apa6_pdf #apa6_word or apa6_wordpdf
+class             : "man" #jou, man, doc
+output            : papaja::apa6_pdf #apa6_word or apa6_pdf
 ---
 
 \raggedbottom
@@ -211,13 +211,17 @@ In this study we measured lateralised ERPs separately for targets and distractor
 
 ## Procedure
 
-Testing took place in a dimly lit, electrically shielded chamber. Experimental stimuli were presented on a 23 inch Samsung LCD monitor positioned 57cm away from the participant with the viewing distance maintained through use of a chinrest. E-prime software(version 2.0.8.74) was used to control stimulus presentation, synchronise stimulus presentation with the electrophysiological recording, and record participant responses. Participants performed a dual working memory task and a selective attention task in which they encoded either one or two shapes at the start of a trial that they had to match to a test display after some delay. During the delay period of the working memory task, participants performed 4 visual searches in a series of target-decoy displays. Each block consisted of 8 trials (8 working memory trials, 32 visual searches) and all participants completed a practice block followed by 18 testing blocks. This resulted in a total of 144 working memory trials and 576 visual search trials for analysis. Participants had a minimum 30 second break between each block and on half of the breaks they could choose to take a longer break.
+Testing took place in a dimly lit, electrically shielded chamber. Experimental stimuli were presented on an LCD computer monitor (Samsung Sync Master P2270), with screen dimensions of 47.7 x 26.8cm and a resolution of 1920 x 1080 pixels. The participant was positioned 57cm away from the monitor with the viewing distance maintained through use of a chinrest. E-prime software (version 2.0.8.74, Psychology Software Tools) was used to control stimulus presentation, synchronise stimulus presentation with the electrophysiological recording, and record participant responses. Participants performed a dual working memory task and a selective attention task in which they encoded either one or two shapes at the start of a trial that they had to match to a test display after some delay. During the delay period of the working memory task, participants performed 4 visual searches in a series of target-decoy displays. Each block consisted of 8 trials (8 working memory trials, 32 visual searches) and all participants completed a practice block followed by 18 testing blocks. This resulted in a total of 144 working memory trials and 576 visual search trials for analysis. Participants had a minimum 30 second break between each block and on half of the breaks they could choose to take a longer break.
 
 Each trial began with a fixation cross on screen for 1500ms, and then the working memory cue appeared for 1000ms. In half of the trials, the cue would point either up or down (with equal probability) resulting in a low load trial, and in the other half of trials the cue would point both up and down resulting in a high load trial. The working memory encode display would then be presented for 2000ms and participants had to encode the shape(s) indicated by the cue.
 
 At this point, the visual search task would begin, first with a fixation cross presented for between 500 and 1500ms (randomly selected on each trial), followed by the presentation of the visual search display which appeared for 200ms. Participants had 1600ms to respond to the orientation of the target letter. If the colored T was upright they would press '1' on a standard keyboard numpad with their right hand, whereas if the T was rotated 180$^\circ$ then they would press '2'. Participants were instructed to respond as quickly as possible while attempting to maintain their accuracy above 90%. The visual search portion of the task was repeated 4 times in each trial.
 
-Once the 4th visual search was completed, the working memory retrieval display would appear on screen for 2000ms and participants had to press 'm' with their left hand if the shape(s) on screen matched the encoded shape(s), or 'x' if it did not. The shapes matched on half of the trials. Finally, participants received feedback on the working memory portion of the task with a 1000ms display of either "Correct!", "Wrong", or "Too Slow" depending on their response.
+Once the 4th visual search was completed, the working memory retrieval display would appear on screen for 2000ms and participants had to press 'm' with their left hand if the shape(s) on screen matched the encoded shape(s), or 'x' if it did not. The shapes matched on half of the trials. Finally, participants received feedback on the working memory portion of the task with a 1000ms display of either "Correct!", "Wrong", or "Too Slow" depending on their response. For an example trial, see figure\ \@ref(fig:TrialExample).
+
+```{r TrialExample, fig.cap = "Example of a single trial of the experiment. This example shows a high load condition, as indicated by the double headed arrow cue pointing to both locations. In a low load trial the arrow cue would point at only one of the possible locations.", fig.align = "center"}
+include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/TrialExample.pdf", auto_pdf = TRUE)
+```
 
 ## Stimuli
 
@@ -229,13 +233,70 @@ EEG activity was recorded continuously at 1000Hz on an Electrical Geodesics Inc.
 
 ## EEG Processing
 
-EEG data were processed twice, firstly in a way which was optimised for the performance of independent component analysis (ICA), and secondly in a way which was optimised for the production of ERP components. ICA weights from the first set of data could then be copied across in order to perform artefact correction in the ERP data. 
+```{r ERP_Plots, include=FALSE}
+erpData <-read.table("P:/dhen061/Experiment_1/EEG_Data/RAW_Files/Output-Final/SubtractedExplore/Average_ERP_Data.txt", header = TRUE)
+#Convert to long table format
+longERP = melt(erpData, id="xAxis")
+#Create variables
+longERP$Stimulus <- substr(longERP$variable,start=1,stop=1)
+longERP$Component <- substr(longERP$variable,start=3,stop=7)
+longERP$Load <- substr(longERP$variable,start=9,stop=12)
 
-For the performance of ICA, data were down-sampled to 250 Hz. Data were Band pass filtered from 1 to 30 using butterworth filter implemented in ERPLAB. Channel locations were loaded. Bad channels were detected, removed, and replaced with a spherical interpolation of surrounding electrodes. Data were then re-referenced to the average of all electrodes. ICA was then performed on the data, using the PCA option to reduce dimensions to account for the number of interpolated channels. ICA weights were then stored in order to be applied to data which had been pre-processed for the production of ERPs. For the production of ERPs, data were first down-sampled to 250Hz. Data were Band pass filtered from 0.1 to 30 using butterworth filter implemented in ERPLAB. Channel locations were loaded. Bad channels were detected, removed, and replaced with a spherical interpolation of surrounding electrodes. Data were then re-referenced to the average of all electrodes. Data were then epoched from -0.2 pre-stimulus to 0.8 post-stimulus. Epochs containing horizontal eye movements were identified as any epoch containing a greater than 32 microvolt difference between electrodes location at the outer canthi of each eye. ICA weights were then copied over to this set of data in order to perform artefact correction. The ADJUST toolbox was used in order to identify artefact components. All components identified as artefacts by ADJUST were removed from the data. Subsequently, epochs which contained any activity above or below 100 microvolts were removed from the data. Participants with less than 60% of their trials remaining at this point were rejected, resulting in 2 rejections.
+longERP$Component[longERP$Component == "P1pcc"] <- "P1pc"
+longERP$Component[longERP$Component == "N2pcc"] <- "N2pc"
+longERP$Component[longERP$Component == "Ptccc"] <- "Ptc"
+
+distERP = filter(longERP, Stimulus == "D")
+distERP$Component_f <- factor(distERP$Component, levels=c("N2pc", "Ptc", "SPCNa", "SPCNb"))
+distPlot <- ggplot(data=distERP, aes( x=xAxis,y=value, group=Load)) +
+  geom_rect(data = subset(distERP, Component  == "N2pc"), aes(xmin=208, xmax=256, ymin=-1, ymax=1), color="transparent", fill="orange", alpha=0.3) +
+  geom_rect(data = subset(distERP, Component  == "Ptc"), aes(xmin=296, xmax=360, ymin=-1, ymax=1), color="transparent", fill="orange", alpha=0.3) +
+  geom_rect(data = subset(distERP, Component  == "SPCNa"), aes(xmin=532, xmax=596, ymin=-1, ymax=1), color="transparent", fill="orange", alpha=0.3) +
+  geom_rect(data = subset(distERP, Component  == "SPCNb"), aes(xmin=700, xmax=728, ymin=-1, ymax=1), color="transparent", fill="orange", alpha=0.3) +
+  geom_line(aes(linetype=Load), size=1) +
+  scale_x_continuous(name ="Latency (ms)") +
+  scale_y_continuous(name =expression(paste("Amplitude (",mu,"v)"))) +
+  facet_grid(Component_f~.) +
+  theme_apa()
+
+
+targERP = filter(longERP, Stimulus == "T")
+targERP$Component_f <- factor(targERP$Component, levels=c("P1pc", "N2pc", "SPCNa", "SPCNb"))
+targPlot <- ggplot(data=targERP, aes( x=xAxis,y=value, group=Load)) +
+  geom_rect(data = subset(targERP, Component  == "P1pc"), aes(xmin=156, xmax=180, ymin=-1, ymax=1), color="transparent", fill="orange", alpha=0.3) +
+  geom_rect(data = subset(targERP, Component  == "N2pc"), aes(xmin=208, xmax=252, ymin=-1, ymax=1), color="transparent", fill="orange", alpha=0.3) +
+  geom_rect(data = subset(targERP, Component  == "SPCNa"), aes(xmin=380, xmax=488, ymin=-1, ymax=1), color="transparent", fill="orange", alpha=0.3) +
+  geom_rect(data = subset(targERP, Component  == "SPCNb"), aes(xmin=676, xmax=700, ymin=-1, ymax=1), color="transparent", fill="orange", alpha=0.3) +
+  geom_line(aes(linetype=Load), size=1) +
+  scale_x_continuous(name ="Latency (ms)") +
+  scale_y_continuous(name =expression(paste("Amplitude (",mu,"v)"))) +
+  facet_grid(Component_f~.) +
+  theme_apa()
+
+pdf("C:/Users/dhen061/Desktop/ThesisWriting/Figures/SAWMLOAD_distERPs.pdf", width = 7, paper = "special")
+distPlot
+dev.off()
+
+pdf("C:/Users/dhen061/Desktop/ThesisWriting/Figures/SAWMLOAD_targERPs.pdf", width = 7, paper = "special")
+targPlot
+dev.off()
+```
+
+```{r distERPs, fig.cap = "Event-related potentials showing the lateralised response to distractors under high and low load. Each component was calculated from the average of a slightly different cluster of electrodes (based on the condition averaged scalp topography of that component's time window).", fig.align = "center"}
+include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/SAWMLOAD_distERPs.pdf", auto_pdf = TRUE)
+```
+
+```{r targERPs, fig.cap = "Event-related potentials showing the lateralised response to targets under high and low load. Each component was calculated from the average of a slightly different cluster of electrodes (based on the condition averaged scalp topography of that component's time window).", fig.align = "center"}
+include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/SAWMLOAD_targERPs.pdf", auto_pdf = TRUE)
+```
+
+EEG data were processed twice, firstly in a way which was optimised for the performance of independent component analysis (ICA), and secondly in a way which was optimised for the production of ERP components. ICA weights from the first set of data could then be copied across in order to perform artefact correction in the ERP data. All EEG preprocessing was performed using MATLAB (2017a, The Mathworks Inc.) and the EEGLAB toolbox  [@DELORME2004].
+
+For the performance of ICA, data were down-sampled to 250 Hz. Data were Band pass filtered from 1 to 30 using butterworth filter implemented in ERPLAB [@ERPLAB]. Channel locations were loaded. Bad channels were detected, removed, and replaced with a spherical interpolation of surrounding electrodes. Data were then re-referenced to the average of all electrodes. ICA was then performed on the data, using the PCA option to reduce dimensions to account for the number of interpolated channels. ICA weights were then stored in order to be applied to data which had been pre-processed for the production of ERPs. For the production of ERPs, data were first down-sampled to 250Hz. Data were Band pass filtered from 0.1 to 30 using butterworth filter implemented in ERPLAB [@ERPLAB]. Channel locations were loaded. Bad channels were detected, removed, and replaced with a spherical interpolation of surrounding electrodes. Data were then re-referenced to the average of all electrodes. Data were then epoched from -0.2 pre-stimulus to 0.8 post-stimulus. Epochs containing horizontal eye movements were identified as any epoch containing a greater than 32 microvolt difference between electrodes location at the outer canthi of each eye. ICA weights were then copied over to this set of data in order to perform artefact correction. The ADJUST toolbox was used in order to identify artefact components [@ADJUST_tb]. All components identified as artefacts by ADJUST were removed from the data. Subsequently, epochs which contained any activity above or below 100 microvolts were removed from the data. Participants with less than 60% of their trials remaining at this point were rejected, resulting in 2 rejections.
 
 In order to isolate activity elicited contralateral to the lateralised object, all trials containing a right visual field target or distractor had their EEG activity flipped along the longitudinal axis such that for all trials, right hemisphere electrodes now represent activity contralateral to the lateralised stimulus and left hemisphere electrodes represent activity ipsilateral to the lateralised object. Ipsilateral activity was then subtracted from both hemispheres and the remaining contralateral activity was then mirrored onto the left hemisphere. At this stage, scalp activity represents only that portion of the EEG signal which is greater contralateral to the lateralised stimulus, mirrored onto both sides of the scalp. Importantly for our results, this means that in target lateralised trials (where the distractor is on the midline), activity elicited by the distractors is subtracted out of the data and only target related activity remains. Conversely, in the distractor lateralised trials (where the target is on the midline), activity elicited by targets has been removed.
 
-Participant averages were formed separately for lateralised target and lateralised distractor trials and global field power (GFP) was then calculated for each of these conditions (across all electrodes posterior to Cz). In order to find unbiased estimates of the component latencies and their widths, Matlab's built-in findpeaks functions was used to detect the five most prominent peaks in the GFP for each stimulus type as well as their widths (using half-prominence). If any of these peaks occurred during the pre-stimulus period then they were ignored, leaving 4 components of interest for both the target and the distractor lateralised conditions. For the targets, an early positivity (156 to 180ms), followed by three negativities (208 to 252ms, 380 to 488ms, and 676 to 700ms). The latencies and scalp distributions of these components line up with the P1pc, N2pc, and two parts of the SPCN component, as a result we will refer to them as the P1pc, N2pc, SPCNa, and SPCNb. For the distractors, this method identified an initial negativity (208 to 256ms), followed by a positivity (296 to 360ms), followed by two negativities (532 to 596ms, and 700 to 728ms). These latencies and scalp distributions are consistent with the N2pc, Ptc, and two portions of the SPCN component and we will therefore refer to them as the N2pc, Ptc, SPCNa, and SPCNb. For the individual diffrences analyses we used a signed-area approach similar to that used by @gaspar_inability_2016 and @sawaki_common_2012. First we calcuated the positive and negative area across all components for targets and distractors under high and low load. In order to correct for the effect of noise in these estimates we followed the procedure of @gaspar_inability_2016 and subtracted the equivalent calculation taken from the prestimulus area in each condition (and in our case this value was multiplied in order to account the different lengths of time between the prestimulus period and the area of the components).
+Participant averages were formed separately for lateralised target and lateralised distractor trials and global field power (GFP) was then calculated for each of these conditions (across all electrodes posterior to Cz). In order to find unbiased estimates of the component latencies and their widths, Matlab's built-in findpeaks function was used to detect the five most prominent peaks in the GFP for each stimulus type as well as their widths (using half-prominence). If any of these peaks overlapped with the pre-stimulus period then they were ignored, leaving 4 components of interest for both the target and the distractor lateralised conditions. Electrode clusters were then selected for each component by averaging across aacross working memory load and plotting the topographies for each window. Electrode selection was similar for all components and centred around P7/8. For the targets, an early positivity (156 to 180ms), followed by three negativities (208 to 252ms, 380 to 488ms, and 676 to 700ms). The latencies and scalp distributions of these components line up with the P1pc, N2pc, and two parts of the SPCN component, as a result we will refer to them as the P1pc, N2pc, SPCNa, and SPCNb (shown in figure\ \@ref(fig:targERPs)). For the distractors, this method identified an initial negativity (208 to 256ms), followed by a positivity (296 to 360ms), followed by two negativities (532 to 596ms, and 700 to 728ms). These latencies and scalp distributions are consistent with the N2pc, Ptc, and two portions of the SPCN component and we will therefore refer to them as the N2pc, Ptc, SPCNa, and SPCNb (shown in figure\ \@ref(fig:distERPs)). For the individual diffrences analyses we used a signed-area approach similar to that used by @gaspar_inability_2016 and @sawaki_common_2012. First we calcuated the positive and negative area across all components for targets and distractors under high and low load. In order to correct for the effect of noise in these estimates we followed the procedure of @gaspar_inability_2016 and subtracted the equivalent calculation taken from the prestimulus area in each condition (and in our case this value was multiplied in order to account the different lengths of time between the prestimulus period and the area of the components).
 
 All statistical anaysis was performed in version 1.1.423 of RStudio [@rstudio_desk_2016] using `r cite_r("r-references.bib")`.
 
@@ -290,7 +351,7 @@ dev.off()
 ```
 
 
-```{r violinPlots, fig.cap = "This is where I'd put the figure caption.", fig.align = "center"}
+```{r violinPlots, fig.cap = "Violin plots showing the effect of working memory load on A) Working memory response times in milliseconds, B) working memory accuracy in percent, C) visual search response times in milliseconds, and D) visual search accuracy in percent.", fig.align = "center"}
 include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/behavViolinPlot.pdf", auto_pdf = TRUE)
 ```
 
@@ -332,13 +393,13 @@ dist.result <- apa_print(dist.aov)
 targ.result <- apa_print(targ.aov)
 
 # Follow-up tables
-targ.component.posthoc.table <- xtable(summary(targ.component.posthoc), caption = "This is the table caption", label = "tab:followupTargetComponentTable")
-dist.component.posthoc.table <- xtable(summary(dist.component.posthoc), caption = "This is the component main effect for distractors", label = "tab:componentMainEffectDistractors")
-dist.interaction.load.posthoc.table <- xtable(summary(dist.interaction.load.posthoc), caption = "This is the table caption", label = "tab:dableLabel")
+targ.component.posthoc.table <- xtable(summary(targ.component.posthoc), caption = "Summary of the posthoc comparisons used to follow up the main effect of component on the lateraliesd neural response to targets during visual search.", label = "tab:followupTargetComponentTable")
+dist.component.posthoc.table <- xtable(summary(dist.component.posthoc), caption = "Summary of the posthoc comparisons used to follow up the main effect of component on the lateraliesd neural response to targets during visual search.", label = "tab:componentMainEffectDistractors")
+dist.interaction.load.posthoc.table <- xtable(summary(dist.interaction.load.posthoc), caption = "Pairwise comparisons showing the effect of load on each component elicited by lateralised distractors using Tukey correction.", label = "tab:dableLabel")
 ```
 
 ```{r targANOVATable, results = 'asis'}
-apa_table(targ.result$table, caption = "This is the subtracted LoadxComponent target ANOVA", escape = FALSE)
+apa_table(targ.result$table, caption = "Summary of the 2 x 4 repeated measures ANOVA used to test the effects of working memory load and component on the lateraliesd neural response to targets during visual search.", escape = FALSE)
 ```
 
 ```{r targANOVAcomponentTable, results = 'asis'}
@@ -348,7 +409,7 @@ print(targ.component.posthoc.table, comment=FALSE, caption.placement = "top", la
 In order to test for the effect of working memory load on lateralised ERP components related to target and distractor processing, two repeated measures ANOVAs were performed. For lateralised targets, the repeated measures factors were working memory load (high and low), and target component (P1pc, N2pc, SPCNa, and SPCNb) whereas for lateralised distractors the repeated measures factors were working memory load (high and low), and distractor component (N2pc, Ptc, SPCNa, and SPCNb). Greenhouse-Geisser corrected values are used in all cases. The results for targets showed a significant main effect of component (`r targ.result$full$Component`), but no significant main effect of working memory load (`r targ.result$full$Load`), nor any significant interaction between working memory load and component (`r targ.result$full$Load_Component`). Pairwise comparisons using Tukey correction were performed in order to follow up the main effect of component. The results showed that the P1pc is significantly more positive in amplitude (M = 0.55, SE = 0.09) when compared to the N2pc (M = -0.71, SE = 0.15,  p <  0.001), SPCNa (M = -1.22, SE = 0.19, p < 0.001), and SPCNb (M = -0.77, SE = 0.13, p < 0.001). The N2pc is significantly smaller in amplitude than the SPCNa (p < 0.001), but there is no significant difference in comparison to the SPCNb (p > 0.05). Finally, there is also no significant difference between SPCNa and SPCNb (p > 0.05). Full results shown in table\ \@ref(tab:followupTargetComponentTable).
 
 ```{r distANOVATable, results='asis'}
-apa_table(dist.result$table, caption = "This is the subtracted LoadxComponent distractor ANOVA", escape = FALSE)
+apa_table(dist.result$table, caption = "Summary of the 2 x 4 repeated measures ANOVA used to test the effects of working memory load and component on the lateraliesd neural response to distractors in the visual search task.", escape = FALSE)
 ```
 
 ```{r distANOVAinteractionTable, results='asis'}
@@ -383,8 +444,13 @@ VSRTbyDISTP <- ggplot(lowAreaData, aes(x=VSRT, y=DistP)) + geom_point() +geom_sm
 VSRTbyDISTN <- ggplot(lowAreaData, aes(x=VSRT, y=DistN)) + geom_point() +geom_smooth(method=lm) +theme_apa()
 VSRTbyTARGP <- ggplot(lowAreaData, aes(x=VSRT, y=TargP)) + geom_point() +geom_smooth(method=lm) +theme_apa()
 WMRTbyDISTP <- ggplot(lowAreaData, aes(x=WMRT, y=DistP)) + geom_point() +geom_smooth(method=lm) +theme_apa()
-pdf("C:/Users/dhen061/Desktop/ThesisWriting/Figures/lowScatterPlot.pdf", width = 7, paper = "special")
+pdf("C:/Users/dhen061/Desktop/ThesisWriting/Figures/SAWMLOAD_lowScatterPlot.pdf", width = 7, paper = "special")
 plot_grid(VSRTbyDISTP,VSRTbyDISTN,VSRTbyTARGP,WMRTbyDISTP, labels = c("A","B","C","D"))
+dev.off()
+
+VSACCbyTARGN  <- ggplot(highAreaData, aes(x=VSAcc, y=TargN)) + geom_point() +geom_smooth(method=lm) +theme_apa()
+pdf("C:/Users/dhen061/Desktop/ThesisWriting/Figures/SAWMLOAD_highScatterPlot.pdf", width = 7, paper = "special")
+VSACCbyTARGN
 dev.off()
 ```
 
@@ -439,7 +505,7 @@ high.results.string[i] <- paste("r  = ",curR, ", p = ", curP)
 
 ```{r correlationTables, results='asis'}
 print(xtable(corstars(lowAreaData,method="pearson",removeTriangle = "upper", result = "none"),
-             caption = "Correlation matrix for the low load condition showing the relationships between all behavioural and ERP measures.", 
+             caption = "Correlation matrix for the low load condition showing the relationships between all behavioural and ERP measures. WM = working memory task, VS = visual search task, Acc = accuracy, RT = response time, Targ = lateralised target response, Dist = lateralised distractor response, P = positive area, N = negative area.",
              label = "tab:lowCorrelationTable"),
       caption.placement = "top",
       latex.environments = "flushleft",
@@ -448,7 +514,7 @@ print(xtable(corstars(lowAreaData,method="pearson",removeTriangle = "upper", res
 p < .001 '****'; p < .01 '***'; p < .05 '**'; p < .1 '*'} \\\\"), comment = FALSE)
 
 print(xtable(corstars(highAreaData,method="pearson",removeTriangle = "upper", result = "none"),
-             caption = "Correlation matrix for the high load condition showing the relationships between all behavioural and ERP measures.", 
+             caption = "Correlation matrix for the high load condition showing the relationships between all behavioural and ERP measures. WM = working memory task, VS = visual search task, Acc = accuracy, RT = response time, Targ = lateralised target response, Dist = lateralised distractor response, P = positive area, N = negative area.", 
              label = "tab:highCorrelationTable"),
       caption.placement = "top",
       latex.environments = "flushleft",
@@ -457,15 +523,19 @@ print(xtable(corstars(highAreaData,method="pearson",removeTriangle = "upper", re
 p < .001 '****'; p < .01 '***'; p < .05 '**'; p < .1 '*'} \\\\"), comment = FALSE)
 ```
 
-```{r lowScatterGraphing, fig.cap = "This is where I'd put the figure caption.", fig.align = "center"}
-include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/lowScatterPlot.pdf", auto_pdf = TRUE)
+```{r lowScatterGraphing, fig.cap = "Scatter plots showing the significant relationships between neural responses and behaviour in the low working memory load condition. A) visual search response times and distractor positivity, B) visual search response times and distractor negativity, C) visual search response times and target positivity, and D) working memory response times and distractor positivity.", fig.align = "center"}
+include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/SAWMLOAD_lowScatterPlot.pdf", auto_pdf = TRUE)
 ```
 
-```{r correlogramLow, fig.cap = "This is where I'd put the figure caption.", fig.align = "center"}
+```{r highScatterGraphing, fig.cap = "Scatter plot showing the significant relationship between visual search accuracy and target negativity in the high working memory load condition.", fig.align = "center"}
+include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/SAWMLOAD_highScatterPlot.pdf", auto_pdf = TRUE)
+```
+
+```{r correlogramLow, fig.cap = "Correlogram showing the direction and strength of all significant correlations between behavioural and neural measures under low working memory load.", fig.align = "center"}
 include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/lowCorrelogram.pdf", auto_pdf = TRUE)
 ```
 
-```{r correlogramHigh, fig.cap = "This is where I'd put the figure caption.", fig.align = "center"}
+```{r correlogramHigh, fig.cap = "Correlogram showing the direction and strength of all significant correlations between behavioural and neural measures under high working memory load.", fig.align = "center"}
 include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/highCorrelogram.pdf", auto_pdf = TRUE)
 ```
 
@@ -475,8 +545,6 @@ In order to investigate the relationship between lateralised activity and behavi
 LDistP.minus.HDistP.D <- mean(lowLatData$LDist_PLat-highLatData$HDist_PLat)
 LDistP.minus.HDistP.se <- sqrt((19/20)*sum(((lowLatData$LDist_PLat-highLatData$HDist_PLat)-LDistP.minus.HDistP.D)^2))
 LDistP.minus.HDistP.T <- LDistP.minus.HDistP.D/LDistP.minus.HDistP.se
-
-
 ```
 
 ```{r latcorrelograms, echo=FALSE, warning=FALSE, include=FALSE}
@@ -522,21 +590,21 @@ dev.off()
 
 # Discussion
 
-The aim of this research was to specify the relationship between selective attention and working memory. Our results showed that within individuals, increased working memory load leads to slowed responses on a concurrent visual search task. The lateralised neural response to targets and distractors in the visual search displays showed that this appears to be the result of changes in the way salient distractors were processed as working memory load increased. Target processing on the other hand is unaffected by working memory load. The presence of a main effect of load on distractors, but no interaction between load and component means that it is difficult to specify the attentional process (whether capture by distractors, or disengagement form distractors) that is being affected. Follow-up analyses suggest that the best candidate is the distractor Ptc which indexes distractor disengagement and is significantly reduced under high working memory load. Taken together, these results support the suggestion by @fukuda_individual_2011 that working memory load specifically impacts an individual's ability to disengage from salient distractors, and that failure to efficiently disengage from distractors is responsible for the  behavioural impairments that we observe under increasing working memory load.
+The aim of this research was to specify the relationship between selective attention and working memory. Our results showed that within individuals, increased working memory load leads to slowed responses on a concurrent visual search task. The lateralised neural response to targets and distractors in the visual search displays showed that this appeared to be the result of changes in the way salient distractors were processed as working memory load increased. Target processing on the other hand is unaffected by working memory load. The presence of a main effect of load on distractors, but no interaction between load and component means that it is difficult to specify the attentional process (whether capture by distractors, or disengagement from distractors) that is being affected. Follow-up analyses suggest that the best candidate is the distractor Ptc which indexes distractor disengagement and is significantly reduced under high working memory load. Taken together, these results support the suggestion by @fukuda_individual_2011 that working memory load specifically impacts an individual's ability to disengage from salient distractors, and that failure to efficiently disengage from distractors is responsible for the  behavioural impairments that we observe under increasing working memory load.
 
 The presence of a main effect of load on distractor component raises some interesting questions around the dynamics of lateralised positivities recorded in this task and others. Although it is possible that the main effect of load is the result of a number of independent distractor related processes being affected as load increases, it is parsimoniously explained by positing the presence of an extended positivity to distractors in the average ERP that overlaps with all other components. At the single trial level, this could reflect the presence of a sustained lateralised positivity, the bulk of which is masked by a series of overlapping, punctuated, lateralised negativities. In this case, the Ptc and Pd would represent those portions of time at which the positivity is observable over competing negativities. Alternatively, the lateralised positivity we recorded may be short in duration but highly variable in latency across trials, therefore the sustained positivity in the average waveform is the product of convolving this variable signal across the epoch. In both cases, the interpretation of our results remains the same; that increased working memory load impacts specifically on the amplitude of the lateralised positivity to distractors. The main effect however does support the use of signed area approaches for quantifying the amplitude of these lateralised positivities as suggested by @sawaki_common_2012. Whether the lateralised positivity is a large sustained component, or highly variable across trials, the signed-area approach would be well suited to capturing and quantifying its amplitude.
 
-With respect to individual differences in performance on the visual search task and the working memory task, the effects are more broad. Under low load, individuals who perform faster on the visual search task appeared to have larger lateralised positivities in response to both targets and distractors, as well as smaller lateralised negativities to distractors. This finding indicates that an important individual characteristic that is related to response times under low load is stimulus disengagement. Whether an object is a target or distractor, the larger the disengagement signal, the faster a participant can respond in the visual search task. It's worth nothing that faster response times do not appear to come at the expense of accuracy on the task as demonstrated by a lack of correlation between speed and accuracy. The correlation with distractor negativities also confirms that individuals who attend to and store the distractor representation less, gain an advantage in target response times. Under high load, the relationships between distractor processing and performance as well as target positivty and performance disappear. Instead we observe that increased target negativity is related to more accurate responses on the visual search task. These results are consistent with the within-subject effects in that they demonstrate increased lateralised positivities are associated with better performance. However the findings introduce the possibility of target disengagement being an important factor for distinguishing individuals.
+With respect to individual differences in performance on the visual search task and the working memory task, the effects are more broad. Under low load, individuals who perform faster on the visual search task appeared to have larger lateralised positivities in response to both targets and distractors, as well as smaller lateralised negativities to distractors. This finding indicates that an important individual characteristic that is related to response times under low load is stimulus disengagement. Whether an object is a target or distractor, the larger the disengagement signal, the faster a participant can respond in the visual search task. It's worth nothing that faster response times do not appear to come at the expense of accuracy on the task as demonstrated by a lack of correlation between speed and accuracy. The correlation with distractor negativities also confirms that individuals who attend to and store the distractor representation less, gain an advantage in target response times. Under high load, the relationships between distractor processing and performance as well as target positivty and performance disappear. Instead we observe that increased target negativity is related to more accurate responses on the visual search task. These results are consistent with the within-subject effects in that they demonstrate increased lateralised positivities are associated with better performance. However the findings introduce the possibility of target disengagement being an important factor for distinguishing between individuals.
 
 Previous research by @gaspar_inability_2016 took advantage of lateralised ERP components in order to interrogate the relationship between working memory capacity and selective attention. In their experiment, working memory capacity was measured in a change detection task that was performed separate to the visual search task used to evoke the lateralised components. @gaspar_inability_2016 showed that positivity to distractors was correlated with working memory capacity yet there was no evidence for a relationship between target processing and working memory capacity. At first glance, our between subjects analyses appear to contradict the results of @gaspar_inability_2016 because we found relationships between individual performance and the processing of both target and distractors. However, differences in both task design and analysis between our study and that of @gaspar_inability_2016 could account for differences in the results. For instance, our study explored correlations between component amplitudes and performance on the visual search task, not the working memory task. In fact, when we looked at the relationship between component amplitude and working memory performance, the only significant effect we observed was between distractor processing and working memory response times in the low load condition. Gaspar and colleagues correlated ERP measures and performance across two independent tasks, whereas the tasks in our study were performed concurrently. Given the changes we observed in our correlations between performance and latearlised component amplitude across load conditions, we wouldn't expect our correlational findings to be consistent with those from the task used by @gaspar_inability_2016 (which would represent a no load condition).
 
-Unexpectedly we detected an early positivity in the lateralised response to targets. Although the P1pc has been observed in other paradigms, its functional role is less well understood and current hypotheses to explain the occurrence of a P1pc don't seem to apply to the current findings. One feature of visual search tasks which can elicit a P1pc is sensory imbalance across the visual display.X. If a lateralised target is presented without a matching ipsilateral stimulus then we would observe an increased P1 contralateral to the laterealised target which would manifest in the lateralised ERPs as P1pc, In our task, all targets were presented opposite gray fillers which were physically matched for luminence. While this in itself is not guaranteed to prevent the target colour from eliciting a larger P1, the lack of any P1pc for distractors in our task (which had the exact same colours as targets and in the same proportions) suggests that the P1pc is not a result of stimulus imbalance. Alternatively, growing evidence suggests that P1pc may be elicited in response to stimulus change.X. Although the target colour did change across trials there are a couple of reasons it is unlikely to explain the P1pc in our task. First, target colour changed at the exact same frequency as distractor colour which did not elicit a P1pc. Second, the target-decoy task used in in our study is a replication of the task used by Hilimire 2011 .X. who did not record a P1pc to targets. The P1pc we observe in our task is therefore likely to be a result of including a concurrent working memory task.
+Unexpectedly we detected an early positivity in the lateralised response to targets. Although the P1pc has been observed in other paradigms, its functional role is less well understood and current hypotheses to explain the occurrence of a P1pc don't seem to apply to the current findings. One feature of visual search tasks which can elicit a P1pc is sensory imbalance across the visual display [@edwards_scalp_1987]. If a luminant stimulus is presented in one visual field, without a luminance matched stimulus in the opposite visua field location then we would observe an increased P1 contralateral to the laterealised target which would manifest in the lateralised ERPs as P1pc. In our task, all targets were presented opposite gray fillers which were physically matched for luminence. While this in itself is not guaranteed to prevent the target colour from eliciting a larger P1, the lack of any P1pc for distractors in our task (which had the exact same colours as targets and in the same proportions) suggests that the P1pc is not a result of stimulus imbalance. Alternatively, growing evidence suggests that P1pc may be elicited in response to stimulus change [@verleger_time-course_2012]. Although the target colour did change across trials there are a couple of reasons it is unlikely to explain the P1pc in our task. First, target colour changed at the exact same frequency as distractor colour which did not elicit a P1pc. Second, the target-decoy task used in in our study is a replication of the task used by @hilimire_dynamics_2011 who did not record a P1pc to targets. The P1pc we observe in our task is therefore likely to be a result of including a concurrent working memory task.
 
 One possibility for how the working memory task could be causing a target P1pc in our target-decoy task is that the P1pc that we measured in our task is functionally distinct from the P1pc that has been investigated by other researchers. The P1pc in our task occured slightly later than the typically observed P1pc in other studies and may be related to the process of stimulus disengagement that we typically associate with the Ptc. One potential source of evidence for this is that the target positivity appears to have similar relationships to other components and to behaviour that we observe for the distractor positivity. For example, target positivity is inversely correlated with target negativity. This is also the case for distractor positivity and distractor negativity. Target positivity is also inversely correlated with visual search response times under low load but not under high load, mirroring the correlations we see between distractor positivity and behaviour. Another source of evidence that target positivity in our task reflects disengagement is that under low load, the correlation between target and distractor positivity is approaching significance (see table\ \@ref(tab:lowCorrelationTable)), indicating that individuals with a larger distractor positivity also tend to have a larger target positivity. Although previous studies have found a Ptc elicited by targets, it has not been observed in as early a time window as in our study. The role of a concurrent working memory task in eliciting an early, target related positivity, and the functional significance of this component requires further investigation.
 
 # Conclusion
 
-Research investigating the relationship between working memory and selective attention has been equivocal about the specific attentional process that is impaired by reduced working memory availability. The recent ERP literature has identified a set of components that allow us to measure specific attentional processes that are otherwise difficult to dissociate. Recent research by @fukuda_individual_2011 and @gaspar_inability_2016 has started to converge on the idea that individual working memory capacity is specifically related to processes of distractor disengagement. Our design complements these results and supports a framework for working memory and selective attention interactions which focuses on the concept of working memory availability. Not only do individuals with low working memory availability have impaired distractor disengagement, our results demonstrate that when working memory availability is manipulated within an individual, it is similarly their ability to disengage from distractors which is impaired.
+Research investigating the relationship between working memory and selective attention has been equivocal about the specific attentional process that is impaired by reduced working memory availability. The recent ERP literature has identified a set of components that allow us to measure specific attentional processes that are otherwise difficult to dissociate. Experiments by @fukuda_individual_2011 and @gaspar_inability_2016 have started to converge on the idea that individual working memory capacity is specifically related to processes of distractor disengagement. Our design complements these results and supports a framework for working memory and selective attention interactions which focuses on the concept of working memory availability. Not only do individuals with low working memory availability have impaired distractor disengagement, our results demonstrate that when working memory availability is manipulated within an individual, it is similarly their ability to disengage from distractors which is impaired.
 
 # Notes
 
