@@ -1,6 +1,6 @@
 ---
 title             : "Working memory availability affects neural indices of distractor processing during visual search"
-shorttitle        : "Attentional ERPs under varied working memory load" #This is the running header
+shorttitle        : "Working memory availability affects distractor processing" #This is the running header
 
 author: 
   - name          : "Dion Henare"
@@ -280,11 +280,11 @@ targPlot
 dev.off()
 ```
 
-```{r distERPs, fig.cap = "Event-related potentials showing the lateralized response to distractors under high and low load. Each component was calculated from the average of a slightly different cluster of electrodes (based on the condition averaged scalp topography of that component's time window).", fig.align = "center"}
+```{r distERPs, fig.cap = "Subtracted event-related potentials showing the lateralized response to distractors under high and low load. Each component was calculated from the average of a slightly different cluster of electrodes (based on the condition averaged scalp topography of that component's time window).", fig.align = "center"}
 include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/SAWMLOAD_distERPs.pdf", auto_pdf = TRUE)
 ```
 
-```{r targERPs, fig.cap = "Event-related potentials showing the lateralized response to targets under high and low load. Each component was calculated from the average of a slightly different cluster of electrodes (based on the condition averaged scalp topography of that component's time window).", fig.align = "center"}
+```{r targERPs, fig.cap = "Subtracted event-related potentials showing the lateralized response to targets under high and low load. Each component was calculated from the average of a slightly different cluster of electrodes (based on the condition averaged scalp topography of that component's time window).", fig.align = "center"}
 include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/SAWMLOAD_targERPs.pdf", auto_pdf = TRUE)
 ```
 
@@ -528,11 +528,11 @@ include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/SAWMLOAD_lowSca
 include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/SAWMLOAD_highScatterPlot.pdf", auto_pdf = TRUE)
 ```
 
-```{r correlogramLow, fig.cap = "Correlogram showing the direction and strength of all significant correlations between behavioral and neural measures under low working memory load.", fig.align = "center"}
+```{r correlogramLow, fig.cap = "Correlogram showing the direction and strength of all significant correlations between behavioral and neural measures under low working memory load. WM = working memory task, VS = visual search task, Acc = accuracy, RT = response time, Targ = lateralized target response, Dist = lateralized distractor response, P = positive area, N = negative area.", fig.align = "center"}
 include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/lowCorrelogram.pdf", auto_pdf = TRUE)
 ```
 
-```{r correlogramHigh, fig.cap = "Correlogram showing the direction and strength of all significant correlations between behavioral and neural measures under high working memory load.", fig.align = "center"}
+```{r correlogramHigh, fig.cap = "Correlogram showing the direction and strength of all significant correlations between behavioral and neural measures under high working memory load. WM = working memory task, VS = visual search task, Acc = accuracy, RT = response time, Targ = lateralized target response, Dist = lateralized distractor response, P = positive area, N = negative area.", fig.align = "center"}
 include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/highCorrelogram.pdf", auto_pdf = TRUE)
 ```
 
@@ -610,6 +610,8 @@ This could reflect either a sustained positivity on a trial by trial basis, or a
 
 EEG suggests that behavioral impairments under high load are a result of difficulties with distractor disengagement. Usually we see people perform worse in the target-decoy task when the target is lateralized, perhaps because pople preferentiialy search the the midline first. Taken together, this should mean that the effect of working memory load on behavioral performance should be larger for target lateralized trials than for distractor lateraliesd trials (in target lateralized trials, participants are much more likely to attend to the distracto first as it's on the midline, therefore their ability to disengage from distractors is more important).
 WAIT THOUGH! People are still responding to targets and it's those responses that are slowed so at a minimum N2pc latency should be effected by working memory load even if that's ultimately because of impaired distractor disengagement.
+
+For such papers, the editorial board encourages authors to report the internal reliability of psychophysiological measures whenever possible (e.g., correlation between odd and even trials), as well as the reliability of the instruments used to assess the individual differences. Such reliability estimates depend on the population and measurement context, so these should also be mentioned. 
 
 \newpage 
 
