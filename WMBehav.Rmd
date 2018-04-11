@@ -1,40 +1,36 @@
 ---
-title             : "The title"
-shorttitle        : "Title"
+title             : "Working memory capacity in the change detection task is effected by the number of irrelevant objects in the display"
+shorttitle        : "Effects of distractor number on change detection"
 
 author: 
-  - name          : "First Author"
+  - name          : "Dion T. Henare"
     affiliation   : "1"
     corresponding : yes    # Define only one corresponding author
-    address       : "Postal address"
-    email         : "my@email.com"
-  - name          : "Ernst-August Doelle"
-    affiliation   : "1,2"
+    address       : "School of Psychology, University of Auckland, Private Bag 92019, Auckland 1010, New Zealand"
+    email         : "dion.henare@auckland.ac.nz"
+  - name          : "Paul M. Corballis"
+    affiliation   : "1"
 
 affiliation:
   - id            : "1"
-    institution   : "Wilhelm-Wundt-University"
-  - id            : "2"
-    institution   : "Konstanz Business School"
+    institution   : "School of Psychology, Univeristy of Auckland"
 
 author_note: |
-  Add complete departmental affiliations for each author here. Each new line herein must be indented, like this line.
-
-  Enter author note here.
+  School of Psychology, University of Auckland, Private Bag 92019, Auckland 1010, New Zealand
 
 abstract: |
   Enter abstract here. Each new line herein must be indented, like this line.
   
-keywords          : "keywords"
+keywords          : "working memory capacity, change detection, delayed matching to sample, distraction, filtering"
 wordcount         : "X"
 
-bibliography      : ["r-references.bib"]
+bibliography      : ["WMBehav-references.bib"]
 
 figsintext        : no
 figurelist        : no
 tablelist         : no
 footnotelist      : no
-lineno            : yes
+lineno            : no
 mask              : no
 
 class             : "man"
