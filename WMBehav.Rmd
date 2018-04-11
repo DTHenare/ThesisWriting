@@ -1,0 +1,285 @@
+---
+title             : "The title"
+shorttitle        : "Title"
+
+author: 
+  - name          : "First Author"
+    affiliation   : "1"
+    corresponding : yes    # Define only one corresponding author
+    address       : "Postal address"
+    email         : "my@email.com"
+  - name          : "Ernst-August Doelle"
+    affiliation   : "1,2"
+
+affiliation:
+  - id            : "1"
+    institution   : "Wilhelm-Wundt-University"
+  - id            : "2"
+    institution   : "Konstanz Business School"
+
+author_note: |
+  Add complete departmental affiliations for each author here. Each new line herein must be indented, like this line.
+
+  Enter author note here.
+
+abstract: |
+  Enter abstract here. Each new line herein must be indented, like this line.
+  
+keywords          : "keywords"
+wordcount         : "X"
+
+bibliography      : ["r-references.bib"]
+
+figsintext        : no
+figurelist        : no
+tablelist         : no
+footnotelist      : no
+lineno            : yes
+mask              : no
+
+class             : "man"
+output            : papaja::apa6_pdf
+---
+
+```{r load_packages, include = FALSE}
+library("papaja")
+library(dplyr)
+library(ggplot2)
+library(afex)
+```
+
+```{r load_raw_data, incude = FALSE}
+#Find all files
+filePath <- "P:/dhen061/WMBehav-RawFolder/data/"
+files <- list.files(path = filePath, pattern = ".csv")
+#load the first one and get the variable names
+allData <- read.csv(file=paste(filePath,files[1], sep=""), header=TRUE, sep=",")
+allData <- subset(allData, select = c(targetColour, DistNum, matchType, targetNum, CorrAns, key_resp_2.keys, key_resp_2.rt))
+#delete data so we just have a dataframe with the relevant variables
+allData <- allData[0,]
+#set PID to 1
+pid = 1
+
+#Loop through the files, load them , and if there are 720 (as should be the case), add the PID and append to dataframe
+for (file in files){
+  curData <- read.csv(file=paste(filePath,file, sep=""), header=TRUE, sep=",")
+  curData <- filter(curData,  !is.na(curData$trials.thisRepN))
+  curData <- subset(curData, select = c(targetColour, DistNum, matchType, targetNum, CorrAns, key_resp_2.keys, key_resp_2.rt))
+  if (nrow(curData) == 720) {
+    curData$PID <- pid
+    allData <- rbind(allData,curData)
+    pid = pid+1
+  } else {
+    #If file doesn't have 720 rows, print the name
+    print(file)
+  }
+}
+```
+
+```{r tidy_data, include = FALSE}
+#Tidy the data, remove non-response trials, and calculate correct response column
+allData <- filter(allData, !allData$key_resp_2.keys=="None")
+allData$CorrAns <- factor(allData$CorrAns)
+allData$key_resp_2.keys <- factor(allData$key_resp_2.keys)
+allData$correctResponse <- as.integer(allData$CorrAns==allData$key_resp_2.keys)
+
+#Participant rejection
+participants <- group_by(allData,PID)
+numberOfTrials <- summarise(participants, nrow=NROW(correctResponse))
+#Which participants have less than 700 trials meaning over 20 non-responses
+pFails <- numberOfTrials$PID[numberOfTrials$nrow<700]
+#remove failed participants
+for (subj in 1:length(pFails)) {
+  allData <- allData[!allData$PID==pFails[subj],]
+}
+#Which participnats have <60% accuracy in 2 targ 0 dist condition
+easyCond <- filter(allData, targetNum==2 & DistNum==0)
+easyAccuracy <- summarise(group_by(easyCond,PID), avg=mean(correctResponse))
+pFails <- easyAccuracy$PID[easyAccuracy$avg<0.60]
+for (subj in 1:length(pFails)) {
+  allData <- allData[!allData$PID==pFails[subj],]
+}
+#check remaining
+summary(as.factor(allData$PID))
+length(summary(as.factor(allData$PID)))
+```
+
+```{r create_measure, include = FALSE}
+#Create hits column and FA column
+allData$hits <- as.integer(allData$CorrAns=="m" & allData$key_resp_2.keys=="m")
+allData$FA <- as.integer(allData$CorrAns=="x" & allData$key_resp_2.keys=="m")
+
+#Create summary table
+participants <- group_by(allData,PID, targetNum, DistNum)
+#Get number of hits and false alarms and calculate pashlers K
+#Apply loglinear approach to prevent Hit rate and FA rate of 1 or 0 (Hautus,1995)
+summaryTable <- summarise(participants, hits=sum(hits)+0.5, fa=sum(FA)+0.5, possHits=sum(as.integer(CorrAns=="m"))+1, possFA=sum(as.integer(CorrAns=="x"))+1)
+summaryTable$hitProp <- summaryTable$hits/summaryTable$possHits
+summaryTable$faProp <- summaryTable$fa/summaryTable$possFA
+#calculate capacity pashlers K
+summaryTable$pashlerK <- summaryTable$targetNum*((summaryTable$hitProp-summaryTable$faProp)/(1-summaryTable$faProp))
+
+#Separate fixed and variable blocks
+fixNames <- c("0", "2","4","6")
+fixed.Vals <- filter(summaryTable, DistNum %in% fixNames)
+varNames <- c("targEqual","targOpp")
+var.Vals <- filter(summaryTable, DistNum %in% varNames)
+var.Vals$numDist <- ifelse(var.Vals$DistNum=="targEqual",var.Vals$targetNum,8-var.Vals$targetNum)
+var.Vals$Block <- var.Vals$DistNum
+#fix up factors in fix v var mat
+fixVmat.Vals <- filter(summaryTable, DistNum == "targEqual" | (DistNum=="2" & targetNum==2) | (DistNum=="4" & targetNum==4)  | (DistNum=="6" & targetNum==6))
+fixVmat.Vals$numDist <- fixVmat.Vals$DistNum
+fixVmat.Vals$numDist[fixVmat.Vals$DistNum=="targEqual"] <- fixVmat.Vals$targetNum[fixVmat.Vals$DistNum=="targEqual"]
+fixVmat.Vals$Block <- fixVmat.Vals$DistNum
+levels(fixVmat.Vals$Block) <- c(levels(fixVmat.Vals$Block),"fixed")
+fixVmat.Vals$Block[fixVmat.Vals$Block!="targEqual"] <- 'fixed'
+fixVmat.Vals$Block <- factor(fixVmat.Vals$Block)
+fixVmat.Vals$numDist <- factor(fixVmat.Vals$numDist)
+#Fix up factors in fix v var opp
+fixVopp.Vals <- filter(summaryTable, DistNum == "targOpp" | (DistNum=="2" & targetNum==6) | (DistNum=="4" & targetNum==4)  | (DistNum=="6" & targetNum==2))
+fixVopp.Vals$numDist <- fixVopp.Vals$DistNum
+fixVopp.Vals$numDist[fixVopp.Vals$DistNum=="targOpp"] <- 8-fixVopp.Vals$targetNum[fixVopp.Vals$DistNum=="targOpp"]
+fixVopp.Vals$Block <- fixVopp.Vals$DistNum
+levels(fixVopp.Vals$Block) <- c(levels(fixVopp.Vals$Block),"fixed")
+fixVopp.Vals$Block[fixVopp.Vals$Block!="targOpp"] <- 'fixed'
+fixVopp.Vals$Block <- factor(fixVopp.Vals$Block)
+```
+
+# Introduction
+Woring memory is central to functioning and important for stuff like fluid intelligence, attention, IQ or whatever.
+change detection tasks are popular for measuring WM capacity across individuals.
+Many variations in change detection tasks. Pashler vs Cowan
+working memory related to attention and specificaly distractor filtering things.
+Estimates of capacity may be effected by the number of distractors that are presented in the change detection task - our study.
+trial-to-trial context effets working memory so distractor effect may also be mediated by context - our study.
+
+
+# Results
+## Capacity
+### Fixed distractors
+#### Targets
+```{r capacity_fixedonly_targets, echo=FALSE}
+capacity.fixedonly.targets.aov <- aov_ez(
+  data = fixed.Vals,
+  dv = "pashlerK",
+  id = "PID", 
+  within = "targetNum"
+)
+summary(capacity.fixedonly.targets.aov)
+capacity.fixedonly.targets.targmain <- pairs(emmeans(capacity.fixedonly.targets.aov, ~ targetNum))
+summary(capacity.fixedonly.targets.targmain)
+```
+Results show that as number of targets increases, capacity estimates increase as well (2 sig> 4 sig> 6). This is a feature of the math used to calculate capacity where estimates are limited to half of the number of targets displayed. This means that as number of targets increases, we are able to estimate higher values for capacity and this is reflected in the results here. It's not that capacity is increased in trials with more targets, it's that we are able to estimate larger capacities in trials with more targets.
+
+#### Distractors
+```{r fcapacity_fixedonly_distractors, echo=FALSE}
+capacity_fixedonly_distractors.aov <- aov_ez(
+  data = fixed.Vals,
+  dv = "pashlerK",
+  id = "PID", 
+  within = c("DistNum")
+)
+summary(capacity_fixedonly_distractors.aov)
+capacity.fixedonly.targets.distmain <- pairs(emmeans(capacity_fixedonly_distractors.aov, ~ DistNum))
+summary(capacity.fixedonly.targets.distmain)
+```
+Results show that when distractors are added to the encoding and retrieval displays, capacity estimates drop. The effect is graded where 0 dist is not sig diff from 2 dist but 0 is signif diff from 4 and 6 dist. 2 dist is sig diff from 4 dist and is sig diff to 6 dist. there is no sig diff between 4 and 6 dist. (as dist number increases, capacity estimates are dropping)
+
+### Variable distractors
+#### Targets
+```{r capacity_variableonly_targets, echo=FALSE}
+capacity.variableonly.targets.aov <- aov_ez(
+  data = var.Vals,
+  dv = "pashlerK",
+  id = "PID", 
+  within = c("targetNum","Block")
+)
+summary(capacity.variableonly.targets.aov)
+capacity.variableonly.targets.targmain <- pairs(emmeans(capacity.variableonly.targets.aov, ~ targetNum))
+summary(capacity.variableonly.targets.targmain)
+#Interaction
+var.DISTbyBLOCK.capacity.posthoc <- pairs(emmeans(var.distractor.capacity.aov, ~ numDist|Block))
+var.BLOCKbyDIST.capacity.posthoc <- pairs(emmeans(var.distractor.capacity.aov, ~ Block|numDist))
+#Interaction table
+summary(var.DISTbyBLOCK.capacity.posthoc)
+summary(var.BLOCKbyDIST.capacity.posthoc)
+```
+#### Distractors
+```{r capacity_variableonly_distractors, echo=FALSE}
+capacity.variableonly.distractors.aov <- aov_ez(
+  data = var.Vals,
+  dv = "pashlerK",
+  id = "PID", 
+  within = c("numDist","Block")
+)
+summary(capacity.variableonly.distractors.aov)
+#Interaction
+capacity.variableonly.distractors.distXblock <- pairs(emmeans(capacity.variableonly.distractors.aov, ~ numDist|Block))
+capacity.variableonly.distractors.blockXdist <- pairs(emmeans(capacity.variableonly.distractors.aov, ~ Block|numDist))
+#Interaction table
+summary(capacity.variableonly.distractors.distXblock)
+summary(capacity.variableonly.distractors.blockXdist)
+```
+
+### Fixed vs. variable distractor blocks (block context effect)
+Now we wanna test whether there is a difference between having distractor number fixed across a block, versus varying trial by trial within a block. We compared trial types which were identical in terms of number of targets and distractors but differed with respect to whether they ocurred in a block where distractor number was fixed or variable. There were two types of variable blocks. One in which the number of distractors always matched the number of targets within the block (ie, 2 targets with 2 distractors, 4 targets with 4 distractors, or 6 targets with 6 distractors). We refer to this as the match distractor block. In the other, the total number of objec ts on screen was fixed across the block and therefore the number of distractors was always the inverse of the number of target (ie, 2 targets with 6 distractors, 4 targets with 4 distractors, or 6 targets with 2 distractors). We refer to this as the inverse distractor block. A separate analysis was performed in order to compare the match distractor block with the fixed condition, and the inverse distractor block with the fixed condition.
+#### Fixed vs. matched block
+```{r capacity_fixVmatch_distractors, echo=FALSE}
+capacity.fixVmatch.distractors.aov <- aov_ez(
+  data = fixVmat.Vals,
+  dv = "pashlerK",
+  id = "PID", 
+  within = c("numDist", "Block")
+)
+summary(capacity.fixVmatch.distractors.aov)
+#Interaction
+capacity.fixVmatch.distractors.distXblock <- pairs(emmeans(capacity.fixVmatch.distractors.aov, ~ numDist|Block))
+capacity.fixVmatch.distractors.blockXdist <- pairs(emmeans(capacity.fixVmatch.distractors.aov, ~ Block|numDist))
+#Interaction table
+summary(capacity.fixVmatch.distractors.distXblock)
+summary(capacity.fixVmatch.distractors.blockXdist)
+
+#Plot data
+fixVmat.violin <- ggplot(data=fixVmat.Vals, aes( x=numDist,y=pashlerK, fill=Block)) +
+  geom_violin( position = position_dodge(width = 1), scale = "width") +
+  scale_fill_manual(values=c("#FFFFFF", "#999999")) +
+  geom_boxplot(width=0.1, position = position_dodge(width = 1)) +
+  scale_y_continuous(name ="Capacity (K)",limits = c(-2, 6)) +
+  theme_apa()
+
+```
+Results show an interaction between block context and distractor effect. Follow ups show that there is an increasing 
+#### Fixed vs. opposite block
+```{r capacity_fixVopp_distractors, echo=FALSE}
+capacity.fixVopp.distractors.aov <- aov_ez(
+  data = fixVopp.Vals,
+  dv = "pashlerK",
+  id = "PID", 
+  within = c("numDist","Block")
+)
+summary(capacity.fixVopp.distractors.aov)
+
+var.distractor.capacity.posthoc <- pairs(emmeans(fix_v_mat.capacity.aov, ~ numDist))
+summary(var.distractor.capacity.posthoc)
+
+#Plot data
+fixVopp.violin <- ggplot(data=fixVopp.Vals, aes( x=numDist,y=pashlerK, fill=Block)) +
+  geom_violin( position = position_dodge(width = 1), scale = "width") +
+  scale_fill_manual(values=c("#FFFFFF", "#999999")) +
+  geom_boxplot(width=0.1, position = position_dodge(width = 1)) +
+  scale_y_continuous(name ="Capacity (K)",limits = c(-2, 6)) +
+  theme_apa()
+```
+
+# Discussion
+
+
+\newpage
+
+# References
+```{r create_r-references}
+r_refs(file = "r-references.bib")
+```
+
+\setlength{\parindent}{-0.5in}
+\setlength{\leftskip}{0.5in}
