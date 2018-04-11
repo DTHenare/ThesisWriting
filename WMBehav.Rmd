@@ -1,5 +1,5 @@
 ---
-title             : "Working memory capacity in the change detection task is effected by the number of irrelevant objects in the display"
+title             : "Working memory capacity in a change detection task is effected by the number of irrelevant objects in the display"
 shorttitle        : "Effects of distractor number on change detection"
 
 author: 
@@ -83,17 +83,17 @@ allData$correctResponse <- as.integer(allData$CorrAns==allData$key_resp_2.keys)
 participants <- group_by(allData,PID)
 numberOfTrials <- summarise(participants, nrow=NROW(correctResponse))
 #Which participants have less than 700 trials meaning over 20 non-responses
-pFails <- numberOfTrials$PID[numberOfTrials$nrow<700]
+nonRespFails <- numberOfTrials$PID[numberOfTrials$nrow<700]
 #remove failed participants
-for (subj in 1:length(pFails)) {
-  allData <- allData[!allData$PID==pFails[subj],]
+for (subj in 1:length(nonRespFails)) {
+  allData <- allData[!allData$PID==nonRespFails[subj],]
 }
 #Which participnats have <60% accuracy in 2 targ 0 dist condition
 easyCond <- filter(allData, targetNum==2 & DistNum==0)
 easyAccuracy <- summarise(group_by(easyCond,PID), avg=mean(correctResponse))
-pFails <- easyAccuracy$PID[easyAccuracy$avg<0.60]
-for (subj in 1:length(pFails)) {
-  allData <- allData[!allData$PID==pFails[subj],]
+accuracyFails <- easyAccuracy$PID[easyAccuracy$avg<0.60]
+for (subj in 1:length(accuracyFails)) {
+  allData <- allData[!allData$PID==accuracyFails[subj],]
 }
 #check remaining
 summary(as.factor(allData$PID))
@@ -151,10 +151,14 @@ trial-to-trial context effets working memory so distractor effect may also be me
 
 
 # Results
+
 ## Capacity
+
 ### Fixed distractors
+
 #### Targets
-```{r capacity_fixedonly_targets, echo=FALSE}
+
+```{r capacity_fixedonly_targets, include = FALSE, echo=FALSE}
 capacity.fixedonly.targets.aov <- aov_ez(
   data = fixed.Vals,
   dv = "pashlerK",
@@ -165,10 +169,11 @@ summary(capacity.fixedonly.targets.aov)
 capacity.fixedonly.targets.targmain <- pairs(emmeans(capacity.fixedonly.targets.aov, ~ targetNum))
 summary(capacity.fixedonly.targets.targmain)
 ```
+
 Results show that as number of targets increases, capacity estimates increase as well (2 sig> 4 sig> 6). This is a feature of the math used to calculate capacity where estimates are limited to half of the number of targets displayed. This means that as number of targets increases, we are able to estimate higher values for capacity and this is reflected in the results here. It's not that capacity is increased in trials with more targets, it's that we are able to estimate larger capacities in trials with more targets.
 
 #### Distractors
-```{r fcapacity_fixedonly_distractors, echo=FALSE}
+```{r fcapacity_fixedonly_distractors, include = FALSE, echo=FALSE}
 capacity_fixedonly_distractors.aov <- aov_ez(
   data = fixed.Vals,
   dv = "pashlerK",
@@ -179,11 +184,14 @@ summary(capacity_fixedonly_distractors.aov)
 capacity.fixedonly.targets.distmain <- pairs(emmeans(capacity_fixedonly_distractors.aov, ~ DistNum))
 summary(capacity.fixedonly.targets.distmain)
 ```
+
 Results show that when distractors are added to the encoding and retrieval displays, capacity estimates drop. The effect is graded where 0 dist is not sig diff from 2 dist but 0 is signif diff from 4 and 6 dist. 2 dist is sig diff from 4 dist and is sig diff to 6 dist. there is no sig diff between 4 and 6 dist. (as dist number increases, capacity estimates are dropping)
 
 ### Variable distractors
+
 #### Targets
-```{r capacity_variableonly_targets, echo=FALSE}
+
+```{r capacity_variableonly_targets,include = FALSE, echo=FALSE}
 capacity.variableonly.targets.aov <- aov_ez(
   data = var.Vals,
   dv = "pashlerK",
@@ -193,15 +201,11 @@ capacity.variableonly.targets.aov <- aov_ez(
 summary(capacity.variableonly.targets.aov)
 capacity.variableonly.targets.targmain <- pairs(emmeans(capacity.variableonly.targets.aov, ~ targetNum))
 summary(capacity.variableonly.targets.targmain)
-#Interaction
-var.DISTbyBLOCK.capacity.posthoc <- pairs(emmeans(var.distractor.capacity.aov, ~ numDist|Block))
-var.BLOCKbyDIST.capacity.posthoc <- pairs(emmeans(var.distractor.capacity.aov, ~ Block|numDist))
-#Interaction table
-summary(var.DISTbyBLOCK.capacity.posthoc)
-summary(var.BLOCKbyDIST.capacity.posthoc)
 ```
+
 #### Distractors
-```{r capacity_variableonly_distractors, echo=FALSE}
+
+```{r capacity_variableonly_distractors,include = FALSE, echo=FALSE}
 capacity.variableonly.distractors.aov <- aov_ez(
   data = var.Vals,
   dv = "pashlerK",
@@ -219,8 +223,10 @@ summary(capacity.variableonly.distractors.blockXdist)
 
 ### Fixed vs. variable distractor blocks (block context effect)
 Now we wanna test whether there is a difference between having distractor number fixed across a block, versus varying trial by trial within a block. We compared trial types which were identical in terms of number of targets and distractors but differed with respect to whether they ocurred in a block where distractor number was fixed or variable. There were two types of variable blocks. One in which the number of distractors always matched the number of targets within the block (ie, 2 targets with 2 distractors, 4 targets with 4 distractors, or 6 targets with 6 distractors). We refer to this as the match distractor block. In the other, the total number of objec ts on screen was fixed across the block and therefore the number of distractors was always the inverse of the number of target (ie, 2 targets with 6 distractors, 4 targets with 4 distractors, or 6 targets with 2 distractors). We refer to this as the inverse distractor block. A separate analysis was performed in order to compare the match distractor block with the fixed condition, and the inverse distractor block with the fixed condition.
+
 #### Fixed vs. matched block
-```{r capacity_fixVmatch_distractors, echo=FALSE}
+
+```{r capacity_fixVmatch_distractors,include = FALSE, echo=FALSE}
 capacity.fixVmatch.distractors.aov <- aov_ez(
   data = fixVmat.Vals,
   dv = "pashlerK",
@@ -244,9 +250,11 @@ fixVmat.violin <- ggplot(data=fixVmat.Vals, aes( x=numDist,y=pashlerK, fill=Bloc
   theme_apa()
 
 ```
+
 Results show an interaction between block context and distractor effect. Follow ups show that there is an increasing 
+
 #### Fixed vs. opposite block
-```{r capacity_fixVopp_distractors, echo=FALSE}
+```{r capacity_fixVopp_distractors,include = FALSE, echo=FALSE}
 capacity.fixVopp.distractors.aov <- aov_ez(
   data = fixVopp.Vals,
   dv = "pashlerK",
@@ -255,8 +263,8 @@ capacity.fixVopp.distractors.aov <- aov_ez(
 )
 summary(capacity.fixVopp.distractors.aov)
 
-var.distractor.capacity.posthoc <- pairs(emmeans(fix_v_mat.capacity.aov, ~ numDist))
-summary(var.distractor.capacity.posthoc)
+capacity.fixVopp.distractors.distmain <- pairs(emmeans(capacity.fixVopp.distractors.aov, ~ numDist))
+summary(capacity.fixVopp.distractors.distmain)
 
 #Plot data
 fixVopp.violin <- ggplot(data=fixVopp.Vals, aes( x=numDist,y=pashlerK, fill=Block)) +
