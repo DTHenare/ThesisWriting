@@ -26,7 +26,7 @@ wordcount         : "X"
 
 bibliography      : ["WMBehav-references.bib"]
 
-figsintext        : no
+figsintext        : yes
 figurelist        : no
 tablelist         : no
 footnotelist      : no
@@ -39,9 +39,49 @@ output            : papaja::apa6_pdf
 
 ```{r load_packages, include = FALSE}
 library("papaja")
+#library(plyr)
 library(dplyr)
 library(ggplot2)
 library(afex)
+library(knitr)
+```
+
+```{r helper_functions, include=FALSE, echo=FALSE}
+summarySE <- function(data=NULL, measurevar, groupvars=NULL, na.rm=FALSE,
+                      conf.interval=.95, .drop=TRUE) {
+    library(plyr)
+
+    # New version of length which can handle NA's: if na.rm==T, don't count them
+    length2 <- function (x, na.rm=FALSE) {
+        if (na.rm) sum(!is.na(x))
+        else       length(x)
+    }
+
+    # This does the summary. For each group's data frame, return a vector with
+    # N, mean, and sd
+    datac <- ddply(data, groupvars, .drop=.drop,
+      .fun = function(xx, col) {
+        c(N    = length2(xx[[col]], na.rm=na.rm),
+          mean = mean   (xx[[col]], na.rm=na.rm),
+          sd   = sd     (xx[[col]], na.rm=na.rm)
+        )
+      },
+      measurevar
+    )
+
+    # Rename the "mean" column    
+    datac <- rename(datac, c("mean" = measurevar))
+
+    datac$se <- datac$sd / sqrt(datac$N)  # Calculate standard error of the mean
+
+    # Confidence interval multiplier for standard error
+    # Calculate t-statistic for confidence interval: 
+    # e.g., if conf.interval is .95, use .975 (above/below), and use df=N-1
+    ciMult <- qt(conf.interval/2 + .5, datac$N-1)
+    datac$ci <- datac$se * ciMult
+
+    return(datac)
+}
 ```
 
 ```{r load_raw_data, incude = FALSE}
@@ -67,7 +107,7 @@ for (file in files){
     pid = pid+1
   } else {
     #If file doesn't have 720 rows, print the name
-    print(file)
+    #print(file)
   }
 }
 ```
@@ -83,7 +123,7 @@ allData$correctResponse <- as.integer(allData$CorrAns==allData$key_resp_2.keys)
 participants <- group_by(allData,PID)
 numberOfTrials <- summarise(participants, nrow=NROW(correctResponse))
 #Which participants have less than 700 trials meaning over 20 non-responses
-nonRespFails <- numberOfTrials$PID[numberOfTrials$nrow<700]
+nonRespFails <- numberOfTrials$PID[numberOfTrials$nrow<695]
 #remove failed participants
 for (subj in 1:length(nonRespFails)) {
   allData <- allData[!allData$PID==nonRespFails[subj],]
@@ -109,7 +149,7 @@ allData$FA <- as.integer(allData$CorrAns=="x" & allData$key_resp_2.keys=="m")
 participants <- group_by(allData,PID, targetNum, DistNum)
 #Get number of hits and false alarms and calculate pashlers K
 #Apply loglinear approach to prevent Hit rate and FA rate of 1 or 0 (Hautus,1995)
-summaryTable <- summarise(participants, hits=sum(hits)+0.5, fa=sum(FA)+0.5, possHits=sum(as.integer(CorrAns=="m"))+1, possFA=sum(as.integer(CorrAns=="x"))+1)
+summaryTable <- summarise(participants, correctResponse=mean(correctResponse)*100, hits=sum(hits)+0.5, fa=sum(FA)+0.5, possHits=sum(as.integer(CorrAns=="m"))+1, possFA=sum(as.integer(CorrAns=="x"))+1)
 summaryTable$hitProp <- summaryTable$hits/summaryTable$possHits
 summaryTable$faProp <- summaryTable$fa/summaryTable$possFA
 #calculate capacity pashlers K
@@ -143,14 +183,132 @@ fixVopp.Vals$Block <- factor(fixVopp.Vals$Block)
 
 # Introduction
 Woring memory is central to functioning and important for stuff like fluid intelligence, attention, IQ or whatever.
-change detection tasks are popular for measuring WM capacity across individuals.
-Many variations in change detection tasks. Pashler vs Cowan
+
+change detection tasks are popular for measuring WM capacity across individuals. (basic outline, increasing popularity, benefits).
+
+Many variations in change detection tasks. Pashler vs Cowan.
+
 working memory related to attention and specificaly distractor filtering things.
+
 Estimates of capacity may be effected by the number of distractors that are presented in the change detection task - our study.
+
 trial-to-trial context effets working memory so distractor effect may also be mediated by context - our study.
 
+# Methods
+
+## Participants
+
+62 individuals participated. One participant did not complete the entire task and was therefore excluded from analysis. Five participants were deemed not to have performed the task properly (3 had over 25 non-responses, and two had less than 60% accuracy on a set size of two with no distractors). Leaving us with 56 individuals to be included in the analysis.
 
 # Results
+
+## Accuracy
+
+### Fixed distractor blocks
+```{r accuracy_fixedonly_targets, include=FALSE, echo=FALSE}
+accuracy.fixedonly.targanddist.aov <- aov_ez(
+  data = fixed.Vals,
+  dv = "correctResponse",
+  id = "PID", 
+  within = c("targetNum","DistNum")
+)
+summary(accuracy.fixedonly.targanddist.aov)
+#Interaction
+accuracy.fixedonly.targanddist.targXdistk <- pairs(emmeans(accuracy.fixedonly.targanddist.aov, ~ targetNum|DistNum))
+accuracy.fixedonly.targanddist.distXtarg <- pairs(emmeans(accuracy.fixedonly.targanddist.aov, ~ DistNum|targetNum))
+#Interaction table
+summary(accuracy.fixedonly.targanddist.targXdistk)
+summary(accuracy.fixedonly.targanddist.distXtarg)
+#Plot data
+accuracy.targXdist.violin <- ggplot(data=fixed.Vals, aes( x=DistNum,y=correctResponse)) +
+  geom_violin( position = position_dodge(width = 1), scale = "width", fill="gray") +
+  geom_boxplot(width=0.1, position = position_dodge(width = 1)) +
+  scale_y_continuous(name ="Accuracy (%)") +
+  facet_grid(.~targetNum) +
+  theme_apa()
+
+plotData <- summarySE(fixed.Vals, measurevar="correctResponse", groupvars=c("targetNum","DistNum"))
+
+accuracy.targXdist.bar <- ggplot(plotData, aes( x=DistNum,y=correctResponse)) + 
+  geom_bar(position=position_dodge(), stat="identity") +
+  facet_grid(.~targetNum) +
+  geom_errorbar(aes(ymin=correctResponse-se, ymax=correctResponse+se), size=0.5,   
+    width=.25,position=position_dodge(.9)) +
+  facet_grid(~targetNum, labeller = as_labeller(c(`2`="Set size 2", `4`="Set size 4", `6`="Set size 6"))) +
+  scale_y_continuous("Accuracy (%)",expand = c(0, 0), limits=c(0,100)) +
+  scale_x_discrete("Number of distractors") +
+  theme_apa()
+
+pdf("C:/Users/dhen061/Desktop/ThesisWriting/Figures/WMBehav_accuracytargXdistPlot.pdf", width = 7, paper = "special")
+accuracy.targXdist.bar
+dev.off()
+```
+
+Interaction between target number and dist number. Set size 2 > set size 4 > set size 6. For set size 2 there are no differences between dist num blocks. For est size 4 0 is different from 4 and 6 and approaching for 2. For set size 6, 0 is diff from 4 and 6, 2 is diff from 4. Figure\ \@ref(fig:accuracytargXdistPlot)
+
+```{r accuracytargXdistPlot, fig.cap = "Participant accuracy as a function of set size and number of distractors present at encoding and retrieval.", fig.align = "center"}
+include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/WMBehav_accuracytargXdistPlot.pdf", auto_pdf = TRUE)
+```
+
+### Fixed distractor vs variable distractor blocks
+#### Fixed vs targEqual
+```{r accuracy_fixVopp_distractors, include=FALSE, echo=FALSE}
+accuracy.fixVmatch.distractors.aov <- aov_ez(
+  data = fixVmat.Vals,
+  dv = "correctResponse",
+  id = "PID", 
+  within = c("numDist", "Block")
+)
+summary(accuracy.fixVmatch.distractors.aov)
+#Interaction
+accuracy.fixVmatch.distractors.distXblock <- pairs(emmeans(accuracy.fixVmatch.distractors.aov, ~ numDist|Block))
+accuracy.fixVmatch.distractors.blockXdist <- pairs(emmeans(accuracy.fixVmatch.distractors.aov, ~ Block|numDist))
+#Interaction table
+summary(accuracy.fixVmatch.distractors.distXblock)
+summary(accuracy.fixVmatch.distractors.blockXdist)
+#Plot data
+accuracy.fixVmat.violin <- ggplot(data=fixVmat.Vals, aes( x=Block,y=correctResponse)) +
+  geom_violin( position = position_dodge(width = 1), scale = "width") +
+  #scale_fill_manual(values=c("#FFFFFF", "#999999")) +
+  geom_boxplot(width=0.1, position = position_dodge(width = 1)) +
+  scale_y_continuous(name ="Accuracy (%)") +
+  facet_grid(.~numDist) +
+  theme_apa()
+
+pdf("C:/Users/dhen061/Desktop/ThesisWriting/Figures/WMBehav_accuracyfixvmatPlot.pdf", width = 7, paper = "special")
+accuracy.fixVmat.violin
+dev.off()
+```
+
+Interaction between block and distnum. within block type, accuracy graded with distnum. For distnum 2 and 4 no difference between block types. For dist 6, targEqual more accurate than fixed equivalent.
+
+#### Fixed vs targOpp
+```{r accuracy_fixVmat_distractors, include=FALSE, echo=FALSE}
+accuracy.fixVopp.distractors.aov <- aov_ez(
+  data = fixVopp.Vals,
+  dv = "correctResponse",
+  id = "PID", 
+  within = c("numDist", "Block")
+)
+summary(accuracy.fixVopp.distractors.aov)
+#Interaction
+accuracy.fixVopp.distractors.distmain <- pairs(emmeans(accuracy.fixVopp.distractors.aov, ~ numDist))
+summary(accuracy.fixVopp.distractors.distmain)
+
+#Plot data
+accuracy.fixVopp.violin <- ggplot(data=fixVopp.Vals, aes( x=Block,y=correctResponse)) +
+  geom_violin( position = position_dodge(width = 1), scale = "width", fill="gray") +
+  geom_boxplot(width=0.1, position = position_dodge(width = 1)) +
+  scale_y_continuous(name ="Accuracy (%)") +
+  facet_grid(.~numDist) +
+  theme_apa()
+
+pdf("C:/Users/dhen061/Desktop/ThesisWriting/Figures/WMBehav_accuracyfixvoppPlot.pdf", width = 7, paper = "special")
+accuracy.fixVopp.violin
+dev.off()
+```
+
+Main effect of distnum, as distnum increases accuracy goes up (because set size is going down).
 
 ## Capacity
 
@@ -183,9 +341,16 @@ capacity_fixedonly_distractors.aov <- aov_ez(
 summary(capacity_fixedonly_distractors.aov)
 capacity.fixedonly.targets.distmain <- pairs(emmeans(capacity_fixedonly_distractors.aov, ~ DistNum))
 summary(capacity.fixedonly.targets.distmain)
+
+#Plot data
+capacity.distractors.violin <- ggplot(data=fixed.Vals, aes( x=DistNum,y=pashlerK)) +
+  geom_violin( position = position_dodge(width = 1), scale = "width", fill="gray") + 
+  geom_boxplot(width=0.1, position = position_dodge(width = 1)) +
+  scale_y_continuous(name ="Capacity (K)" ) +
+  theme_apa()
 ```
 
-Results show that when distractors are added to the encoding and retrieval displays, capacity estimates drop. The effect is graded where 0 dist is not sig diff from 2 dist but 0 is signif diff from 4 and 6 dist. 2 dist is sig diff from 4 dist and is sig diff to 6 dist. there is no sig diff between 4 and 6 dist. (as dist number increases, capacity estimates are dropping)
+Results show that when distractors are added to the encoding and retrieval displays, capacity estimates drop. The effect is graded where 0 dist is not sig diff from 2 dist but 0 is signif diff from 4 and 6 dist. 2 dist is sig diff from 4 and 6 dist. There is no sig diff between 4 and 6 dist. (as dist number increases, capacity estimates are dropping)
 
 ### Variable distractors
 
@@ -202,6 +367,8 @@ summary(capacity.variableonly.targets.aov)
 capacity.variableonly.targets.targmain <- pairs(emmeans(capacity.variableonly.targets.aov, ~ targetNum))
 summary(capacity.variableonly.targets.targmain)
 ```
+
+Main effect of target, 2 < 4 < 6
 
 #### Distractors
 
@@ -220,6 +387,8 @@ capacity.variableonly.distractors.blockXdist <- pairs(emmeans(capacity.variableo
 summary(capacity.variableonly.distractors.distXblock)
 summary(capacity.variableonly.distractors.blockXdist)
 ```
+
+Interaction between dist number and block context. For targEqual 2<4<6 and for targopp 2>4>6. for dist 2, block diff is sig (euqla <opp), for 4 it isn't, for 6 it is (equal > opp).
 
 ### Fixed vs. variable distractor blocks (block context effect)
 Now we wanna test whether there is a difference between having distractor number fixed across a block, versus varying trial by trial within a block. We compared trial types which were identical in terms of number of targets and distractors but differed with respect to whether they ocurred in a block where distractor number was fixed or variable. There were two types of variable blocks. One in which the number of distractors always matched the number of targets within the block (ie, 2 targets with 2 distractors, 4 targets with 4 distractors, or 6 targets with 6 distractors). We refer to this as the match distractor block. In the other, the total number of objec ts on screen was fixed across the block and therefore the number of distractors was always the inverse of the number of target (ie, 2 targets with 6 distractors, 4 targets with 4 distractors, or 6 targets with 2 distractors). We refer to this as the inverse distractor block. A separate analysis was performed in order to compare the match distractor block with the fixed condition, and the inverse distractor block with the fixed condition.
@@ -241,6 +410,15 @@ capacity.fixVmatch.distractors.blockXdist <- pairs(emmeans(capacity.fixVmatch.di
 summary(capacity.fixVmatch.distractors.distXblock)
 summary(capacity.fixVmatch.distractors.blockXdist)
 
+#Plot  facet grid style
+fixVmat.violin.facet <- ggplot(data=fixVmat.Vals, aes( x=Block,y=pashlerK)) +
+  geom_violin( position = position_dodge(width = 1), scale = "width") +
+  #scale_fill_manual(values=c("#FFFFFF", "#999999")) +
+  geom_boxplot(width=0.1, position = position_dodge(width = 1)) +
+  scale_y_continuous(name ="Accuracy (%)") +
+  facet_grid(.~numDist) +
+  theme_apa()
+
 #Plot data
 fixVmat.violin <- ggplot(data=fixVmat.Vals, aes( x=numDist,y=pashlerK, fill=Block)) +
   geom_violin( position = position_dodge(width = 1), scale = "width") +
@@ -251,7 +429,7 @@ fixVmat.violin <- ggplot(data=fixVmat.Vals, aes( x=numDist,y=pashlerK, fill=Bloc
 
 ```
 
-Results show an interaction between block context and distractor effect. Follow ups show that there is an increasing 
+Results show an interaction between block context and distractor effect. For variable, 2<4<6, for fixed, 2<4, 2<6, 4=6. for dist 2, no diff between block, for dist 4, no diff between block, for dist 6, var>fixed 
 
 #### Fixed vs. opposite block
 ```{r capacity_fixVopp_distractors,include = FALSE, echo=FALSE}
@@ -274,6 +452,8 @@ fixVopp.violin <- ggplot(data=fixVopp.Vals, aes( x=numDist,y=pashlerK, fill=Bloc
   scale_y_continuous(name ="Capacity (K)",limits = c(-2, 6)) +
   theme_apa()
 ```
+
+Main effect of dist. 2>4>6
 
 # Discussion
 
