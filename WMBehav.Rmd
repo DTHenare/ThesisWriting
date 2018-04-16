@@ -115,46 +115,72 @@ for (file in files){
 ```
 
 ```{r tidy_data, include = FALSE}
+#Grab data for cronbachs and create correct responses (where "none is counted as incorrect")
+cronbach <- allData
+cronbach$key_resp_2.keys[cronbach$key_resp_2.keys=="None"] = ""
+cronbach$key_resp_2.keys <- factor(cronbach$key_resp_2.keys)
+cronbach$correctResponse <- as.integer(cronbach$CorrAns==cronbach$key_resp_2.keys)
+cronbach <- cronbach[order(cronbach$targetColour),]
+cronbach <- cronbach[order(cronbach$matchType),]
+cronbach <- cronbach[order(cronbach$targetNum),]
+cronbach <- cronbach[order(cronbach$DistNum),]
+cronbach <- within(cronbach, rm(targetColour,DistNum,matchType,targetNum,CorrAns,key_resp_2.keys,key_resp_2.rt))
 #Tidy the data, remove non-response trials, and calculate correct response column
 allData <- filter(allData, !allData$key_resp_2.keys=="None")
 allData$CorrAns <- factor(allData$CorrAns)
 allData$key_resp_2.keys <- factor(allData$key_resp_2.keys)
 allData$correctResponse <- as.integer(allData$CorrAns==allData$key_resp_2.keys)
 #Spit half the data
-sample = sample.split(allData$PID, SplitRatio = .5)
-odd = subset(data, sample == TRUE)
-even = subset(data, sample == FALSE)
+sample = sample.split(allData$correctResponse, SplitRatio = 0.5)
+odd = subset(allData, sample == TRUE)
+even = subset(allData, sample == FALSE)
 
 #Participant rejection
 participants <- group_by(allData,PID)
 numberOfTrials <- summarise(participants, nrow=NROW(correctResponse))
 #Which participants have less than 700 trials meaning over 20 non-responses
 nonRespFails <- numberOfTrials$PID[numberOfTrials$nrow<695]
+if (!is.null(nonRespFails)) {
 #remove failed participants
 for (subj in 1:length(nonRespFails)) {
   allData <- allData[!allData$PID==nonRespFails[subj],]
   odd <- odd[!odd$PID==nonRespFails[subj],]
-  even <- even[!odd$PID==nonRespFails[subj],]
+  even <- even[!even$PID==nonRespFails[subj],]
+  cronbach <- cronbach[!cronbach$PID==nonRespFails[subj],]
+}
 }
 #Which participnats have <60% accuracy in 2 targ 0 dist condition
 easyCond <- filter(allData, targetNum==2 & DistNum==0)
 easyAccuracy <- summarise(group_by(easyCond,PID), avg=mean(correctResponse))
 accuracyFails <- easyAccuracy$PID[easyAccuracy$avg<0.60]
+if (!is.null(accuracyFails)) {
 for (subj in 1:length(accuracyFails)) {
   allData <- allData[!allData$PID==accuracyFails[subj],]
   odd <- odd[!odd$PID==accuracyFails[subj],]
-  even <- even[!odd$PID==accuracyFails[subj],]
+  even <- even[!even$PID==accuracyFails[subj],]
+  cronbach <- cronbach[!cronbach$PID==accuracyFails[subj],]
 }
-
+}
 #check remaining
-summary(as.factor(allData$PID))
+remSubj <- as.integer(levels(as.factor(cronbach$PID)))
 length(summary(as.factor(allData$PID)))
+#create cronbach shape
+cronbachData <- as.data.frame(t(cronbach$correctResponse[cronbach$PID==1]))
+cronbachData <- cronbachData[0,]
+for (subj in remSubj) {
+  curData <- as.data.frame(t(cronbach$correctResponse[cronbach$PID==remSubj]))
+  cronbachData <- rbind(cronbachData,curData)
+}
 ```
 
 ```{r create_measure, include = FALSE}
 #Create hits column and FA column
 allData$hits <- as.integer(allData$CorrAns=="m" & allData$key_resp_2.keys=="m")
 allData$FA <- as.integer(allData$CorrAns=="x" & allData$key_resp_2.keys=="m")
+odd$hits <- as.integer(odd$CorrAns=="m" & odd$key_resp_2.keys=="m")
+odd$FA <- as.integer(odd$CorrAns=="x" & odd$key_resp_2.keys=="m")
+even$hits <- as.integer(even$CorrAns=="m" & even$key_resp_2.keys=="m")
+even$FA <- as.integer(even$CorrAns=="x" & even$key_resp_2.keys=="m")
 
 #Create summary table
 participants <- group_by(allData,PID, targetNum, DistNum)
@@ -165,6 +191,19 @@ summaryTable$hitProp <- summaryTable$hits/summaryTable$possHits
 summaryTable$faProp <- summaryTable$fa/summaryTable$possFA
 #calculate capacity pashlers K
 summaryTable$pashlerK <- summaryTable$targetNum*((summaryTable$hitProp-summaryTable$faProp)/(1-summaryTable$faProp))
+
+#Repeat calculations for split half data
+oddParticipants <- group_by(odd,PID, targetNum)
+oddTable <- summarise(oddParticipants, correctResponse=mean(correctResponse)*100, hits=sum(hits)+0.5, fa=sum(FA)+0.5, possHits=sum(as.integer(CorrAns=="m"))+1, possFA=sum(as.integer(CorrAns=="x"))+1)
+oddTable$hitProp <- oddTable$hits/oddTable$possHits
+oddTable$faProp <- oddTable$fa/oddTable$possFA
+oddTable$pashlerK <- oddTable$targetNum*((oddTable$hitProp-oddTable$faProp)/(1-oddTable$faProp))
+
+evenParticipants <- group_by(even,PID, targetNum)
+evenTable <- summarise(evenParticipants, correctResponse=mean(correctResponse)*100, hits=sum(hits)+0.5, fa=sum(FA)+0.5, possHits=sum(as.integer(CorrAns=="m"))+1, possFA=sum(as.integer(CorrAns=="x"))+1)
+evenTable$hitProp <- evenTable$hits/evenTable$possHits
+evenTable$faProp <- evenTable$fa/evenTable$possFA
+evenTable$pashlerK <- evenTable$targetNum*((evenTable$hitProp-evenTable$faProp)/(1-evenTable$faProp))
 
 #Separate fixed and variable blocks
 fixNames <- c("0", "2","4","6")
@@ -193,6 +232,27 @@ fixVopp.Vals$Block <- factor(fixVopp.Vals$Block)
 ```
 
 # Introduction
+
+Working memory is a term used to describe the active maintenance of information for brief periods of time. It is well known that there are limits to the amount of information that can be stored, and that an individual's working memory capacity is associated with a range of other important cognitive abilities. Individuals with larger working memory capacities have been shown to have better long-term memory, language comprehension, problem solving, multi-tasking, emotion regulation, and higher general fluid intelligence. Working memory capacity has also been shown to predict real-world abilities such as hazard detection in drivers. The estimation of working memory capacity is therefore increasingly important for research in all of these cognitive domains, and recent evidence has shown that capacity estimates can vary depending not only on the general paradigm being used, but the details of that paradigm [Shipstead Engle, primary secondary stuff].
+```
+"long-term memory, language comprehension, and problem solving."
+"multi-tasking (Hambrick, Oswald, Darowski, Rench, & Brou, 2010), emotion regulation (Kleider, Parrott, & King, 2009), hindsight bias (Calvillo, 2012), and susceptibility to stereotype threat (Hutchison, Smith, & Ferris, 2012). Perhaps most famously, working memory capacity shares at least half its statistical variance with general fluid intelligence (the ability to reason with novel information; Kane, Hambrick, & Conway, 2005)."
+"WM capacity predicts attentional control, fluid intelligence, and real-world outcomes such as perceiving hazards while driving (Engle, Tuholski, Laughlin, & Conway, 1999; Fukuda, Vogel, Mayr, & Awh, 2010; Wood, Hartley, Furley, & Wilson, 2016)"
+```
+
+Change detection tasks are an increasingly popular way of measuring visual working memory capacity across individuals. Change detection involves the brief presentation of an encoding display, where a number of simple objects are shown on screen for the participant to encode. This is followed by a delay period where the participant must maintain the encoded information in working memory, and then a retrieval probe is presented. The participant must indicate whether or not the retrieval probe matches the encoded stimuli. Typically, set size (the number of objects that should be encoded) is varied across trials and performance is measured using either accuracy on the task, or by estimating capacity. Capacity is quantified for a given set size is based on the proportion of hits (the number of correctly identified match probes), and the proportion of false alarms (the number of non-matches that are misidentified as matches). As a result of their short, simple structure, change detection tasks are well suited to use with developmental and clinical populations, as well as with neural recordings that require large trial numbers. Change detection tasks also translate well to paradigms used with non-human animals and taken together, these features have contributed to their rising popularity.
+```
+The reliability and stability of visual working memory capacity - for the benefits stuff.
+How to measure working memory capacity in the change detection paradigm -for the measurement of capacity
+
+```
+
+Specific incarnations of the change detection paradigm can vary significantly in terms of the type of stimuli used, and the number of stimuli that are presented at both encoding and retrieval. One of the main ways that versions of the change detection task have varied historically is with regard to the number of probes presented on the retrieval display. In the single-probed retrieval version of the task, participants are shown only one of the encoded stimuli and must therefore indicate whether that specific object has changed in any way. In the whole-display retrieval version of the task however, the entire set of encoded stimuli are presented as probes, and the participant must indicate whether any one of the stimuli have changed. Another way in which the task varies is with regard to the number of encode stimuli that need to be remembered. In some versions of the task, all of the objects presented during encoding must be remembered by the participant. In other versions of the task participants receive a cue ahead of the encoding display which indicates which subset of the encoding stimuli needs to be remembered. For example, participants may be cued to encode only the blue objects in an upcoming display which contains both blue and red stimuli. These features have been shown to effect not just the absolute capacity values reported, but the underlying cognitive mechanisms that are being tested.
+
+One of the cognitive systems which is especially important to consider when measuring working memory is selective attention. Converging evidence from both within and between-participant experiments now suggests that there is significant functional overlap between selective attention and working memory. When working memory load on an individual is increased, performance on a concurrent visual search task is impeded. Similarly, individuals who naturally possess a larger working memory capacity perform better on standard measures of attentional control like the Stroop task and the Eriksen flanker task. Modern accounts of working memory availability typically recognise this close association between attention and working memory by either incorporating elements of attentional control, or in some cases suggesting that attentional control is the primary determinant of working memory capacity. More specific investigations of this relationship using both behavioural and neural measures now suggest that is specifically the ability to disengage from irrelevant distractors which is the crucial differentiator of high and low capacity individuals.
+
+The critical role that distractor suppression plays in working memory performance raises questions around the effect that irrelevant objects may have in a change detection task. In our study, we used a cued, whole-display retrieval version of the change detection task while varying the number and proportion of targets to distractors across blocks. This allowed us to measure the effect that distraction in the change detection task has on both participant accuracy, and estimates of individual capacity. Set size varied within each block however the number of distractors remained fixed in 4 conditions (ranging from 0 distractors to 6 distractors). We also included two conditions where the number of distractors varied within a block. In one of these variable conditions, the number of distractors was simply the same as the number of targets on a given trial. In the other variable block, we sought to keep the total number of objects on screen the same, and therefore the number of distractors was always inverse to the number of targets.
+
 Woring memory is central to functioning and important for stuff like fluid intelligence, attention, IQ or whatever.
 
 change detection tasks are popular for measuring WM capacity across individuals. (basic outline, increasing popularity, benefits).
@@ -212,6 +272,13 @@ trial-to-trial context effets working memory so distractor effect may also be me
 62 individuals participated. One participant did not complete the entire task and was therefore excluded from analysis. Five participants were deemed not to have performed the task properly (3 had over 25 non-responses, and two had less than 60% accuracy on a set size of two with no distractors). Leaving us with 56 individuals to be included in the analysis.
 
 # Results
+
+## Reliability
+```{r reliability,echo=FALSE,include=FALSE}
+oddVeven.cor <- cor(oddTable$pashlerK, evenTable$pashlerK)
+```
+
+We tested the internal reliability of the capacity measure (pashler's K) by performing a correlation on capacity measured from odd and even trials. The results show an r of 0.83
 
 ## Accuracy
 
