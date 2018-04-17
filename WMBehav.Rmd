@@ -86,13 +86,14 @@ summarySE <- function(data=NULL, measurevar, groupvars=NULL, na.rm=FALSE,
 }
 ```
 
-```{r load_raw_data, incude = FALSE}
+```{r load_raw_data, incude = FALSE, echo=FALSE}
 #Find all files
 filePath <- "P:/dhen061/WMBehav-RawFolder/data/"
 files <- list.files(path = filePath, pattern = ".csv")
 #load the first one and get the variable names
 allData <- read.csv(file=paste(filePath,files[1], sep=""), header=TRUE, sep=",")
 demoData <- subset(allData, select = c(X2..Age,X1..Sex))
+demoData$X1..Sex <- as.character(demoData$X1..Sex)
 allData <- subset(allData, select = c(targetColour, DistNum, matchType, targetNum, CorrAns, key_resp_2.keys, key_resp_2.rt))
 #delete data so we just have a dataframe with the relevant variables
 allData <- allData[0,]
@@ -105,12 +106,13 @@ for (file in files){
   curData <- read.csv(file=paste(filePath,file, sep=""), header=TRUE, sep=",")
   curData <- filter(curData,  !is.na(curData$trials.thisRepN))
   curDemo <- subset(curData, select = c(X2..Age,X1..Sex))
+  curDemo$X1..Sex <- as.character(curDemo$X1..Sex)
   curData <- subset(curData, select = c(targetColour, DistNum, matchType, targetNum, CorrAns, key_resp_2.keys, key_resp_2.rt))
   if (nrow(curData) == 720) {
     curData$PID <- pid
     curDemo$PID <- pid
     allData <- rbind(allData,curData)
-    demoData <- rbind(demoData,curDemo)
+    demoData <- rbind(demoData,curDemo[1,])
     pid = pid+1
   } else {
     #If file doesn't have 720 rows, print the name
@@ -156,8 +158,6 @@ for (subj in 1:length(accuracyFails)) {
   even <- even[!even$PID==accuracyFails[subj],]
 }
 }
-#check remaining
-length(summary(as.factor(allData$PID)))
 ```
 
 ```{r create_measure, include = FALSE}
@@ -255,8 +255,25 @@ trial-to-trial context effets working memory so distractor effect may also be me
 # Methods
 
 ## Participants
+```{r demo_Analysis, echo=FALSE, include=FALSE}
+demographics <- group_by(demoData,PID, X2..Age, X1..Sex)
+#Get number of hits and false alarms and calculate pashlers K
+#Apply loglinear approach to prevent Hit rate and FA rate of 1 or 0 (Hautus,1995)
+demoTable <- summarise(demographics)
+demoTable$X1..Sex <- toupper(substr(demoTable$X1..Sex,start=1,stop=1))
+demoTable$X2..Age <- as.numeric(substr(demoTable$X2..Age,start=1,stop=2))
+demoTable$SexBin <- ifelse(demoTable$X1..Sex=="F",1,0)
 
-62 individuals participated. One participant did not complete the entire task and was therefore excluded from analysis. Five participants were deemed not to have performed the task properly (3 had over 25 non-responses, and two had less than 60% accuracy on a set size of two with no distractors). Leaving us with 56 individuals to be included in the analysis.
+meanAge <- mean(demoTable$X2..Age)
+sdAge <- sd(demoTable$X2..Age)
+minAge <- min(demoTable$X2..Age)
+maxAge <- max(demoTable$X2..Age)
+
+totalSubj <- length(summary(as.factor(demoTable$PID)))
+totalFemale <- sum(demoTable$SexBin)
+```
+
+62 individuals participated. One participant did not complete the entire task and was therefore excluded from analysis. Five participants were deemed not to have performed the task properly (3 had over 25 non-responses, and two had less than 60% accuracy on a set size of two with no distractors). Leaving us with 56 individuals (`r totalFemale` female) with an age range of `r minAge` to `r maxAge` (mean = `r meanAge` and sd = `r sdAge`) to be included in the analysis.
 
 # Results
 
