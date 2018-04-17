@@ -92,9 +92,11 @@ filePath <- "P:/dhen061/WMBehav-RawFolder/data/"
 files <- list.files(path = filePath, pattern = ".csv")
 #load the first one and get the variable names
 allData <- read.csv(file=paste(filePath,files[1], sep=""), header=TRUE, sep=",")
+demoData <- subset(allData, select = c(X2..Age,X1..Sex))
 allData <- subset(allData, select = c(targetColour, DistNum, matchType, targetNum, CorrAns, key_resp_2.keys, key_resp_2.rt))
 #delete data so we just have a dataframe with the relevant variables
 allData <- allData[0,]
+demoData <- demoData[0,]
 #set PID to 1
 pid = 1
 
@@ -102,10 +104,13 @@ pid = 1
 for (file in files){
   curData <- read.csv(file=paste(filePath,file, sep=""), header=TRUE, sep=",")
   curData <- filter(curData,  !is.na(curData$trials.thisRepN))
+  curDemo <- subset(curData, select = c(X2..Age,X1..Sex))
   curData <- subset(curData, select = c(targetColour, DistNum, matchType, targetNum, CorrAns, key_resp_2.keys, key_resp_2.rt))
   if (nrow(curData) == 720) {
     curData$PID <- pid
+    curDemo$PID <- pid
     allData <- rbind(allData,curData)
+    demoData <- rbind(demoData,curDemo)
     pid = pid+1
   } else {
     #If file doesn't have 720 rows, print the name
@@ -115,16 +120,6 @@ for (file in files){
 ```
 
 ```{r tidy_data, include = FALSE}
-#Grab data for cronbachs and create correct responses (where "none is counted as incorrect")
-cronbach <- allData
-cronbach$key_resp_2.keys[cronbach$key_resp_2.keys=="None"] = ""
-cronbach$key_resp_2.keys <- factor(cronbach$key_resp_2.keys)
-cronbach$correctResponse <- as.integer(cronbach$CorrAns==cronbach$key_resp_2.keys)
-cronbach <- cronbach[order(cronbach$targetColour),]
-cronbach <- cronbach[order(cronbach$matchType),]
-cronbach <- cronbach[order(cronbach$targetNum),]
-cronbach <- cronbach[order(cronbach$DistNum),]
-cronbach <- within(cronbach, rm(targetColour,DistNum,matchType,targetNum,CorrAns,key_resp_2.keys,key_resp_2.rt))
 #Tidy the data, remove non-response trials, and calculate correct response column
 allData <- filter(allData, !allData$key_resp_2.keys=="None")
 allData$CorrAns <- factor(allData$CorrAns)
@@ -144,9 +139,9 @@ if (!is.null(nonRespFails)) {
 #remove failed participants
 for (subj in 1:length(nonRespFails)) {
   allData <- allData[!allData$PID==nonRespFails[subj],]
+  demoData <- demoData[!demoData$PID==nonRespFails[subj],]
   odd <- odd[!odd$PID==nonRespFails[subj],]
   even <- even[!even$PID==nonRespFails[subj],]
-  cronbach <- cronbach[!cronbach$PID==nonRespFails[subj],]
 }
 }
 #Which participnats have <60% accuracy in 2 targ 0 dist condition
@@ -156,21 +151,13 @@ accuracyFails <- easyAccuracy$PID[easyAccuracy$avg<0.60]
 if (!is.null(accuracyFails)) {
 for (subj in 1:length(accuracyFails)) {
   allData <- allData[!allData$PID==accuracyFails[subj],]
+  demoData <- demoData[!demoData$PID==accuracyFails[subj],]
   odd <- odd[!odd$PID==accuracyFails[subj],]
   even <- even[!even$PID==accuracyFails[subj],]
-  cronbach <- cronbach[!cronbach$PID==accuracyFails[subj],]
 }
 }
 #check remaining
-remSubj <- as.integer(levels(as.factor(cronbach$PID)))
 length(summary(as.factor(allData$PID)))
-#create cronbach shape
-cronbachData <- as.data.frame(t(cronbach$correctResponse[cronbach$PID==1]))
-cronbachData <- cronbachData[0,]
-for (subj in remSubj) {
-  curData <- as.data.frame(t(cronbach$correctResponse[cronbach$PID==remSubj]))
-  cronbachData <- rbind(cronbachData,curData)
-}
 ```
 
 ```{r create_measure, include = FALSE}
@@ -240,18 +227,18 @@ Working memory is a term used to describe the active maintenance of information 
 "WM capacity predicts attentional control, fluid intelligence, and real-world outcomes such as perceiving hazards while driving (Engle, Tuholski, Laughlin, & Conway, 1999; Fukuda, Vogel, Mayr, & Awh, 2010; Wood, Hartley, Furley, & Wilson, 2016)"
 ```
 
-Change detection tasks are an increasingly popular way of measuring visual working memory capacity across individuals. Change detection involves the brief presentation of an encoding display, where a number of simple objects are shown on screen for the participant to encode. This is followed by a delay period where the participant must maintain the encoded information in working memory, and then a retrieval probe is presented. The participant must indicate whether or not the retrieval probe matches the encoded stimuli. Typically, set size (the number of objects that should be encoded) is varied across trials and performance is measured using either accuracy on the task, or by estimating capacity. Capacity is quantified for a given set size is based on the proportion of hits (the number of correctly identified match probes), and the proportion of false alarms (the number of non-matches that are misidentified as matches). As a result of their short, simple structure, change detection tasks are well suited to use with developmental and clinical populations, as well as with neural recordings that require large trial numbers. Change detection tasks also translate well to paradigms used with non-human animals and taken together, these features have contributed to their rising popularity.
+Change detection tasks are an increasingly popular way of measuring visual working memory capacity across individuals. Change detection involves the brief presentation of an encoding display, where a number of simple objects are shown on screen for the participant to encode. This is followed by a delay period where the participant must maintain the encoded information in working memory, and then a retrieval probe is presented. The participant must indicate whether or not the retrieval probe matches the encoded stimuli. Typically, set size (the number of objects that should be encoded) is varied across trials and performance is measured using either accuracy on the task, or by estimating capacity. Capacity is quantified for a given set size based on the proportion of hits (the number of correctly identified match probes), and the proportion of false alarms (the number of non-matches that are misidentified as matches). As a result of their short, simple structure, change detection tasks are well suited to use with developmental and clinical populations, as well as with neural recordings that require large trial numbers. Change detection tasks also translate well to paradigms used with non-human animals and taken together, these features have contributed to their rising popularity.
 ```
 The reliability and stability of visual working memory capacity - for the benefits stuff.
 How to measure working memory capacity in the change detection paradigm -for the measurement of capacity
 
 ```
 
-Specific incarnations of the change detection paradigm can vary significantly in terms of the type of stimuli used, and the number of stimuli that are presented at both encoding and retrieval. One of the main ways that versions of the change detection task have varied historically is with regard to the number of probes presented on the retrieval display. In the single-probed retrieval version of the task, participants are shown only one of the encoded stimuli and must therefore indicate whether that specific object has changed in any way. In the whole-display retrieval version of the task however, the entire set of encoded stimuli are presented as probes, and the participant must indicate whether any one of the stimuli have changed. Another way in which the task varies is with regard to the number of encode stimuli that need to be remembered. In some versions of the task, all of the objects presented during encoding must be remembered by the participant. In other versions of the task participants receive a cue ahead of the encoding display which indicates which subset of the encoding stimuli needs to be remembered. For example, participants may be cued to encode only the blue objects in an upcoming display which contains both blue and red stimuli. These features have been shown to effect not just the absolute capacity values reported, but the underlying cognitive mechanisms that are being tested.
+Specific incarnations of the change detection paradigm can vary significantly in terms of the type of stimuli used, and the number of stimuli that are presented at both encoding and retrieval. Historically, one of the main ways that change detection tasks have varied is with regard to the number of probes presented on the retrieval display. In the single-probed retrieval version of the task, participants are shown only one of the encoded stimuli and must therefore indicate whether that specific object has changed in any way. In the whole-display retrieval version of the task however, the entire set of encoded stimuli are presented as probes and the participant must indicate whether any one of the stimuli have changed. Another way in which the task varies is with regard to the number of encode stimuli that need to be remembered. In some versions of the task, all of the objects presented during encoding must be remembered by the participant. In other versions of the task participants receive a cue ahead of the encoding display which indicates which subset of the encoding stimuli needs to be remembered. For example, participants may be cued to encode only the blue objects in an upcoming display which contains both blue and red stimuli. These features have been shown to effect not just the absolute capacity values reported, but the underlying cognitive mechanisms that are being tested.
 
-One of the cognitive systems which is especially important to consider when measuring working memory is selective attention. Converging evidence from both within and between-participant experiments now suggests that there is significant functional overlap between selective attention and working memory. When working memory load on an individual is increased, performance on a concurrent visual search task is impeded. Similarly, individuals who naturally possess a larger working memory capacity perform better on standard measures of attentional control like the Stroop task and the Eriksen flanker task. Modern accounts of working memory availability typically recognise this close association between attention and working memory by either incorporating elements of attentional control, or in some cases suggesting that attentional control is the primary determinant of working memory capacity. More specific investigations of this relationship using both behavioural and neural measures now suggest that is specifically the ability to disengage from irrelevant distractors which is the crucial differentiator of high and low capacity individuals.
+One set of cognitive mechanisms that is especially important to consider when measuring working memory is selective attention. Converging evidence from both within and between-participant experiments now suggests that there is significant functional overlap between selective attention and working memory. When working memory load on an individual is increased, performance on a concurrent visual search task is impeded. Similarly, individuals who naturally possess a larger working memory capacity perform better on standard measures of attentional control like the Stroop task and the Eriksen flanker task. Modern accounts of working memory availability typically recognise this close association between attention and working memory by either incorporating elements of attentional control, or in some cases suggesting that attentional control is the primary determinant of working memory capacity. More specific investigations of this relationship using both behavioural and neural measures now suggest that it is specifically the ability to disengage from irrelevant distractors which differentiates high and low capacity individuals.
 
-The critical role that distractor suppression plays in working memory performance raises questions around the effect that irrelevant objects may have in a change detection task. In our study, we used a cued, whole-display retrieval version of the change detection task while varying the number and proportion of targets to distractors across blocks. This allowed us to measure the effect that distraction in the change detection task has on both participant accuracy, and estimates of individual capacity. Set size varied within each block however the number of distractors remained fixed in 4 conditions (ranging from 0 distractors to 6 distractors). We also included two conditions where the number of distractors varied within a block. In one of these variable conditions, the number of distractors was simply the same as the number of targets on a given trial. In the other variable block, we sought to keep the total number of objects on screen the same, and therefore the number of distractors was always inverse to the number of targets.
+The critical role that distractor suppression plays in working memory performance raises questions around the effect that irrelevant objects may have in a change detection task. In our study, we used a cued, whole-display retrieval version of the change detection task while varying the number of distractors across blocks. This allowed us to measure the effect that distraction in the change detection task has on both participant accuracy, and estimates of individual capacity. Set size varied within each block however the number of distractors remained fixed in 4 conditions (ranging from 0 distractors to 6 distractors). We also included two conditions where the number of distractors varied within a block. In one of these variable conditions, the number of distractors was simply the same as the number of targets on a given trial. In the other variable block, we sought to keep the total number of objects on screen the same, and therefore the number of distractors was always inverse to the number of targets.
 
 Woring memory is central to functioning and important for stuff like fluid intelligence, attention, IQ or whatever.
 
