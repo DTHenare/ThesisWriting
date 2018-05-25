@@ -41,7 +41,7 @@ output            : papaja::apa6_pdf #apa6_word or apa6_pdf
 
 \raggedbottom
 
-```{r load_packages, include = FALSE}
+```{r SL_load_packages, include = FALSE}
 library(papaja)
 library(reshape)
 library(dplyr)
@@ -57,7 +57,7 @@ library(gdata)
 library(cowplot)
 ```
 
-```{r helperFunctions, echo = FALSE, warning=FALSE}
+```{r SL_helperFunctions, echo = FALSE, warning=FALSE}
 corstars <-function(x, method=c("pearson", "spearman"), removeTriangle=c("upper", "lower"),
                      result=c("none", "html", "latex")){
     #Compute correlation matrix
