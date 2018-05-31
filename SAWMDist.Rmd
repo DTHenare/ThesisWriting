@@ -28,7 +28,7 @@ abstract: |
 keywords          : "keywords"
 wordcount         : "X"
 
-bibliography      : ["SAWMDist-references.bib"]
+bibliography      : ["r-references.bib"]
 
 figsintext        : no
 figurelist        : no
