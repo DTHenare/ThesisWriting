@@ -35,7 +35,7 @@ mask              : no
 
 class             : "man"
 output            : papaja::apa6_pdf
-toc: true
+#toc: true
 ---
 
 \raggedbottom
@@ -49,6 +49,8 @@ library(afex)
 library(knitr)
 library(xtable)
 library(caTools) #split-half data
+library(psych)
+library(cowplot)
 
 set.seed(4609948)
 ```
@@ -249,21 +251,21 @@ Change detection tasks are an increasingly popular way of measuring visual worki
 
 Specific incarnations of the change detection paradigm can vary significantly in terms of the type of stimuli used, and the number of stimuli that are presented at both encoding and retrieval. Historically, one of the main ways that change detection tasks have varied is with regard to the number of probes presented on the retrieval display. In the single-probed retrieval version of the task, participants are shown only one of the encoded stimuli and must therefore indicate whether that specific object has changed in any way. In the whole-display retrieval version of the task however, the entire set of encoded stimuli are presented as probes and the participant must indicate whether any one of the stimuli have changed. Another way in which the task varies is with regard to the number of encode stimuli that need to be remembered. In some versions of the task, all of the objects presented during encoding must be remembered by the participant. In other versions of the task participants receive a cue ahead of the encoding display which indicates which subset of the encoding stimuli needs to be remembered. For example, participants may be cued to encode only the blue objects in an upcoming display which contains both blue and red stimuli. These features have been shown to effect not just the absolute capacity values reported, but the underlying cognitive mechanisms that are being tested.
 
-One set of cognitive mechanisms that is especially important to consider when measuring working memory is selective attention. Converging evidence from both within and between-participant experiments now suggests that there is significant functional overlap between selective attention and working memory. When working memory load on an individual is increased, performance on a concurrent visual search task is impeded [@ahmed_focusing_2012;@de_fockert_role_2001;@stins_role_2004]. Similarly, individuals who naturally possess a larger working memory capacity perform better on standard measures of attentional control like the Stroop task [@kane_working-memory_2003] and the Eriksen flanker task [@shipstead_working_2012]. Modern accounts of working memory availability typically recognise this close association between attention and working memory by either incorporating elements of attentional control [@kane_controlled-attention_2001; @shipstead_mechanisms_2014, or in some cases suggesting that attentional control is the primary determinant of working memory capacity [@engle_working_2018]. More specific investigations of this relationship using both behavioural and neural measures now suggest that it is specifically the ability to disengage from irrelevant distractors which differentiates high and low capacity individuals [@fukuda_individual_2011;gaspar_inability_2016].
+One set of cognitive mechanisms that is especially important to consider when measuring working memory is selective attention. Converging evidence from both within and between-participant experiments now suggests that there is significant functional overlap between selective attention and working memory. When working memory load on an individual is increased, performance on a concurrent visual search task is impeded [@ahmed_focusing_2012;@de_fockert_role_2001;@stins_role_2004]. Similarly, individuals who naturally possess a larger working memory capacity perform better on standard measures of attentional control like the Stroop task [@kane_working-memory_2003] and the Eriksen flanker task [@shipstead_working_2012]. Modern accounts of working memory availability typically recognize this close association between attention and working memory by either incorporating elements of attentional control [@kane_controlled-attention_2001; @shipstead_mechanisms_2014, or in some cases suggesting that attentional control is the primary determinant of working memory capacity [@engle_working_2018]. More specific investigations of this relationship using both behavioral and neural measures now suggest that it is specifically the ability to disengage from irrelevant distractors which differentiates high and low capacity individuals [@fukuda_individual_2011;gaspar_inability_2016].
 
 The critical role that distractor suppression plays in working memory performance raises questions around the effect that irrelevant objects may have in a change detection task. In our study, we used a cued, probed-retrieval version of the change detection task while varying the number of distractors across blocks. This allowed us to systematically measure the effect that distraction in the change detection task has on both participant performance, and estimates of individual capacity. Set size varied within each block however the number of distractors remained fixed in 4 conditions (ranging from 0 distractors to 6 distractors), and varied in two conditions (either to maintain the total number of objects on screen across the block, or to match the number of targets on each trial). We measured the effect of these distractor conditions on accuracy and capacity, as well as on signal detection measures of sensitivity (d'), and response bias (C).
 
-Woring memory is central to functioning and important for stuff like fluid intelligence, attention, IQ or whatever.
+Working memory is central to functioning and important for stuff like fluid intelligence, attention, IQ or whatever.
 
 change detection tasks are popular for measuring WM capacity across individuals. (basic outline, increasing popularity, benefits).
 
 Many variations in change detection tasks. Pashler vs Cowan.
 
-working memory related to attention and specificaly distractor filtering things.
+working memory related to attention and specifically distractor filtering things.
 
 Estimates of capacity may be effected by the number of distractors that are presented in the change detection task - our study.
 
-trial-to-trial context effets working memory so distractor effect may also be mediated by context - our study.
+trial-to-trial context effects working memory so distractor effect may also be mediated by context - our study.
 
 # Methods
 
@@ -290,297 +292,141 @@ totalFemale <- sum(demoTable$SexBin)
 
 ## Change detection task
 
-Participants were positioned 57cm away from the screen and performed two practice blocks of 12 trials each, followed by 18 blocks of 40 trials each for a total of 720 experimental trials. For each block, the participant was told which colour (either blue or red) they would be focusing on for that block. Trials began with a 1 second fixation cross and involved being presented with a set of rectangles for 250ms, some of which matched the target colour, and some of which were irrelevant coloured distractors. Participants were required to encode only the subset of objects defined by the target colour, maintain that information across a one second delay period, and were then presented with the retrieval display for 2 seconds (or until the participant responded). The retrieval display consisted of all of the stimuli presented in the encoding display however one of the target objects was marked with a probe and participants were required to indicate whether the probed object had changed since encoding. The probe object was rotated randomly on 50% of trials (constituting a non-match trial) and matched the encoded object on the other 50% of trials. A fixation cross was maintained in the centre of the screen throughout the entire trial.
+Participants were positioned 57cm away from the screen and performed two practice blocks of 12 trials each, followed by 18 blocks of 40 trials each for a total of 720 experimental trials. For each block, the participant was told which color (either blue or red) they would be focusing on for that block. Trials began with a 1 second fixation cross and involved being presented with a set of rectangles for 250ms, some of which matched the target color, and some of which were irrelevant colored distractors. Participants were required to encode only the subset of objects defined by the target color, maintain that information across a one second delay period, and were then presented with the retrieval display for 2 seconds (or until the participant responded). The retrieval display consisted of all of the stimuli presented in the encoding display however one of the target objects was marked with a probe and participants were required to indicate whether the probed object had changed since encoding. The probe object was rotated randomly on 50% of trials (constituting a non-match trial) and matched the encoded object on the other 50% of trials. A fixation cross was maintained in the center of the screen throughout the entire trial.
 
-Blocks were separated into 6 different conditions. In four of the blocks, the number of distractors (objects of the irrelevant colour) present at encoding and retrieval was fixed across the block at either 0, 2, 4, or 6. In the other two conditions, distractor number varied within the block. In one of these variable conditions, the number of distractors was simply the same as the number of targets on a given trial. In the other variable block, we sought to keep the total number of objects on screen the same, and therefore the number of distractors was always the inverse of the number of targets.
+Blocks were separated into 6 different conditions. In four of the blocks, the number of distractors (objects of the irrelevant color) present at encoding and retrieval was fixed across the block at either 0, 2, 4, or 6. In the other two conditions, distractor number varied within the block. In one of these variable conditions, the number of distractors was simply the same as the number of targets on a given trial. In the other variable block, we sought to keep the total number of objects on screen the same, and therefore the number of distractors was always the inverse of the number of targets.
 
 ## Stimulus presentation
 
-All stimuli were presented on a .X. monitor in  using psychopy (v.). The fixation cross0 .5x0.5 degrees and was fixed in the centre of the screen throughout each trial. Each memory stimulus was a 0.5X2 degree bar of either red() or green() and rotated to one of four orientations  (0,45,90,135). The probe consisted of a 0.5x0.5 white square positioned on the centre of the probed stimulus. All stimuli were kept within .X. degrees of the fixation cross and were separated by at least .X. degrees. Python code used to run the task is available at .X.link.
+All stimuli were presented on a .X. monitor in  using psychopy (v.). The fixation cross0 .5x0.5 degrees and was fixed in the center of the screen throughout each trial. Each memory stimulus was a 0.5X2 degree bar of either red() or green() and rotated to one of four orientations  (0,45,90,135). The probe consisted of a 0.5x0.5 white square positioned on the center of the probed stimulus. All stimuli were kept within .X. degrees of the fixation cross and were separated by at least .X. degrees. Python code used to run the task is available at .X.link.
 
 ## Data processing
 Trials which had no response were removed for all participants and performance measures were calculated for each block type and set size. For each of these conditions we calculated accuracy, capacity, hit rate, false alarm rate, D', and C.
 groups created by...
 
 # Results
+## Target number
+```{r target_number_effect, include=FALSE, echo=FALSE}
+accuracy.targetNum.aov <- aov_ez(
+  data = summaryTable,
+  dv = "correctResponse",
+  id = "PID",
+  within = "targetNum"
+)
+target.followup <- pairs(emmeans(accuracy.targetNum.aov, ~ targetNum))
+target.aov.result <- apa_print(accuracy.targetNum.aov)
+
+twoTarg.mean <- describe(subset(summaryTable,targetNum==2)$correctResponse)$mean
+twoTarg.sd <- describe(subset(summaryTable,targetNum==2)$correctResponse)$sd
+fourTarg.mean <- describe(subset(summaryTable,targetNum==4)$correctResponse)$mean
+fourTarg.sd <- describe(subset(summaryTable,targetNum==4)$correctResponse)$sd
+sixTarg.mean <- describe(subset(summaryTable,targetNum==6)$correctResponse)$mean
+sixTarg.sd <- describe(subset(summaryTable,targetNum==6)$correctResponse)$sd
+```
+
+First, to confirm a fundamental benchmark in the change detection task (that participant accuracy decreases as the number of to-be-remembered items goes up) we performed a one-way ANOVA to test for the effect of target number on accuracy. The independent variable was target number across all blocks types (which had three levels; two targets, four targets, or six targets) and the dependent variable was accuracy. The results showed a significant effect of target number (`r target.aov.result$full_result$targetNum`) on accuracy and follow up comparisons using tukey correction confirmed the expected effect that accuracy is significantly higher in the two target trials (M=`r twoTarg.mean`, sd=`r twoTarg.sd`) when compared to both the four target (M=`r fourTarg.mean`, sd=`r fourTarg.sd`, t(110)=12.81, p<0.001) and six target trials (M=`r sixTarg.mean`, sd=`r sixTarg.sd`, t(110)=22.2, p<0.001), and accuracy is also higher in the four target trials compared to the six target trials (t(110)=10.42, p<0.001).
+
 ## Fixed distractor blocks
-### Accuracy
-```{r accuracy_fixedonly_targets, include=FALSE, echo=FALSE}
-accuracy.fixedonly.targanddist.aov <- aov_ez(
+```{r fixed_distractor_effect,include=FALSE, echo=FALSE}
+accuracy.fixedonly.aov <- aov_ez(
   data = fixed.Vals,
   dv = "correctResponse",
   id = "PID", 
-  within = c("targetNum","DistNum")
+  within = "DistNum"
 )
-#Pairwise comparisons
-accuracy.fixedonly.targanddist.targXdist <- pairs(emmeans(accuracy.fixedonly.targanddist.aov, ~ targetNum|DistNum))
-accuracy.fixedonly.targanddist.distXtarg <- pairs(emmeans(accuracy.fixedonly.targanddist.aov, ~ DistNum|targetNum))
+accuracy.fixed <- apa_print(accuracy.fixedonly.aov)
+accuracy.fixed.followup <- pairs(emmeans(accuracy.fixedonly.aov, ~DistNum))
+accuracy.fixed.distractors.table <- xtable(summary(accuracy.fixed.followup), caption = "Summary of the pairwise comparisons used to follow up the main effect of distractor number on accuracy", label = "tab:accuracyfixeddistractorstable")
 
-#Create tables
-accuracy.fixedonly.targanddist.table <- apa_print(accuracy.fixedonly.targanddist.aov)
-# FPairwise tables
-accuracy.fixedonly.targanddist.distXtarg.table <- xtable(summary(accuracy.fixedonly.targanddist.distXtarg), caption = "Summary of the pairwise comparisons used to follow up the main interaction (accuracy)", label = "tab:accuracyfixedonlytarganddistdistXtargTable")
-accuracy.fixedonly.targanddist.targXdist.table <- xtable(summary(accuracy.fixedonly.targanddist.targXdist), caption = "Summary of the pairwise comparisons used to follow up the main interaction (accuracy)", label = "tab:accuracyfixedonlytarganddisttargXdistTable")
-
-#Create plot
-accuracy.targXdist.summarydata <- summarySE(fixed.Vals, measurevar="correctResponse", groupvars=c("targetNum","DistNum"))
-accuracy.targXdist.bar <- ggplot(accuracy.targXdist.summarydata, aes( x=DistNum,y=correctResponse)) + 
-  geom_bar(position=position_dodge(), stat="identity") +
-  geom_errorbar(aes(ymin=correctResponse-se, ymax=correctResponse+se), size=0.5,
-    width=.25,position=position_dodge(.9)) +
-  facet_grid(~targetNum, labeller = as_labeller(c(`2`="Set size 2", `4`="Set size 4", `6`="Set size 6"))) +
-  scale_y_continuous("Accuracy (%)",expand = c(0, 0), limits=c(0,100)) +
-  scale_x_discrete("Number of distractors") +
-  theme_apa()
-pdf("C:/Users/dhen061/Desktop/ThesisWriting/Figures/WMBehav_accuracytargXdistPlot.pdf", width = 7, paper = "special")
-accuracy.targXdist.bar
-dev.off()
-```
-
-A 3x4 repeated measures ANOVA was performed in order to test the effect of target number (two, four, and six), and distractor number (zero, two four, and six) on accuracy across blocks where the number of distractors was fixed within the block. The results show a main effect of target number (`r accuracy.fixedonly.targanddist.table$full_result$targetNum`) and distractor number (`r accuracy.fixedonly.targanddist.table$full_result$DistNum`). There was also a significant interaction between target number and distractor number (`r accuracy.fixedonly.targanddist.table$full_result$targetNum_DistNum`) and pairwise comparisons using Tukey correction were performed in order to follow up this effect. For a target number of two, there were no significant differences in accuracy between distractor conditions (see table\ \@ref(tab:accuracyfixedonlytarganddistdistXtargTable)). For a target number of four, accuracy is significantly higher in the zero distractor condition than the four distractor, and six distractor conditions, but there are no other significant difference sbetween distractor conditions. For a target number of six, accuracy is significantly higher in the zero distractor condition than the four distractor and six distractor condition, and also significantly higher in the two distractor condition than the four distractor conditions (see table\ \@ref(tab:accuracyfixedonlytarganddistdistXtargTable) for a full summary). For each distractor level (zero, two four and six distractrs), participants were significantly more accurate in the two target condition than the four target or six target condition, and more accurate in the four target than six target condition. The only exception to this was the zero distractor condition where there was no significant difference between the two and four target conditions (see table\ \@ref(tab:accuracyfixedonlytarganddisttargXdistTable) . The results of this analysis are displayed in figure\ \@ref(fig:accuracytargXdistPlot).
-
-```{r accuracy_fixedonly_targanddist_table, results = 'asis'}
-#apa_table(accuracy.fixedonly.targanddist.table$table, caption = "Fixed accuracy. Summary of the 3 x 4 repeated measures ANOVA used to test the effects of set size and distractor number on participant accuracy in the working memory task.", escape = FALSE)
-```
-
-```{r accuracy_fixedOnly_pairwise, results = 'asis'}
-print(accuracy.fixedonly.targanddist.targXdist.table, comment=FALSE, caption.placement = "top", latex.environments="flushleft")
-print(accuracy.fixedonly.targanddist.distXtarg.table, comment=FALSE, caption.placement = "top", latex.environments="flushleft")
-```
-
-```{r accuracytargXdistPlot, fig.cap = "Participant accuracy as a function of set size and number of distractors present at encoding and retrieval.", fig.align = "center"}
-include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/WMBehav_accuracytargXdistPlot.pdf", auto_pdf = TRUE)
-```
-
-### Capacity
-```{r capacity_fixedonly_targets, include=FALSE, echo=FALSE}
-capacity.fixedonly.targanddist.aov <- aov_ez(
+capacity.fixedonly.aov <- aov_ez(
   data = fixed.Vals,
   dv = "cowanC",
   id = "PID", 
-  within = c("targetNum","DistNum")
+  within = "DistNum"
 )
-#Pairwise comparisons
-capacity.fixedonly.targanddist.targXdist <- pairs(emmeans(capacity.fixedonly.targanddist.aov, ~ targetNum|DistNum))
-capacity.fixedonly.targanddist.distXtarg <- pairs(emmeans(capacity.fixedonly.targanddist.aov, ~ DistNum|targetNum))
+capacity.fixed <- apa_print(capacity.fixedonly.aov)
+capacity.fixed.followup <- pairs(emmeans(capacity.fixedonly.aov, ~DistNum))
+capacity.fixed.distractors.table <- xtable(summary(capacity.fixed.followup), caption = "Summary of the pairwise comparisons used to follow up the main effect of distractor number on capacity", label = "tab:capacityfixeddistractorstable")
 
-#Create tables
-capacity.fixedonly.targanddist.table <- apa_print(capacity.fixedonly.targanddist.aov)
-# FPairwise tables
-capacity.fixedonly.targanddist.distXtarg.table <- xtable(summary(capacity.fixedonly.targanddist.distXtarg), caption = "Summary of the pairwise comparisons used to follow up the main interaction (capacity)", label = "tab:capacityfixedonlytarganddistdistXtargTable")
-capacity.fixedonly.targanddist.targXdist.table <- xtable(summary(capacity.fixedonly.targanddist.targXdist), caption = "Summary of the pairwise comparisons used to follow up the main interaction (capacity)", label = "tab:capacityfixedonlytarganddisttargXdistTable")
-
-#Create plot
-capacity.targXdist.summarydata <- summarySE(fixed.Vals, measurevar="cowanC", groupvars=c("targetNum","DistNum"))
-capacity.targXdist.bar <- ggplot(capacity.targXdist.summarydata, aes( x=DistNum,y=cowanC)) + 
-  geom_bar(position=position_dodge(), stat="identity") +
-  geom_errorbar(aes(ymin=cowanC-se, ymax=cowanC+se), size=0.5,   
-    width=.25,position=position_dodge(.9)) +
-  facet_grid(~targetNum, labeller = as_labeller(c(`2`="Set size 2", `4`="Set size 4", `6`="Set size 6"))) +
-  scale_y_continuous("Capacity (%)",expand = c(0, 0)) +
-  scale_x_discrete("Number of distractors") +
-  theme_apa()
-pdf("C:/Users/dhen061/Desktop/ThesisWriting/Figures/WMBehav_capacitytargXdistPlot.pdf", width = 7, paper = "special")
-capacity.targXdist.bar
-dev.off()
-```
-
-A 3x4 repeated measures ANOVA was performed in order to test the effect of target number (two, four, and six), and distractor number (zero, two four, and six) on accuracy across blocks where the number of distractors was fixed within the block. The results show a main effect of target number (`r capacity.fixedonly.targanddist.table$full_result$targetNum`) and distractor number (`r capacity.fixedonly.targanddist.table$full_result$DistNum`). There was also a significant interaction between target number and distractor number (`r capacity.fixedonly.targanddist.table$full_result$targetNum_DistNum`) and pairwise comparisons using Tukey correction were performed in order to follow up this effect. For a target number of two, there were no significant differences in accuracy between distractor conditions (see table\ \@ref(tab:capacityfixedonlytarganddistdistXtargTable)). For a target number of four, capacity estimates were significantly higher in the zero distractor condition than the four and six distractor conditions but no other comparisons were significant. For a target number of six, capacity estimates were significantly higher in the zero distractor condition than the four and six distractor conditions, and capacity was also higher in the two distractor condition than the four distractor conditions. There were no other significant interactions (see table\ \@ref(tab:capacityfixedonlytarganddistdistXtargTable)). The effects of target number are uninformative but conform with the expectation that capacity estimates increase as set size increases but asymptote once set size is sufficiently large for capturing average capacity, for full results see table\ \@ref(tab:capacityfixedonlytarganddisttargXdistTable). The results of this analysis are displayed in figure\ \@ref(fig:capacitytargXdistPlot).
-
-```{r capacity_fixedonly_targanddist_table, results = 'asis'}
-#apa_table(capacity.fixedonly.targanddist.table$table, caption = "fixed capacity. Summary of the 3 x 4 repeated measures ANOVA used to test the effects of set size and distractor number on participant capacity in the working memory task.", escape = FALSE)
-```
-
-```{r capacity_fixedOnly_pairwise, results = 'asis'}
-print(capacity.fixedonly.targanddist.targXdist.table, comment=FALSE, caption.placement = "top", latex.environments="flushleft")
-print(capacity.fixedonly.targanddist.distXtarg.table, comment=FALSE, caption.placement = "top", latex.environments="flushleft")
-```
-
-```{r capacitytargXdistPlot, fig.cap = "Participant capacity as a function of set size and number of distractors present at encoding and retrieval.", fig.align = "center"}
-include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/WMBehav_capacitytargXdistPlot.pdf", auto_pdf = TRUE)
-```
-
-### Hits
-```{r hits_fixedonly_targets, include=FALSE, echo=FALSE}
-hits.fixedonly.targanddist.aov <- aov_ez(
-  data = fixed.Vals,
-  dv = "hitProp",
-  id = "PID", 
-  within = c("targetNum","DistNum")
-)
-#Pairwise comparisons
-hits.fixedonly.targanddist.targXdist <- pairs(emmeans(hits.fixedonly.targanddist.aov, ~ targetNum|DistNum))
-hits.fixedonly.targanddist.distXtarg <- pairs(emmeans(hits.fixedonly.targanddist.aov, ~ DistNum|targetNum))
-
-#Create tables
-hits.fixedonly.targanddist.table <- apa_print(hits.fixedonly.targanddist.aov)
-# FPairwise tables
-hits.fixedonly.targanddist.targXdist.table <- xtable(summary(hits.fixedonly.targanddist.targXdist), caption = "Summary of the pairwise comparisons used to follow up the main interaction (hits)", label = "tab:hits.fixedonly.targanddist.targXdist.Table")
-hits.fixedonly.targanddist.distXtarg.table <- xtable(summary(hits.fixedonly.targanddist.distXtarg), caption = "Summary of the pairwise comparisons used to follow up the main interaction (hits)", label = "tab:hits.fixedonly.targanddist.distXtarg.Table")
-
-#Create plot
-hits.targXdist.summarydata <- summarySE(fixed.Vals, measurevar="hitProp", groupvars=c("targetNum","DistNum"))
-hits.targXdist.bar <- ggplot(hits.targXdist.summarydata, aes( x=DistNum,y=hitProp)) + 
-  geom_bar(position=position_dodge(), stat="identity") +
-  geom_errorbar(aes(ymin=hitProp-se, ymax=hitProp+se), size=0.5,   
-    width=.25,position=position_dodge(.9)) +
-  facet_grid(~targetNum, labeller = as_labeller(c(`2`="Set size 2", `4`="Set size 4", `6`="Set size 6"))) +
-  scale_y_continuous("Hits (%)",expand = c(0, 0)) +
-  scale_x_discrete("Number of distractors") +
-  theme_apa()
-pdf("C:/Users/dhen061/Desktop/ThesisWriting/Figures/WMBehav_hitstargXdistPlot.pdf", width = 7, paper = "special")
-hits.targXdist.bar
-dev.off()
-```
-
-
-
-```{r hits_fixedonly_targanddist_table, results = 'asis'}
-#apa_table(hits.fixedonly.targanddist.table$table, caption = "Fixed hits. Summary of the 3 x 4 repeated measures ANOVA used to test the effects of set size and distractor number on participant hits in the working memory task.", escape = FALSE)
-```
-
-```{r hits_fixedOnly_pairwise, results = 'asis'}
-#print(hits.fixedonly.targanddist.targXdist.table, comment=FALSE, caption.placement = "top", latex.environments="flushleft")
-#print(hits.fixedonly.targanddist.distXtarg.table, comment=FALSE, caption.placement = "top", latex.environments="flushleft")
-```
-
-```{r hitstargXdistPlot, fig.cap = "Participant hits as a function of set size and number of distractors present at encoding and retrieval.", fig.align = "center"}
-#include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/WMBehav_hitstargXdistPlot.pdf", auto_pdf = TRUE)
-```
-
-### False alarms
-```{r fa_fixedonly_targets, include=FALSE, echo=FALSE}
-fa.fixedonly.targanddist.aov <- aov_ez(
-  data = fixed.Vals,
-  dv = "faProp",
-  id = "PID", 
-  within = c("targetNum","DistNum")
-)
-#Pairwise comparisons
-fa.fixedOnly.targets.targmain <- pairs(emmeans(fa.fixedonly.targanddist.aov, ~targetNum))
-
-#Create tables
-fa.fixedOnly.targets.table <- apa_print(fa.fixedonly.targanddist.aov)
-#Create pairwise tables
-fa.fixedOnly.targets.targmain.table <- xtable(summary(fa.fixedOnly.targets.targmain), caption = "Summary of the pairwise comparisons used to follow up the main interaction (fa)", label = "tab:fa.fixedOnly.targets.targmain.table")
-
-#Create plot
-fa.targXdist.summarydata <- summarySE(fixed.Vals, measurevar="faProp", groupvars=c("targetNum","DistNum"))
-fa.targXdist.bar <- ggplot(fa.targXdist.summarydata, aes( x=DistNum,y=faProp)) + 
-  geom_bar(position=position_dodge(), stat="identity") +
-  geom_errorbar(aes(ymin=faProp-se, ymax=faProp+se), size=0.5,   
-    width=.25,position=position_dodge(.9)) +
-  facet_grid(~targetNum, labeller = as_labeller(c(`2`="Set size 2", `4`="Set size 4", `6`="Set size 6"))) +
-  scale_y_continuous("Fa (%)",expand = c(0, 0)) +
-  scale_x_discrete("Number of distractors") +
-  theme_apa()
-pdf("C:/Users/dhen061/Desktop/ThesisWriting/Figures/WMBehav_fatargXdistPlot.pdf", width = 7, paper = "special")
-fa.targXdist.bar
-dev.off()
-```
-
-```{r fa.fixedOnly.targets.table, results = 'asis'}
-#apa_table(fa.fixedOnly.targets.table$table, caption = "Fixed FA. Summary of the 3 x 4 repeated measures ANOVA used to test the effects of set size and distractor number on participant fa in the working memory task.", escape = FALSE)
-```
-
-```{r fa_fixedOnly_pairwise, results = 'asis'}
-#print(fa.fixedOnly.targets.targmain.table, comment=FALSE, caption.placement = "top", latex.environments="flushleft")
-```
-
-```{r fatargXdistPlot, fig.cap = "Participant fa as a function of set size and number of distractors present at encoding and retrieval.", fig.align = "center"}
-#include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/WMBehav_fatargXdistPlot.pdf", auto_pdf = TRUE)
-```
-
-### Sensitivity
-```{r sensitivity_fixedOnly, include=FALSE, echo=FALSE}
-sensitivity.fixedonly.targanddist.aov <- aov_ez(
+sensitivity.fixedonly.aov <- aov_ez(
   data = fixed.Vals,
   dv = "D",
   id = "PID", 
-  within = c("targetNum","DistNum")
+  within = "DistNum"
 )
-#Pairwise comparisons
-sensitivity.fixedonly.targanddist.targXdist <- pairs(emmeans(sensitivity.fixedonly.targanddist.aov, ~ targetNum|DistNum))
-sensitivity.fixedonly.targanddist.distXtarg <- pairs(emmeans(sensitivity.fixedonly.targanddist.aov, ~ DistNum|targetNum))
+sensitivity.fixed <- apa_print(sensitivity.fixedonly.aov)
+sensitivity.fixed.followup <- pairs(emmeans(sensitivity.fixedonly.aov, ~DistNum))
+sensitivity.fixed.distractors.table <- xtable(summary(sensitivity.fixed.followup), caption = "Summary of the pairwise comparisons used to follow up the main effect of distractor number on sensitivity", label = "tab:sensitivityfixeddistractorstable")
 
-#Create tables
-sensitivity.fixedonly.targanddist.table <- apa_print(sensitivity.fixedonly.targanddist.aov)
-# FPairwise tables
-sensitivity.fixedonly.targanddist.distXtarg.table <- xtable(summary(sensitivity.fixedonly.targanddist.distXtarg), caption = "Summary of the pairwise comparisons used to follow up the main interaction (sensitivity)", label = "tab:sensitivityfixedonlytarganddistdistXtargTable")
-sensitivity.fixedonly.targanddist.targXdist.table <- xtable(summary(sensitivity.fixedonly.targanddist.targXdist), caption = "Summary of the pairwise comparisons used to follow up the main interaction (sensitivity)", label = "tab:sensitivityfixedonlytarganddisttargXdistTable")
+responseBias.fixedonly.aov <- aov_ez(
+  data = fixed.Vals,
+  dv = "C",
+  id = "PID", 
+  within = "DistNum"
+)
+responseBias.fixed <- apa_print(responseBias.fixedonly.aov)
 
-#Create plot
-sensitivity.targXdist.summarydata <- summarySE(fixed.Vals, measurevar="D", groupvars=c("targetNum", "DistNum"))
-sensitivity.targXdist.bar <- ggplot(sensitivity.targXdist.summarydata, aes( x=DistNum,y=D)) +
+# fixed distractor plots
+accuracy.fixed.summarydata <- summarySE(fixed.Vals, measurevar="correctResponse", groupvars="DistNum")
+accuracy.fixed.plot <- ggplot(accuracy.fixed.summarydata, aes( x=DistNum,y=correctResponse)) + 
+  geom_bar(position=position_dodge(), stat="identity") +
+  geom_errorbar(aes(ymin=correctResponse-se, ymax=correctResponse+se), size=0.5,
+    width=.25,position=position_dodge(.9)) +
+  scale_y_continuous("Accuracy (%)",expand = c(0, 0)) +
+  coord_cartesian(ylim=c(50,80)) +
+  scale_x_discrete("Number of distractors across block") +
+  theme_apa()
+
+capacity.fixed.summarydata <- summarySE(fixed.Vals, measurevar="cowanC", groupvars="DistNum")
+capacity.fixed.plot <- ggplot(capacity.fixed.summarydata, aes( x=DistNum,y=cowanC)) + 
+  geom_bar(position=position_dodge(), stat="identity") +
+  geom_errorbar(aes(ymin=cowanC-se, ymax=cowanC+se), size=0.5,
+    width=.25,position=position_dodge(.9)) +
+  scale_y_continuous("Capacity",expand = c(0, 0)) +
+  coord_cartesian(ylim=c(0,2)) +
+  scale_x_discrete("Number of distractors across block") +
+  theme_apa()
+
+sensitivity.fixed.summarydata <- summarySE(fixed.Vals, measurevar="D", groupvars="DistNum")
+sensitivity.fixed.plot <- ggplot(sensitivity.fixed.summarydata, aes( x=DistNum,y=D)) + 
   geom_bar(position=position_dodge(), stat="identity") +
   geom_errorbar(aes(ymin=D-se, ymax=D+se), size=0.5,
     width=.25,position=position_dodge(.9)) +
-  facet_grid(~targetNum, labeller = as_labeller(c(`2`="Set size 2", `4`="Set size 4", `6`="Set size 6"))) +
-  scale_y_continuous("Sensitivity (D')",expand = c(0, 0)) +
-  scale_x_discrete("Number of distractors") +
+  scale_y_continuous("Sensitivity (d')",expand = c(0, 0)) +
+  coord_cartesian(ylim=c(0,2)) +
+  scale_x_discrete("Number of distractors across block") +
   theme_apa()
-pdf("C:/Users/dhen061/Desktop/ThesisWriting/Figures/WMBehav_sensitivitytargXdistPlot.pdf", width = 7, paper = "special")
-sensitivity.targXdist.bar
-dev.off()
-```
 
-A 3x4 repeated measures ANOVA was performed in order to test the effect of target number (two, four, and six), and distractor number (zero, two four, and six) on sensitivity (d') across blocks where the number of distractors was fixed within the block. The results show a main effect of target number (`r sensitivity.fixedonly.targanddist.table$full_result$targetNum`) and distractor number (`r sensitivity.fixedonly.targanddist.table$full_result$DistNum`). There was also a significant interaction between target number and distractor number (`r sensitivity.fixedonly.targanddist.table$full_result$targetNum_DistNum`) and pairwise comparisons using Tukey correction were performed in order to follow up this effect. For a target number of two, there were no significant differences in accuracy between distractor conditions (see table\ \@ref(tab:sensitivityfixedonlytarganddistdistXtargTable)). For a target number of four, sensitivity estimates were significantly higher in the zero distractor condition than the four and six distractor conditions but no other comparisons were significant. For a target number of six, sensitivity estimates were significantly higher in the zero distractor condition than the four and six distractor conditions, and sensitivity was also higher in the two distractor condition than the four distractor conditions. There were no other significant interactions (see table\ \@ref(tab:sensitivityfixedonlytarganddistdistXtargTable)). For every level of distractor number sensitivity was higher in for two targets than for four or six, and higherfor four targets than six targets, for full results see table\ \@ref(tab:sensitivityfixedonlytarganddisttargXdistTable). The results of this analysis are displayed in figure\ \@ref(fig:sensitivitytargXdistPlot).
-
-```{r sensitivity_fixedonly_targanddist_table, results = 'asis'}
-#apa_table(sensitivity.fixedonly.targanddist.table$table, caption = "Fixed sensitivity. Summary of the 3 x 4 repeated measures ANOVA used to test the effects of set size and distractor number on participant accuracy in the working memory task.", escape = FALSE)
-```
-
-```{r sensitivity_fixedOnly_pairwise, results = 'asis'}
-print(sensitivity.fixedonly.targanddist.targXdist.table, comment=FALSE, caption.placement = "top", latex.environments="flushleft")
-print(sensitivity.fixedonly.targanddist.distXtarg.table, comment=FALSE, caption.placement = "top", latex.environments="flushleft")
-```
-
-```{r sensitivitytargXdistPlot, fig.cap = "Participant sensitivity as a function of set size and number of distractors present at encoding and retrieval.", fig.align = "center"}
-include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/WMBehav_sensitivitytargXdistPlot.pdf", auto_pdf = TRUE)
-```
-### Response bias
-```{r criterion_fixedOnly, include=FALSE, echo=FALSE}
-criterion.fixedonly.targanddist.aov <- aov_ez(
-  data = fixed.Vals,
-  dv = "C",
-  id = "PID",
-  within = c("targetNum","DistNum")
-)
-#Pairwise comparisons
-criterion.fixedonly.targanddist.targXdist <- pairs(emmeans(criterion.fixedonly.targanddist.aov, ~ targetNum|DistNum))
-criterion.fixedonly.targanddist.distXtarg <- pairs(emmeans(criterion.fixedonly.targanddist.aov, ~ DistNum|targetNum))
-
-#Create tables
-criterion.fixedonly.targanddist.table <- apa_print(criterion.fixedonly.targanddist.aov)
-
-#Create plot
-criterion.targXdist.summarydata <- summarySE(fixed.Vals, measurevar="C", groupvars=c("targetNum","DistNum"))
-criterion.targXdist.bar <- ggplot(criterion.targXdist.summarydata, aes( x=DistNum,y=C)) + 
+responseBias.fixed.summarydata <- summarySE(fixed.Vals, measurevar="C", groupvars="DistNum")
+responseBias.fixed.plot <- ggplot(responseBias.fixed.summarydata, aes( x=DistNum,y=C)) + 
   geom_bar(position=position_dodge(), stat="identity") +
-  geom_errorbar(aes(ymin=C-se, ymax=C+se), size=0.5,   
+  geom_errorbar(aes(ymin=C-se, ymax=C+se), size=0.5,
     width=.25,position=position_dodge(.9)) +
-  facet_grid(~targetNum, labeller = as_labeller(c(`2`="Set size 2", `4`="Set size 4", `6`="Set size 6"))) +
-  scale_y_continuous("Response bias (C)",expand = c(0, 0)) +
-  scale_x_discrete("Number of distractors") +
+  scale_y_continuous("ResponseBias (C)",expand = c(0, 0)) +
+  coord_cartesian(ylim=c(-1,0)) +
+  scale_x_discrete("Number of distractors across block") +
   theme_apa()
-pdf("C:/Users/dhen061/Desktop/ThesisWriting/Figures/WMBehav_criteriontargXdistPlot.pdf", width = 7, paper = "special")
-criterion.targXdist.bar
+
+pdf("C:/Users/dhen061/Desktop/ThesisWriting/Figures/WMBehav_fixedBlock_distractors.pdf", width = 7, paper = "special")
+plot_grid(accuracy.fixed.plot,capacity.fixed.plot,sensitivity.fixed.plot,responseBias.fixed.plot)
 dev.off()
+
+```
+Next, we focused on blocks in which the number of distractors was fixed for the entire block at either zero, two, four, or six distractors. In order to test for the effect of distractor number on change detection performance, we calculated four behavioral measures (accuracy, working memory capacity, sensitivity, and response bias), and performed a one-way ANOVA for each of these measures with distractor number as the independent variable. The results showed that distractor number had a significant effect on accuracy (`r accuracy.fixed$full_result$DistNum`), capacity (`r capacity.fixed$full_result$DistNum`), and sensitivity (`r sensitivity.fixed$full_result$DistNum`), but no significant effect on response bias (`r responseBias.fixed$full_result$DistNum`). Follow up comparisons were performed using tukey correction for each of the significant effects and the results generally show that in blocks with larger numbers of irrelevant distractors, accuracy is lower (see table\ \@ref(tab:accuracyfixeddistractorstable) for details), capacity estimates are lower (see table\ \@ref(tab:capacityfixeddistractorstable) for details), and sensitivity is lower (see table\ \@ref(tab:sensitivityfixeddistractorstable) for details) however not every follow up comparison is significant.
+
+```{r accuracy_fixed_distractors, results = 'asis'}
+print(accuracy.fixed.distractors.table, comment=FALSE, caption.placement = "top", latex.environments="flushleft")
+print(capacity.fixed.distractors.table, comment=FALSE, caption.placement = "top", latex.environments="flushleft")
+print(sensitivity.fixed.distractors.table, comment=FALSE, caption.placement = "top", latex.environments="flushleft")
 ```
 
-A 3x4 repeated measures ANOVA was performed in order to test the effect of target number (two, four, and six), and distractor number (zero, two four, and six) on response bias (C) across blocks where the number of distractors was fixed within the block. The results showed no significant main effect of either target number (`r criterion.fixedonly.targanddist.table$full_result$targetNum`) or distractor number (`r criterion.fixedonly.targanddist.table$full_result$DistNum`). There was also no significant interaction between the two (`r criterion.fixedonly.targanddist.table$full_result$targetNum_DistNum`). The results of this analysis are shown in figure\ \@ref(fig:criteriontargXdistPlot).
-
-````{r criterion_fixedonly_targanddist_table, results = 'asis'}
-#apa_table(criterion.fixedonly.targanddist.table$table, caption = "Fixed criterion. Summary of the 3 x 4 repeated measures ANOVA used to test the effects of set size and distractor number on participant accuracy in the working memory task.", escape = FALSE)
+```{r accuracyFixedDistractorsPlot, fig.cap = "Plots showing the mean and standard error for each behavioural measure across the fixed distractor blocks.", fig.align = "center"}
+include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/WMBehav_fixedBlock_distractors.pdf", auto_pdf = TRUE)
 ```
 
-```{r criteriontargXdistPlot, fig.cap = "Participant criterion as a function of set size and number of distractors present at encoding and retrieval.", fig.align = "center"}
-include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/WMBehav_criteriontargXdistPlot.pdf", auto_pdf = TRUE)
-```
+## Target-match blocks
 
-## Fixed vs. targEqual
-
-In order to test for the effect of block context on performance, we compared performance measures in the targEqual condition to performance from the equivalent trials taken from the fixed distractor blocks.
+In order to test for the effect of target-matching block context on performance, we first focused on those blocks where the number of distractors on a given trial always matched the number of targets on that trial. These target-match trials were compared to the equivalent trials taken from the fixed distractor blocks (two target trials from the two distractor blocks, four target trials from the four distractor blocks, and six target trials from the six distractor blocks). Once again we calculated accuracy, capacity, sensitivity, and response bias and performed a 2x3 ANOVA for each of these dependent variables, with block type (fixed, or target-match) and distractor number (two, four, or six) as the independent variables. In this case, main effects of distractor number would represent the same effects described above and therefore follow up comparisons were only performed on interactions between block type and distractor number. The results of these analyses are visualized in figure\ \@ref(fig:load_targMatch_Plots)
 
 ### Accuracy
 ```{r accuracy_fixVmat_distractors, include=FALSE, echo=FALSE}
@@ -607,7 +453,8 @@ accuracy.fixVmat.bar <- ggplot(accuracy.fixVmat.summarydata, aes( x=Block,y=corr
   geom_errorbar(aes(ymin=correctResponse-se, ymax=correctResponse+se), size=0.5,   
     width=.25,position=position_dodge(.9)) +
   facet_grid(~numDist, labeller = as_labeller(c(`2`="2 distractors", `4`="4 distractors", `6`="6 distractors"))) +
-  scale_y_continuous("Accuracy (%)",expand = c(0, 0), limits=c(0,100)) +
+  scale_y_continuous("Accuracy (%)",expand = c(0, 0)) +
+  coord_cartesian(ylim=c(50,100)) +
   scale_x_discrete("Block type") +
   theme_apa()
 pdf("C:/Users/dhen061/Desktop/ThesisWriting/Figures/WMBehav_accuracyfixvmatPlot.pdf", width = 7, paper = "special")
@@ -615,7 +462,7 @@ accuracy.fixVmat.bar
 dev.off()
 ```
 
-A 2x3 repeated measures ANOVA was performed in order to test for the effect of block type (fixed, and targEqual), and distractor number (two, four, and six) on participant accuracy. The results showed a main effect of distractor number (`r accuracy.fixVmatch.distractors.table$full_result$numDist`), but no main effect of block context (`r accuracy.fixVmatch.distractors.table$full_result$Block`). There was however a significant interaction between distractor number and block context (`r accuracy.fixVmatch.distractors.table$full_result$numDist`) and pairwise comparisons using Tukey correction were performed in order to follow up this effect. For both block types, participants got significantly more accurate as distractor number decreased (see table\ \@ref(tab:accuracyfixVmatchdistractorsdistXblocktable) for full details). In the two distractor trials, participants were significantly less accurate in the targEqual block compared to fixed distractor block, there was no significant difference between blocks for the four distractor, and six distractor trials (see table\ \@ref(tab:accuracyfixVmatchdistractorsblockXdisttable)). The results of this analysis are shown in figure\ \@ref(fig:accuracyfixVmatPlot).
+The results showed a main effect of distractor number (`r accuracy.fixVmatch.distractors.table$full_result$numDist`) on accuracy, but no main effect of block context (`r accuracy.fixVmatch.distractors.table$full_result$Block`). There was however a significant interaction between distractor number and block context (`r accuracy.fixVmatch.distractors.table$full_result$numDist_Block`) and pairwise comparisons using Tukey correction were performed in order to follow up this effect. For both block types, participants got significantly more accurate as distractor number decreased (see table\ \@ref(tab:accuracyfixVmatchdistractorsdistXblocktable) for full details). In the two distractor trials, participants were significantly less accurate in the target-match block compared to fixed distractor block, there was no significant difference between blocks for the four distractor, and six distractor trials (see table\ \@ref(tab:accuracyfixVmatchdistractorsblockXdisttable)). The results of this analysis are shown in figure\ \@ref(fig:accuracyfixVmatPlot).
 
 ```{r accuracy_fixVmatch_distractors_table, results = 'asis'}
 #apa_table(accuracy.fixVmatch.distractors.table$table, caption = "FixVMat accuracy: Summary of the 2 x 4 repeated measures ANOVA used to test the effects of block type and distractor number on participant accuracy in the working memory task.", escape = FALSE)
@@ -664,7 +511,7 @@ capacity.fixVmat.bar
 dev.off()
 ```
 
-A 2x3 repeated measures ANOVA was performed in order to test for the effect of block type (fixed, and targEqual), and distractor number (two, four, and six) on capacity estimates. The results showed a main effect of distractor number (`r capacity.fixVmatch.distractors.table$full_result$numDist`), but no main effect of block context (`r capacity.fixVmatch.distractors.table$full_result$Block`), and no significant interaction between distractor number and block context (`r capacity.fixVmatch.distractors.table$full_result$numDist`). The results of this analysis are shown in figure\ \@ref(fig:capacityfixVmatPlot).
+The results showed a main effect of distractor number (`r capacity.fixVmatch.distractors.table$full_result$numDist`) on capacity, but no main effect of block context (`r capacity.fixVmatch.distractors.table$full_result$Block`), and no significant interaction between distractor number and block context (`r capacity.fixVmatch.distractors.table$full_result$numDist_Block`). The results of this analysis are shown in figure\ \@ref(fig:capacityfixVmatPlot).
 
 ```{r capacity_fixVmatch_distractors_table, results = 'asis'}
 #apa_table(capacity.fixVmatch.distractors.table$table, caption = "FixVMat capacity. Summary of the 3 x 4 repeated measures ANOVA used to test the effects of set size and distractor number on participant capacity in the working memory task.", escape = FALSE)
@@ -678,95 +525,6 @@ A 2x3 repeated measures ANOVA was performed in order to test for the effect of b
 
 ```{r capacityfixVmatPlot, fig.cap = "Participant capacity as a function of set size and number of distractors present at encoding and retrieval.", fig.align = "center"}
 include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/WMBehav_capacityfixVmatPlot.pdf", auto_pdf = TRUE)
-```
-### Hits
-```{r hits_fixVmat_distractors, include=FALSE, echo=FALSE}
-hits.fixVmatch.distractors.aov <- aov_ez(
-  data = fixVmat.Vals,
-  dv = "hitProp",
-  id = "PID", 
-  within = c("numDist", "Block")
-)
-#Interaction
-hits.fixVmatch.distractors.distXblock <- pairs(emmeans(hits.fixVmatch.distractors.aov, ~ numDist|Block))
-hits.fixVmatch.distractors.blockXdist <- pairs(emmeans(hits.fixVmatch.distractors.aov, ~ Block|numDist))
-
-#Create tables
-hits.fixVmatch.distractors.table <- apa_print(hits.fixVmatch.distractors.aov)
-#Create pairwise tables
-hits.fixVmatch.distractors.distXblock.table <- xtable(summary(hits.fixVmatch.distractors.distXblock), caption = "Summary of the pairwise comparisons used to follow up the main interaction (hits)", label = "tab:hits.fixVmatch.distractors.distXblock.table")
-hits.fixVmatch.distractors.blockXdist.table <- xtable(summary(hits.fixVmatch.distractors.blockXdist), caption = "Summary of the pairwise comparisons used to follow up the main interaction (hits)", label = "tab:hits.fixVmatch.distractors.blockXdist.table")
-
-#Create plots
-hits.fixVmat.summarydata <- summarySE(fixVmat.Vals, measurevar="hitProp", groupvars=c("Block","numDist"))
-hits.fixVmat.bar <- ggplot(hits.fixVmat.summarydata, aes( x=Block,y=hitProp)) + 
-  geom_bar(position=position_dodge(), stat="identity") +
-  geom_errorbar(aes(ymin=hitProp-se, ymax=hitProp+se), size=0.5,   
-    width=.25,position=position_dodge(.9)) +
-  facet_grid(~numDist, labeller = as_labeller(c(`2`="2 distractors", `4`="4 distractors", `6`="6 distractors"))) +
-  scale_y_continuous("Hits (%)",expand = c(0, 0)) +
-  scale_x_discrete("Block type") +
-  theme_apa()
-pdf("C:/Users/dhen061/Desktop/ThesisWriting/Figures/WMBehav_hitsfixvmatPlot.pdf", width = 7, paper = "special")
-hits.fixVmat.bar
-dev.off()
-```
-
-
-```{r hits_fixVmatch_distractors_table, results = 'asis'}
-#pa_table(hits.fixVmatch.distractors.table$table, caption = "FixVMat hits. Summary of the 3 x 4 repeated measures ANOVA used to test the effects of set size and distractor number on participant hits in the working memory task.", escape = FALSE)
-```
-
-```{r hits_fixVmat_pairwise, results = 'asis'}
-#print(hits.fixVmatch.distractors.distXblock.table, comment=FALSE, caption.placement = "top", latex.environments="flushleft")
-#print(hits.fixVmatch.distractors.blockXdist.table, comment=FALSE, caption.placement = "top", latex.environments="flushleft")
-```
-
-```{r hitsfixVmatPlot, fig.cap = "Participant hits as a function of set size and number of distractors present at encoding and retrieval.", fig.align = "center"}
-include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/WMBehav_hitsfixVmatPlot.pdf", auto_pdf = TRUE)
-```
-### False alarms
-```{r fa_fixVmat_distractors, include=FALSE, echo=FALSE}
-fa.fixVmatch.distractors.aov <- aov_ez(
-  data = fixVmat.Vals,
-  dv = "faProp",
-  id = "PID", 
-  within = c("numDist", "Block")
-)
-#Interaction
-fa.fixVmatch.distractors.distmain <- pairs(emmeans(fa.fixVmatch.distractors.aov, ~ numDist))
-
-#Create tables
-fa.fixVmatch.distractors.table <- apa_print(fa.fixVmatch.distractors.aov)
-#Create pairwise tables
-fa.fixVmatch.distractors.distmain.table <- xtable(summary(fa.fixVmatch.distractors.distmain), caption = "Summary of the pairwise comparisons used to follow up the main interaction (fa)", label = "tab:fa.fixVmatch.distractors.distmain.table")
-
-#Create plots
-fa.fixVmat.summarydata <- summarySE(fixVmat.Vals, measurevar="faProp", groupvars=c("Block","numDist"))
-fa.fixVmat.bar <- ggplot(fa.fixVmat.summarydata, aes( x=Block,y=faProp)) + 
-  geom_bar(position=position_dodge(), stat="identity") +
-  geom_errorbar(aes(ymin=faProp-se, ymax=faProp+se), size=0.5,   
-    width=.25,position=position_dodge(.9)) +
-  facet_grid(~numDist, labeller = as_labeller(c(`2`="2 distractors", `4`="4 distractors", `6`="6 distractors"))) +
-  scale_y_continuous("Fa (%)",expand = c(0, 0)) +
-  scale_x_discrete("Block type") +
-  theme_apa()
-pdf("C:/Users/dhen061/Desktop/ThesisWriting/Figures/WMBehav_fafixvmatPlot.pdf", width = 7, paper = "special")
-fa.fixVmat.bar
-dev.off()
-```
-
-
-```{r fa_fixVmatch_distractors_table, results = 'asis'}
-#apa_table(fa.fixVmatch.distractors.table$table, caption = "FixVMat FA. Summary of the 3 x 4 repeated measures ANOVA used to test the effects of set size and distractor number on participant fa in the working memory task.", escape = FALSE)
-```
-
-```{r fa_fixVmat_pairwise, results = 'asis'}
-#print(fa.fixVmatch.distractors.distmain.table, comment=FALSE, caption.placement = "top", latex.environments="flushleft")
-```
-
-```{r fafixVmatPlot, fig.cap = "Participant fa as a function of set size and number of distractors present at encoding and retrieval.", fig.align = "center"}
-#include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/WMBehav_fafixVmatPlot.pdf", auto_pdf = TRUE)
 ```
 ### Sensitivity
 ```{r sensitivity_fixVmat_distractors, include=FALSE, echo=FALSE}
@@ -787,13 +545,13 @@ sensitivity.fixVmatch.distractors.distXblock.table <- xtable(summary(sensitivity
 sensitivity.fixVmatch.distractors.blockXdist.table <- xtable(summary(sensitivity.fixVmatch.distractors.blockXdist), caption = "Summary of the pairwise comparisons used to follow up the main interaction (sensitivity)", label = "tab:sensitivityfixVmatchdistractorsblockXdisttable")
 
 #Create plots
-sensitivity.fixVmat.summarydata <- summarySE(fixVmat.Vals, measurevar="correctResponse", groupvars=c("Block","numDist"))
-sensitivity.fixVmat.bar <- ggplot(sensitivity.fixVmat.summarydata, aes( x=Block,y=correctResponse)) + 
+sensitivity.fixVmat.summarydata <- summarySE(fixVmat.Vals, measurevar="D", groupvars=c("Block","numDist"))
+sensitivity.fixVmat.bar <- ggplot(sensitivity.fixVmat.summarydata, aes( x=Block,y=D)) + 
   geom_bar(position=position_dodge(), stat="identity") +
-  geom_errorbar(aes(ymin=correctResponse-se, ymax=correctResponse+se), size=0.5,   
+  geom_errorbar(aes(ymin=D-se, ymax=D+se), size=0.5,   
                 width=.25,position=position_dodge(.9)) +
   facet_grid(~numDist, labeller = as_labeller(c(`2`="2 distractors", `4`="4 distractors", `6`="6 distractors"))) +
-  scale_y_continuous("sensitivity (%)",expand = c(0, 0), limits=c(0,100)) +
+  scale_y_continuous("sensitivity (%)",expand = c(0, 0)) +
   scale_x_discrete("Block type") +
   theme_apa()
 pdf("C:/Users/dhen061/Desktop/ThesisWriting/Figures/WMBehav_sensitivityfixvmatPlot.pdf", width = 7, paper = "special")
@@ -801,7 +559,7 @@ sensitivity.fixVmat.bar
 dev.off()
 ```
 
-A 2x3 repeated measures ANOVA was performed in order to test for the effect of block type (fixed, and targEqual), and distractor number (two, four, and six) on sensitivity (d'). The results showed a main effect of distractor number (`r sensitivity.fixVmatch.distractors.table$full_result$numDist`), but no main effect of block context (`r sensitivity.fixVmatch.distractors.table$full_result$Block`). There was however a significant interaction between distractor number and block context (`r sensitivity.fixVmatch.distractors.table$full_result$numDist`) and pairwise comparisons using Tukey correction were performed in order to follow up this effect. For both block types, participants had significantly higher sensitivity as distractor number decreased (see table\ \@ref(tab:sensitivityfixVmatchdistractorsdistXblocktable) for full details). In the 6 distractor trials, participants had significantly higher sensitivity in the targEqual block than the fixed block, there was no significant difference between blocks in the four distractor trials, but there was an effect approaching significance in the two distractor trials where participants had higher sensitivity in the fixed distractor blocks (see table\ \@ref(tab:sensitivityfixVmatchdistractorsblockXdisttable)). The results of this analysis are shown in figure\ \@ref(fig:sensitivityfixVmatPlot).
+The results showed a main effect of distractor number (`r sensitivity.fixVmatch.distractors.table$full_result$numDist`) on sensitivity, but no main effect of block context (`r sensitivity.fixVmatch.distractors.table$full_result$Block`). There was however a significant interaction between distractor number and block context (`r sensitivity.fixVmatch.distractors.table$full_result$numDist_Block`) and pairwise comparisons using Tukey correction were performed in order to follow up this effect. For both block types, participants had significantly higher sensitivity as distractor number decreased (see table\ \@ref(tab:sensitivityfixVmatchdistractorsdistXblocktable) for full details). In the 6 distractor trials, participants had significantly higher sensitivity in the target-match block than the fixed block, there was no significant difference between blocks in the four distractor trials, but there was an effect approaching significance in the two distractor trials where participants had higher sensitivity in the fixed distractor blocks (see table\ \@ref(tab:sensitivityfixVmatchdistractorsblockXdisttable)). The results of this analysis are shown in figure\ \@ref(fig:sensitivityfixVmatPlot).
 
 ```{r sensitivity_fixVmatch_distractors_table, results = 'asis'}
 #apa_table(sensitivity.fixVmatch.distractors.table$table, caption = "FixVMat sensitivity: Summary of the 2 x 4 repeated measures ANOVA used to test the effects of block type and distractor number on participant sensitivity in the working memory task.", escape = FALSE)
@@ -813,7 +571,7 @@ print(sensitivity.fixVmatch.distractors.blockXdist.table, comment=FALSE, caption
 ```
 
 ```{r sensitivityfixVmatPlot, fig.cap = "Participant sensitivity as a function of set size and number of distractors present at encoding and retrieval.", fig.align = "center"}
-#include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/WMBehav_sensitivityfixVmatPlot.pdf", auto_pdf = TRUE)
+include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/WMBehav_sensitivityfixVmatPlot.pdf", auto_pdf = TRUE)
 ```
 ### Response bias
 ```{r criterion_fixVmat_distractors, include=FALSE, echo=FALSE}
@@ -831,13 +589,13 @@ criterion.fixVmatch.distractors.blockXdist <- pairs(emmeans(criterion.fixVmatch.
 criterion.fixVmatch.distractors.table <- apa_print(criterion.fixVmatch.distractors.aov)
 
 #Create plots
-criterion.fixVmat.summarydata <- summarySE(fixVmat.Vals, measurevar="correctResponse", groupvars=c("Block","numDist"))
-criterion.fixVmat.bar <- ggplot(criterion.fixVmat.summarydata, aes( x=Block,y=correctResponse)) + 
+criterion.fixVmat.summarydata <- summarySE(fixVmat.Vals, measurevar="C", groupvars=c("Block","numDist"))
+criterion.fixVmat.bar <- ggplot(criterion.fixVmat.summarydata, aes( x=Block,y=C)) + 
   geom_bar(position=position_dodge(), stat="identity") +
-  geom_errorbar(aes(ymin=correctResponse-se, ymax=correctResponse+se), size=0.5,   
+  geom_errorbar(aes(ymin=C-se, ymax=C+se), size=0.5,   
                 width=.25,position=position_dodge(.9)) +
-  facet_grid(~numDist, labeller = as_labeller(c(`2`="2 distractors", `4`="4 distractors", `6`="6 distractors"))) +
-  scale_y_continuous("criterion (%)",expand = c(0, 0), limits=c(0,100)) +
+  facet_grid(~numDist, labeller = as_labeller(c(`2`="2 dist", `4`="4 distractors", `6`="6 distractors"))) +
+  scale_y_continuous("criterion (%)",expand = c(0, 0)) +
   scale_x_discrete("Block type") +
   theme_apa()
 pdf("C:/Users/dhen061/Desktop/ThesisWriting/Figures/WMBehav_criterionfixvmatPlot.pdf", width = 7, paper = "special")
@@ -845,7 +603,7 @@ criterion.fixVmat.bar
 dev.off()
 ```
 
-A 2x3 repeated measures ANOVA was performed in order to test for the effect of block type (fixed, and targEqual), and distractor number (two, four, and six) on response bias (C). The results showed no significant main effect of distractor number (`r criterion.fixVmatch.distractors.table$full_result$numDist`), no significant main effect of block context (`r criterion.fixVmatch.distractors.table$full_result$Block`), and no significant interaction between distractor number and block context (`r criterion.fixVmatch.distractors.table$full_result$numDist`). The results are displayed in figure\ \@ref(fig:criterionfixVmatPlot).
+The results showed no significant main effect of distractor number (`r criterion.fixVmatch.distractors.table$full_result$numDist`) on response bias, no significant main effect of block context (`r criterion.fixVmatch.distractors.table$full_result$Block`), and no significant interaction between distractor number and block context (`r criterion.fixVmatch.distractors.table$full_result$numDist_Block`). The results are displayed in figure\ \@ref(fig:criterionfixVmatPlot).
 
 ```{r criterion_fixVmatch_distractors_table, results = 'asis'}
 #apa_table(criterion.fixVmatch.distractors.table$table, caption = "FixVMat criterion: Summary of the 2 x 4 repeated measures ANOVA used to test the effects of block type and distractor number on participant criterion in the working memory task.", escape = FALSE)
@@ -854,9 +612,10 @@ A 2x3 repeated measures ANOVA was performed in order to test for the effect of b
 ```{r criterionfixVmatPlot, fig.cap = "Participant criterion as a function of set size and number of distractors present at encoding and retrieval.", fig.align = "center"}
 include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/WMBehav_criterionfixVmatPlot.pdf", auto_pdf = TRUE)
 ```
-## Fixed vs. targOpp
 
-In order to test for the effect of block context on performance, we compared performance measures in the targEqual condition to performance from the equivalent trials taken from the fixed distractor blocks.
+## Target-inverse blocks
+
+Next, we tested for the effect of target-inverse block context on performance by focusing on those blocks where the number of distractors on a given trial was always the inverse of the number of targets on that trial. These target-inverse trials were compared to the equivalent trials taken from the fixed distractor blocks (two target trials from the six distractor blocks, four target trials from the four distractor blocks, and six target trials from the two distractor blocks). Once again we calculated accuracy, capacity, sensitivity, and response bias and performed a 2x3 ANOVA for each of these dependent variables, with block type (fixed, or target-match) and distractor number (two, four, or six) as the independent variables. Once again, follow up comparisons were only performed on interactions between block type and distractor number. 
 
 ### Accuracy
 ```{r accuracy_fixVopp_distractors, include=FALSE, echo=FALSE}
@@ -881,7 +640,8 @@ accuracy.fixVopp.bar <- ggplot(accuracy.fixVopp.summarydata, aes( x=Block,y=corr
   geom_errorbar(aes(ymin=correctResponse-se, ymax=correctResponse+se), size=0.5,   
     width=.25,position=position_dodge(.9)) +
   facet_grid(~numDist, labeller = as_labeller(c(`2`="2 distractors", `4`="4 distractors", `6`="6 distractors"))) +
-  scale_y_continuous("Accuracy (%)",expand = c(0, 0), limits=c(0,100)) +
+  scale_y_continuous("Accuracy (%)",expand = c(0, 0)) +
+  coord_cartesian(ylim=c(50,100)) +
   scale_x_discrete("Block type") +
   theme_apa()
 pdf("C:/Users/dhen061/Desktop/ThesisWriting/Figures/WMBehav_accuracyfixvoppPlot.pdf", width = 7, paper = "special")
@@ -889,7 +649,7 @@ accuracy.fixVopp.bar
 dev.off()
 ```
 
-A 2x3 repeated measures ANOVA was performed in order to test for the effect of block type (fixed, and targOpp), and distractor number (two, four, and six) on participant accuracy. The results showed a main effect of distractor number (`r accuracy.fixVopp.distractors.table$full_result$numDist`), but no main effect of block context (`r accuracy.fixVopp.distractors.table$full_result$Block`), and no significant interaction between distractor number and block context (`r accuracy.fixVopp.distractors.table$full_result$numDist`). The results of this analysis are shown in figure\ \@ref(fig:accuracyfixVoppPlot).
+The results showed a main effect of distractor number (`r accuracy.fixVopp.distractors.table$full_result$numDist`), but no main effect of block context (`r accuracy.fixVopp.distractors.table$full_result$Block`), and no significant interaction between distractor number and block context (`r accuracy.fixVopp.distractors.table$full_result$numDist_Block`). The results of this analysis are shown in figure\ \@ref(fig:accuracyfixVoppPlot).
 
 ```{r accuracy_fixVopp_distractors_table, results = 'asis'}
 #apa_table(accuracy.fixVopp.distractors.table$table, caption = "FixVOpp accuracy. Summary of the 2 x 4 repeated measures ANOVA used to test the effects of block type and distractor number on participant accuracy in the working memory task.", escape = FALSE)
@@ -933,7 +693,7 @@ capacity.fixVopp.bar
 dev.off()
 ```
 
-A 2x3 repeated measures ANOVA was performed in order to test for the effect of block type (fixed, and targOpp), and distractor number (two, four, and six) on capacity estimates. The results showed a main effect of distractor number (`r capacity.fixVopp.distractors.table$full_result$numDist`), but no main effect of block context (`r capacity.fixVopp.distractors.table$full_result$Block`), and no significant interaction between distractor number and block context (`r capacity.fixVopp.distractors.table$full_result$numDist`). The results of this analysis are shown in figure\ \@ref(fig:capacityfixVoppPlot).
+The results showed a main effect of distractor number (`r capacity.fixVopp.distractors.table$full_result$numDist`), but no main effect of block context (`r capacity.fixVopp.distractors.table$full_result$Block`), and no significant interaction between distractor number and block context (`r capacity.fixVopp.distractors.table$full_result$numDist_Block`). The results of this analysis are shown in figure\ \@ref(fig:capacityfixVoppPlot).
 
 ```{r capacity_fixVopp_distractors_table, results = 'asis'}
 #apa_table(capacity.fixVopp.distractors.table$table, caption = "FixVOpp capacity. Summary of the 2 x 4 repeated measures ANOVA used to test the effects of block type and distractor number on participant capacity in the working memory task.", escape = FALSE)
@@ -947,90 +707,6 @@ A 2x3 repeated measures ANOVA was performed in order to test for the effect of b
 include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/WMBehav_capacityfixVoppPlot.pdf", auto_pdf = TRUE)
 ```
 
-### Hits
-```{r hits_fixVopp_distractors, include=FALSE, echo=FALSE}
-hits.fixVopp.distractors.aov <- aov_ez(
-  data = fixVopp.Vals,
-  dv = "hitProp",
-  id = "PID", 
-  within = c("numDist", "Block")
-)
-#Interaction
-hits.fixVopp.distractors.distmain <- pairs(emmeans(hits.fixVopp.distractors.aov, ~ numDist))
-
-#create table
-hits.fixVopp.distractors.table <- apa_print(hits.fixVopp.distractors.aov)
-#Create followup table
-hits.fixVopp.distractors.distmain.table <- xtable(summary(hits.fixVopp.distractors.distmain), caption = "Summary of the pairwise comparisons used to follow up the main interaction (hits)", label = "tab:hits.fixVopp.distractors.distmain.table")
-
-#create plot
-hits.fixVopp.summarydata <- summarySE(fixVopp.Vals, measurevar="hitProp", groupvars=c("Block","numDist"))
-hits.fixVopp.bar <- ggplot(hits.fixVopp.summarydata, aes( x=Block,y=hitProp)) + 
-  geom_bar(position=position_dodge(), stat="identity") +
-  geom_errorbar(aes(ymin=hitProp-se, ymax=hitProp+se), size=0.5,   
-    width=.25,position=position_dodge(.9)) +
-  facet_grid(~numDist, labeller = as_labeller(c(`2`="2 distractors", `4`="4 distractors", `6`="6 distractors"))) +
-  scale_y_continuous("Hits (%)",expand = c(0, 0)) +
-  scale_x_discrete("Block type") +
-  theme_apa()
-pdf("C:/Users/dhen061/Desktop/ThesisWriting/Figures/WMBehav_hitsfixvoppPlot.pdf", width = 7, paper = "special")
-hits.fixVopp.bar
-dev.off()
-```
-
-```{r hits_fixVopp_distractors_table, results = 'asis'}
-#apa_table(hits.fixVopp.distractors.table$table, caption = "FixVOpp hits. Summary of the 2 x 4 repeated measures ANOVA used to test the effects of block type and distractor number on participant hits in the working memory task.", escape = FALSE)
-```
-
-```{r hits_fixVopp_pairwise, results = 'asis'}
-#print(hits.fixVopp.distractors.distmain.table, comment=FALSE, caption.placement = "top", latex.environments="flushleft")
-```
-
-```{r hitsfixVoppPlot, fig.cap = "Participant hits as a function of set size and number of distractors present at encoding and retrieval.", fig.align = "center"}
-#include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/WMBehav_hitsfixVoppPlot.pdf", auto_pdf = TRUE)
-```
-### False alarms
-```{r fa_fixVopp_distractors, include=FALSE, echo=FALSE}
-fa.fixVopp.distractors.aov <- aov_ez(
-  data = fixVopp.Vals,
-  dv = "faProp",
-  id = "PID", 
-  within = c("numDist", "Block")
-)
-#Interaction
-fa.fixVopp.distractors.distmain <- pairs(emmeans(fa.fixVopp.distractors.aov, ~ numDist))
-
-#create table
-fa.fixVopp.distractors.table <- apa_print(fa.fixVopp.distractors.aov)
-#Create followup table
-fa.fixVopp.distractors.distmain.table <- xtable(summary(fa.fixVopp.distractors.distmain), caption = "Summary of the pairwise comparisons used to follow up the main interaction (fa)", label = "tab:fa.fixVopp.distractors.distmain.table")
-
-#create plot
-fa.fixVopp.summarydata <- summarySE(fixVopp.Vals, measurevar="faProp", groupvars=c("Block","numDist"))
-fa.fixVopp.bar <- ggplot(fa.fixVopp.summarydata, aes( x=Block,y=faProp)) + 
-  geom_bar(position=position_dodge(), stat="identity") +
-  geom_errorbar(aes(ymin=faProp-se, ymax=faProp+se), size=0.5,   
-    width=.25,position=position_dodge(.9)) +
-  facet_grid(~numDist, labeller = as_labeller(c(`2`="2 distractors", `4`="4 distractors", `6`="6 distractors"))) +
-  scale_y_continuous("Fa (%)",expand = c(0, 0)) +
-  scale_x_discrete("Block type") +
-  theme_apa()
-pdf("C:/Users/dhen061/Desktop/ThesisWriting/Figures/WMBehav_fafixvoppPlot.pdf", width = 7, paper = "special")
-fa.fixVopp.bar
-dev.off()
-```
-
-```{r fa_fixVopp_distractors_table, results = 'asis'}
-#apa_table(fa.fixVopp.distractors.table$table, caption = "FixVOpp FA. Summary of the 2 x 4 repeated measures ANOVA used to test the effects of block type and distractor number on participant fa in the working memory task.", escape = FALSE)
-```
-
-```{r fa_fixVopp_pairwise, results = 'asis'}
-#print(fa.fixVopp.distractors.distmain.table, comment=FALSE, caption.placement = "top", latex.environments="flushleft")
-```
-
-```{r fafixVoppPlot, fig.cap = "Participant fa as a function of set size and number of distractors present at encoding and retrieval.", fig.align = "center"}
-#include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/WMBehav_fafixVoppPlot.pdf", auto_pdf = TRUE)
-```
 ### Sensitivity
 ```{r sensitivity_fixVopp_distractors, include=FALSE, echo=FALSE}
 sensitivity.fixVopp.distractors.aov <- aov_ez(
@@ -1048,13 +724,13 @@ sensitivity.fixVopp.distractors.table <- apa_print(sensitivity.fixVopp.distracto
 sensitivity.fixVopp.distractors.distmain.table <- xtable(summary(sensitivity.fixVopp.distractors.distmain), caption = "Summary of the pairwise comparisons used to follow up the main interaction (sensitivity)", label = "tab:sensitivity.fixVopp.distractors.distmain.table")
 
 #create plot
-sensitivity.fixVopp.summarydata <- summarySE(fixVopp.Vals, measurevar="correctResponse", groupvars=c("Block","numDist"))
-sensitivity.fixVopp.bar <- ggplot(sensitivity.fixVopp.summarydata, aes( x=Block,y=correctResponse)) + 
+sensitivity.fixVopp.summarydata <- summarySE(fixVopp.Vals, measurevar="D", groupvars=c("Block","numDist"))
+sensitivity.fixVopp.bar <- ggplot(sensitivity.fixVopp.summarydata, aes( x=Block,y=D)) + 
   geom_bar(position=position_dodge(), stat="identity") +
-  geom_errorbar(aes(ymin=correctResponse-se, ymax=correctResponse+se), size=0.5,   
+  geom_errorbar(aes(ymin=D-se, ymax=D+se), size=0.5,   
                 width=.25,position=position_dodge(.9)) +
   facet_grid(~numDist, labeller = as_labeller(c(`2`="2 distractors", `4`="4 distractors", `6`="6 distractors"))) +
-  scale_y_continuous("sensitivity (%)",expand = c(0, 0), limits=c(0,100)) +
+  scale_y_continuous("sensitivity (%)",expand = c(0, 0)) +
   scale_x_discrete("Block type") +
   theme_apa()
 pdf("C:/Users/dhen061/Desktop/ThesisWriting/Figures/WMBehav_sensitivityfixvoppPlot.pdf", width = 7, paper = "special")
@@ -1062,7 +738,7 @@ sensitivity.fixVopp.bar
 dev.off()
 ```
 
-A 2x3 repeated measures ANOVA was performed in order to test for the effect of block type (fixed, and targOpp), and distractor number (two, four, and six) on sensitivity (d'). The results showed a main effect of distractor number (`r sensitivity.fixVopp.distractors.table$full_result$numDist`), but no main effect of block context (`r sensitivity.fixVopp.distractors.table$full_result$Block`), and no significant interaction between distractor number and block context (`r sensitivity.fixVopp.distractors.table$full_result$numDist`). The results of this analysis are shown in figure\ \@ref(fig:sensitivityfixVoppPlot).
+The results showed a main effect of distractor number (`r sensitivity.fixVopp.distractors.table$full_result$numDist`), but no main effect of block context (`r sensitivity.fixVopp.distractors.table$full_result$Block`), and no significant interaction between distractor number and block context (`r sensitivity.fixVopp.distractors.table$full_result$numDist_Block`). The results of this analysis are shown in figure\ \@ref(fig:sensitivityfixVoppPlot).
 
 ```{r sensitivity_fixVopp_distractors_table, results = 'asis'}
 #apa_table(sensitivity.fixVopp.distractors.table$table, caption = "FixVOpp sensitivity. Summary of the 2 x 4 repeated measures ANOVA used to test the effects of block type and distractor number on participant sensitivity in the working memory task.", escape = FALSE)
@@ -1090,13 +766,13 @@ criterion.fixVopp.distractors.distmain <- pairs(emmeans(criterion.fixVopp.distra
 criterion.fixVopp.distractors.table <- apa_print(criterion.fixVopp.distractors.aov)
 
 #create plot
-criterion.fixVopp.summarydata <- summarySE(fixVopp.Vals, measurevar="correctResponse", groupvars=c("Block","numDist"))
-criterion.fixVopp.bar <- ggplot(criterion.fixVopp.summarydata, aes( x=Block,y=correctResponse)) + 
+criterion.fixVopp.summarydata <- summarySE(fixVopp.Vals, measurevar="C", groupvars=c("Block","numDist"))
+criterion.fixVopp.bar <- ggplot(criterion.fixVopp.summarydata, aes( x=Block,y=C)) + 
   geom_bar(position=position_dodge(), stat="identity") +
-  geom_errorbar(aes(ymin=correctResponse-se, ymax=correctResponse+se), size=0.5,   
+  geom_errorbar(aes(ymin=C-se, ymax=C+se), size=0.5,   
                 width=.25,position=position_dodge(.9)) +
   facet_grid(~numDist, labeller = as_labeller(c(`2`="2 distractors", `4`="4 distractors", `6`="6 distractors"))) +
-  scale_y_continuous("criterion (%)",expand = c(0, 0), limits=c(0,100)) +
+  scale_y_continuous("criterion (%)",expand = c(0, 0)) +
   scale_x_discrete("Block type") +
   theme_apa()
 pdf("C:/Users/dhen061/Desktop/ThesisWriting/Figures/WMBehav_criterionfixvoppPlot.pdf", width = 7, paper = "special")
@@ -1104,10 +780,10 @@ criterion.fixVopp.bar
 dev.off()
 ```
 
-A 2x3 repeated measures ANOVA was performed in order to test for the effect of block type (fixed, and targEqual), and distractor number (two, four, and six) on response bias (C). The results showed no significant main effect of distractor number (`r criterion.fixVopp.distractors.table$full_result$numDist`), no significant main effect of block context (`r criterion.fixVopp.distractors.table$full_result$Block`), and no significant interaction between distractor number and block context (`r criterion.fixVopp.distractors.table$full_result$numDist`). The results are displayed in figure\ \@ref(fig:criterionfixVoppPlot).
+The results showed no significant main effect of distractor number (`r criterion.fixVopp.distractors.table$full_result$numDist`), no significant main effect of block context (`r criterion.fixVopp.distractors.table$full_result$Block`), and no significant interaction between distractor number and block context (`r criterion.fixVopp.distractors.table$full_result$numDist_Block`). The results are displayed in figure\ \@ref(fig:criterionfixVoppPlot).
 
 ```{r criterion_fixVopp_distractors_table, results = 'asis'}
-apa_table(criterion.fixVopp.distractors.table$table, caption = "FixVOpp criterion. Summary of the 2 x 4 repeated measures ANOVA used to test the effects of block type and distractor number on participant criterion in the working memory task.", escape = FALSE)
+#apa_table(criterion.fixVopp.distractors.table$table, caption = "FixVOpp criterion. Summary of the 2 x 4 repeated measures ANOVA used to test the effects of block type and distractor number on participant criterion in the working memory task.", escape = FALSE)
 ```
 
 ```{r criterion_fixVopp_pairwise, results = 'asis'}
@@ -1147,9 +823,9 @@ capacity.splithalf <- cor(oddDataSummary$capacity, evenDataSummary$capacity)
 capacity.SB <- (2*capacity.splithalf)/(1+capacity.splithalf)
 ```
 
-In order to test for the effects of working memory capacity on filtering in our task, we followed the analyses used by Miller and Unsworth (2018). Individual differences in working memory capacity and filtering. Individual capacity was estimated using the fixed zero distractor blocks in order to prevent capacity estimates from including any trials which directly required distractor suppression.. We tested the internal reliability of this estimate by performing a split-half correlation on capacity measured from odd and even trials. The results produced a Spearman-Brown coefficient of `r as.character(round(capacity.SB,2))`. To 
+In our final set of analyses we sought to test the relationship between an individual's working memory capacity and distractor filtering in this task. Individual capacity was estimated using the fixed zero distractor blocks in order to prevent capacity estimates from including any trials which directly required distractor suppression.. We tested the internal reliability of this estimate by performing a split-half correlation on capacity measured from odd and even trials. The results produced a Spearman-Brown coefficient of `r as.character(round(capacity.SB,2))`.
 
-### Fixed distractor blocks
+### Individual differences in the fixed distractor blocks
 
 ```{r measuringDistractorEffectInFixed,echo=FALSE,include=FALSE}
 #"First, we examined the correlation between the filtering cost described above and WM span."
@@ -1170,7 +846,7 @@ accuracy.fixedonly.targanddist.ancova <- aov_ez(
   data = fixed.Vals,
   dv = "D",
   id = "PID", 
-  within = c("targetNum","DistNum"),
+  within = "DistNum",
   covariate = "avgCapacity"
 )
 fixed.ancova <- apa_print(accuracy.fixedonly.targanddist.ancova)
@@ -1198,41 +874,11 @@ ggplot(fixedRegressSheet, aes(x=fourDist, y=resid2)) + geom_point() +geom_smooth
 #Plot the part correlation of capacity after accounting for fixNZ accuracy
 fixedRegressSheet$m1Residual <- resid(fixedModel1)
 ggplot(fixedRegressSheet, aes(x=Capacity, y=m1Residual)) + geom_point() +geom_smooth(method=lm) +theme_apa()
-
-if (FALSE) {
-#R value across nonZero dist condition
-nonZeroDist <- subset(fixed.Vals, DistNum!=0)
-for (subj in unique(nonZeroDist$PID)) {
-  fixed.Vals$nonZeroR[fixed.Vals$PID==subj] <- summary(lm(correctResponse ~ numOfDist, subset(nonZeroDist, PID==subj)))$coefficients[2]
-}
-testCorrel <- summarise(group_by(fixed.Vals,PID),acc = mean(correctResponse),cap = mean(avgCapacity), dist=mean(nonZeroR))
-corValue <-cor(testCorrel$cap,testCorrel$dist)
-corValuep <- cor.test(testCorrel$cap,testCorrel$dist)
-corPlot <- ggplot(data=testCorrel,aes(x=dist,y=cap)) +geom_point()
-
-#GLM per person using dist num to predict correct response
-for (subj in unique(allData$PID)) {
-  result <- summary(glm(correctResponse~numDist+targetNum,data=subset(allData,PID==subj),family=binomial()))
-  fixed.Vals$distGLMR[fixed.Vals$PID==subj] <- result$coefficients[2]
-}
-testCorrel <- summarise(group_by(fixed.Vals,PID),cap = mean(avgCapacity), dist=mean(distGLMR))
-corValue <-  cor(testCorrel$cap,testCorrel$dist)
-corValuep <-  cor.test(testCorrel$cap,testCorrel$dist)
-corPlot <- ggplot(data=fixed.Vals,aes(x=distGLMR,y=avgCapacity)) +geom_point()
-
-#Regression for each person of distNum and capacity
-
-#hierarchical regression, exetra variance explained by dist present trials
-
-
-}
 ```
 
-To evaluate the effect of capacity on distraction, first we entered capacity as a covariate in the above ANOVA which tested for the effect of target and distractor number on accuracy in the fixed distractor blocks. Although the results showed that there was a significant main effect of working memory capacity (`r fixed.ancova$full_result$avgCapacity`), such that individuals with larger capacities were more accurate on the task (r=0.40, p<0.001), capacity did not interact with either target number (`r fixed.ancova$full_result$avgCapacity_targetNum`), distractor number (`r fixed.ancova$full_result$avgCapacity_DistNum`), or the interaction between target and distractor number (`r fixed.ancova$full_result$avgCapacity_targetNum_DistNum`).
+To evaluate the effect of capacity on distraction, first we entered capacity as a covariate in the above ANOVA which tested for the effect of distractor number on accuracy in the fixed distractor blocks. Although the results showed that there was a significant main effect of working memory capacity (`r fixed.ancova$full_result$avgCapacity`), such that individuals with larger capacities were more accurate on the task (r=0.40, p<0.001), capacity did not interact with distractor number (`r fixed.ancova$full_result$avgCapacity_DistNum`). Next, we performed a correlation to test for a relationship between working memory capacity and filtering cost in the fixed blocks. Filtering cost was calculated by subtracting accuracy in the the distractor present blocks from accuracy in the distractor absent blocks. The results showed a marginally significant relationship between capacity and filtering cost such that as capacity increased, the cost of distractors also increased (r = 0.27, p = 0.045).
 
-Next, we performed a correlation to test for a relationship between working memory capacity and filtering cost in the fixed blocks. Filtering cost was calculated by subtracting accuracy in the the distractor preset blocks from accuracy in the distractor absent blocks. The results showed a marginaly significant relationship between capacity and filtering cost such that as capacity increased, the cost of distractors also increased (r = 0.27, p = 0.045).
-
-### TargEqual block
+### Individual differences in the target-match blocks
 ```{r measuringDistractorEffectIntargEqual,echo=FALSE,include=FALSE}
 #Because distractor number and target number are conflated, we can't calculate filter cost like above, so we skip that analysis and jst do the other two.
 #First, repeat ANOVAs from above including WM capacity as a covariate.
@@ -1266,11 +912,41 @@ regressSheet$m1Residual <-residual <- resid(model1)
 ggplot(regressSheet, aes(x=Capacity, y=m1Residual)) + geom_point() +geom_smooth(method=lm) +theme_apa()
 ```
 
-To evaluate the effect of capacity on distraction, first we entered capacity as a covariate in the above ANOVA which tested for the effect of bock type and distractor number on accuracy in the targMat blocks. The results showed that there was no significant main effect of working memory capacity (`r fixVmat.ancova$full_result$avgCapacity`), and capacity did not interact with either block type (`r fixVmat.ancova$full_result$avgCapacity_Block`), distractor number (`r fixVmat.ancova$full_result$avgCapacity_numDist`), or the interaction between block type and distractor number (`r fixVmat.ancova$full_result$avgCapacity_numDist_Block`).
+```{r makeM1RegressionTable, include=FALSE,echo=FALSE}
+#Make my own table because I can't get any of the packages to work >:/
+m1Full <- summary(model1)
+m2Full <- summary(model2)
+m1Sum <- format(round(m1Full$coefficients[,1:3],2),nsmall=2)
+m2Sum <- format(round(m2Full$coefficients[,1:3],2),nsmall=2)
+m1Sum <- cbind(m1Sum,format(round(m1Full$coefficients[,4],3),nsmall=3))
+m2Sum <- cbind(m2Sum,format(round(m2Full$coefficients[,4],3),nsmall=3))
+m1Sum[as.numeric(m1Sum[,4])<0.001,4]="<0.001"
+m2Sum[as.numeric(m2Sum[,4])<0.001,4]="<0.001"
+fullTable <- rbind(c(""),m1Sum,c(""),m2Sum)
+#fullTable <- format(round(fullTable,2),nsmall=2)
+fullTable <- cbind(c("Step 1","Constant","Fixed trials","Step 2","Constant","Fixed trials","Capacity"),fullTable)
+fullTable <- data.frame(fullTable)
 
-Next, we used regression to estimate the shared variance between the targMat trials and their fixed block equivalents. After controlling for this variance, any residual shared variance between working memory capacity and accuracy in the targMat block should be due to working memory control abilities that are unique to inter-trial effects in the targMat block. As shown in table .X., accuracy in the fixed block trials accounts for a significant amount of variance in targMat accruacy, however working memory capacity also accounts for a unique portion of variance in the targMat block and significantly improves the model's performance (F(1,53)=7.92, p=0.007). Individuals with a higher working memory capacity perform more accurately on the targOpp trials, even after controlling for the shared variance between their fixed block accuracy and targOpp accuracy.
+R <- c(format(round(m1Full$r.squared,2),nsmall=2),"","",format(round(m2Full$r.squared,2),nsmall=2),"","","")
+Adj.R <- c(format(round(m1Full$adj.r.squared,2),nsmall=2),"","",format(round(m2Full$adj.r.squared,2),nsmall=2),"","","")
+p.value <- c("<0.001","","","<0.001","","","")
+F.value <- c(format(round(m1Full$fstatistic[1],2),nsmall=2),"","",format(round(m2Full$fstatistic[1],2),nsmall=2),"","","")
+df <- c(paste(as.character(round(m1Full$fstatistic[2])),",",round(m1Full$fstatistic[3]),sep=""),"","",paste(as.character(round(m2Full$fstatistic[2])),",",round(m2Full$fstatistic[3]),sep=""),"","","")
+frame = data.frame(R,Adj.R,F.value,df,p.value)
+fullTable <- cbind(fullTable,frame)
+colnames(fullTable) <- c("","$B$","SE","t","p","$R^2$","$Adj. R^2$","F","df","p")
 
-### TargOpp block
+
+modelTable <- xtable(fullTable, caption = "Summary of the hierarchical regression results predicting performance in the target-match blocks", label = "tab:modelOneTable")
+```
+
+```{r printM1RegressTable, results='asis'}
+print(modelTable, comment=FALSE, caption.placement = "top", latex.environments="flushleft",include.rownames=FALSE, sanitize.text.function = function(x) {x})
+```
+
+To evaluate the effect of capacity on distraction in the target-match blocks, first we entered capacity as a covariate in the above ANOVA which tested for the effect of block type and distractor number on accuracy in the target-match blocks. The results showed that there was no significant main effect of working memory capacity (`r fixVmat.ancova$full_result$avgCapacity`), and capacity did not interact with either block type (`r fixVmat.ancova$full_result$avgCapacity_Block`), distractor number (`r fixVmat.ancova$full_result$avgCapacity_numDist`), or the interaction between block type and distractor number (`r fixVmat.ancova$full_result$avgCapacity_numDist_Block`). Next, we used regression to estimate the shared variance between the targMat trials and their fixed block equivalents. After controlling for this variance, any residual shared variance between working memory capacity and accuracy in the targMat block should be due to working memory control abilities that are unique to inter-trial effects in the targMat block. As shown in table .X., accuracy in the fixed block trials accounts for a significant amount of variance in targMat accuracy, however working memory capacity also accounts for a unique portion of variance in the targMat block and significantly improves the model's performance (F(1,53)=7.92, p=0.007). Individuals with a higher working memory capacity perform more accurately on the target-inverse trials, even after controlling for the shared variance between their fixed block accuracy and target-inverse accuracy.  For a summary of the regression results see table\ \@ref(tab:modelOneTable).
+
+### Individual differences in the target-inverse blocks
 ```{r measuringDistractorEffectIntargOpp,echo=FALSE,include=FALSE}
 #Because distractor number and target number are conflated, we can't calculate filter cost like above, so we skip that analysis and jst do the other two.
 #First, repeat ANOVAs from above including WM capacity as a covariate.
@@ -1300,9 +976,40 @@ hRegression <- anova(model1,model2)
 regressSheet$m1Residual <-residual <- resid(model1)
 ggplot(regressSheet, aes(x=Capacity, y=m1Residual)) + geom_point() +geom_smooth(method=lm) +theme_apa()
 ```
-To evaluate the effect of capacity on distraction, first we entered capacity as a covariate in the above ANOVA which tested for the effect of bock type and distractor number on accuracy in the targOpp blocks. The results showed that there was no significant main effect of working memory capacity (`r fixVopp.ancova$full_result$avgCapacity`), and capacity did not interact with either block type (`r fixVopp.ancova$full_result$avgCapacity_Block`), distractor number (`r fixVopp.ancova$full_result$avgCapacity_numDist`), or the interaction between block type and distractor number (`r fixVopp.ancova$full_result$avgCapacity_numDist_Block`).
 
-Next, we used regression to estimate the shared variance between the targOpp trials and their fixed block equivalents. After controlling for this variance, any residual shared variance between working memory capacity and accuracy in the targOpp block should be due to working memory control abilities that are unique to inter-trial effects in the targOpp block. As shown in table .X., accuracy in the fixed block trials accounts for a significant amount of variance in targOpp accruacy, however working memory capacity also accounts for a unique portion of variance in the targOpp block and significantly improves the model's performance (F(1,53)=8.05, p=0.006). Individuals with a higher working memory capacity perform more accurately on the targOpp trials, even after controlling for the shared variance between their fixed block accuracy and targOpp accuracy.
+```{r makeM2RegressionTable, include=FALSE,echo=FALSE}
+#Make my own table because I can't get any of the packages to work >:/
+m1Full <- summary(model1)
+m2Full <- summary(model2)
+m1Sum <- format(round(m1Full$coefficients[,1:3],2),nsmall=2)
+m2Sum <- format(round(m2Full$coefficients[,1:3],2),nsmall=2)
+m1Sum <- cbind(m1Sum,format(round(m1Full$coefficients[,4],3),nsmall=3))
+m2Sum <- cbind(m2Sum,format(round(m2Full$coefficients[,4],3),nsmall=3))
+m1Sum[as.numeric(m1Sum[,4])<0.001,4]="<0.001"
+m2Sum[as.numeric(m2Sum[,4])<0.001,4]="<0.001"
+fullTable <- rbind(c(""),m1Sum,c(""),m2Sum)
+#fullTable <- format(round(fullTable,2),nsmall=2)
+fullTable <- cbind(c("Step 1","Constant","Fixed trials","Step 2","Constant","Fixed trials","Capacity"),fullTable)
+fullTable <- data.frame(fullTable)
+
+R <- c(format(round(m1Full$r.squared,2),nsmall=2),"","",format(round(m2Full$r.squared,2),nsmall=2),"","","")
+Adj.R <- c(format(round(m1Full$adj.r.squared,2),nsmall=2),"","",format(round(m2Full$adj.r.squared,2),nsmall=2),"","","")
+p.value <- c("<0.001","","","<0.001","","","")
+F.value <- c(format(round(m1Full$fstatistic[1],2),nsmall=2),"","",format(round(m2Full$fstatistic[1],2),nsmall=2),"","","")
+df <- c(paste(as.character(round(m1Full$fstatistic[2])),",",round(m1Full$fstatistic[3]),sep=""),"","",paste(as.character(round(m2Full$fstatistic[2])),",",round(m2Full$fstatistic[3]),sep=""),"","","")
+frame = data.frame(R,Adj.R,F.value,df,p.value)
+fullTable <- cbind(fullTable,frame)
+colnames(fullTable) <- c("","$B$","SE","t","p","$R^2$","$Adj. R^2$","F","df","p")
+
+
+modelTable <- xtable(fullTable, caption = "Summary of the hierarchical regression results predicting performance in the target-inverse blocks", label = "tab:modelTwoTable")
+```
+
+```{r printM2RegressTable, results='asis'}
+print(modelTable, comment=FALSE, caption.placement = "top", latex.environments="flushleft",include.rownames=FALSE, sanitize.text.function = function(x) {x})
+```
+
+To evaluate the effect of capacity on distraction, first we entered capacity as a covariate in the above ANOVA which tested for the effect of bock type and distractor number on accuracy in the target-inverse blocks. The results showed that there was no significant main effect of working memory capacity (`r fixVopp.ancova$full_result$avgCapacity`), and capacity did not interact with either block type (`r fixVopp.ancova$full_result$avgCapacity_Block`), distractor number (`r fixVopp.ancova$full_result$avgCapacity_numDist`), or the interaction between block type and distractor number (`r fixVopp.ancova$full_result$avgCapacity_numDist_Block`). Next, we used regression to estimate the shared variance between the target-inverse trials and their fixed block equivalents. After controlling for this variance, any residual shared variance between working memory capacity and accuracy in the target-inverse block should be due to working memory control abilities that are unique to inter-trial effects in the target-inverse block. As shown in table .X., accuracy in the fixed block trials accounts for a significant amount of variance in target-inverse accuracy, however working memory capacity also accounts for a unique portion of variance in the target-inverse block and significantly improves the model's performance (F(1,53)=8.05, p=0.006). Individuals with a higher working memory capacity perform more accurately on the target-inverse trials, even after controlling for the shared variance between their fixed block accuracy and target-inverse accuracy. For a summary of the regression results see table\ \@ref(tab:modelTwoTable).
 
 # Discussion
 
@@ -1310,11 +1017,11 @@ The number of irrelevant objects presented in the change detection task effects 
 
 There was little evidence of an effect of block context on individual performance.
  
-Our variable distractor blocks never had 0 distractors, maybe this would boost block context effects as currenty particpiants might be maintaining a filter the entire block whereas if there were 0 distractor trials maybe they would be fluctuating between active suppression or not. While we see some differnces between distractor number in the fixed trials, the largest effects are between 0 and other blocks.
+Our variable distractor blocks never had 0 distractors, maybe this would boost block context effects as currently participants might be maintaining a filter the entire block whereas if there were 0 distractor trials maybe they would be fluctuating between active suppression or not. While we see some differences between distractor number in the fixed trials, the largest effects are between 0 and other blocks.
 
 What about estimating the R across distractor number on jack knifed estimates of capacity etc. as measure of distractor effect (average of individual R is no the same as R of averaged data.)
 
-Kinda makes sense that targOpp no diff from fixed because in both cases, the proportion of targs to dists is changing on a trial by trial basis.
+Kinda makes sense that target-inverse no diff from fixed because in both cases, the proportion of targs to dists is changing on a trial by trial basis.
 
 \newpage
 
