@@ -8,6 +8,8 @@ author:
     corresponding : yes    # Define only one corresponding author
     address       : "School of Psychology, University of Auckland, Private Bag 92019, Auckland 1010, New Zealand"
     email         : "dion.henare@auckland.ac.nz"
+  - name          : "Lenore Tahara-Eckl"
+    affiliation   : "1"
   - name          : "Paul M. Corballis"
     affiliation   : "1"
 
@@ -251,22 +253,25 @@ Change detection tasks are an increasingly popular way of measuring visual worki
 
 Specific incarnations of the change detection paradigm can vary significantly in terms of the type of stimuli used, and the number of stimuli that are presented at both encoding and retrieval. Historically, one of the main ways that change detection tasks have varied is with regard to the number of probes presented on the retrieval display. In the single-probed retrieval version of the task, participants are shown only one of the encoded stimuli and must therefore indicate whether that specific object has changed in any way. In the whole-display retrieval version of the task however, the entire set of encoded stimuli are presented as probes and the participant must indicate whether any one of the stimuli have changed. Another way in which the task varies is with regard to the number of encode stimuli that need to be remembered. In some versions of the task, all of the objects presented during encoding must be remembered by the participant. In other versions of the task participants receive a cue ahead of the encoding display which indicates which subset of the encoding stimuli needs to be remembered. For example, participants may be cued to encode only the blue objects in an upcoming display which contains both blue and red stimuli. These features have been shown to effect not just the absolute capacity values reported, but the underlying cognitive mechanisms that are being tested.
 
-One set of cognitive mechanisms that is especially important to consider when measuring working memory is selective attention. Converging evidence from both within and between-participant experiments now suggests that there is significant functional overlap between selective attention and working memory. When working memory load on an individual is increased, performance on a concurrent visual search task is impeded [@ahmed_focusing_2012;@de_fockert_role_2001;@stins_role_2004]. Similarly, individuals who naturally possess a larger working memory capacity perform better on standard measures of attentional control like the Stroop task [@kane_working-memory_2003] and the Eriksen flanker task [@shipstead_working_2012]. Modern accounts of working memory availability typically recognize this close association between attention and working memory by either incorporating elements of attentional control [@kane_controlled-attention_2001; @shipstead_mechanisms_2014, or in some cases suggesting that attentional control is the primary determinant of working memory capacity [@engle_working_2018]. More specific investigations of this relationship using both behavioral and neural measures now suggest that it is specifically the ability to disengage from irrelevant distractors which differentiates high and low capacity individuals [@fukuda_individual_2011;gaspar_inability_2016].
+One set of cognitive mechanisms that is especially important to consider when measuring working memory is selective attention. Converging evidence from both within and between-participant experiments now suggests that there is significant functional overlap between selective attention and working memory. When working memory load on an individual is increased, performance on a concurrent visual search task is impeded [@ahmed_focusing_2012;@de_fockert_role_2001;@stins_role_2004]. Similarly, individuals who naturally possess a larger working memory capacity perform better on standard measures of attentional control like the Stroop task [@kane_working-memory_2003] and the Eriksen flanker task [@shipstead_working_2012]. Modern accounts of working memory availability typically recognize this close association between attention and working memory by either incorporating elements of attentional control [@kane_controlled-attention_2001; @shipstead_mechanisms_2014, or in some cases suggesting that attentional control is the primary determinant of working memory capacity [@engle_working_2018]. More specific investigations of this relationship using both behavioral and neural measures now suggest that it is specifically the ability to disengage from irrelevant distractors which differentiates high and low capacity individuals [@fukuda_individual_2011;@gaspar_inability_2016].
 
-The critical role that distractor suppression plays in working memory performance raises questions around the effect that irrelevant objects may have in a change detection task. In our study, we used a cued, probed-retrieval version of the change detection task while varying the number of distractors across blocks. This allowed us to systematically measure the effect that distraction in the change detection task has on both participant performance, and estimates of individual capacity. Set size varied within each block however the number of distractors remained fixed in 4 conditions (ranging from 0 distractors to 6 distractors), and varied in two conditions (either to maintain the total number of objects on screen across the block, or to match the number of targets on each trial). We measured the effect of these distractor conditions on accuracy and capacity, as well as on signal detection measures of sensitivity (d'), and response bias (C).
+The critical role that distractor suppression plays in working memory performance raises questions around the effect that irrelevant objects may have in a change detection task. In our study, we used a cued, probed-retrieval version of the change detection task while varying the number of distractors across blocks. This allowed us to systematically measure the effect that distraction in the change detection task has on both participant performance, and estimates of individual capacity. Set size varied within each block however the number of distractors remained fixed in 4 conditions (ranging from 0 distractors to 6 distractors), and varied in two conditions (either to maintain the total number of objects on screen across the block, or to match the number of targets on each trial). We measured the effect of these distractor conditions on accuracy and capacity (using Cowan's C as descibed by @rouder_how_2011), as well as on signal detection measures of sensitivity (d'), and response bias (C) as detailed by @stanislaw_calculation_1999.
 
-Working memory is central to functioning and important for stuff like fluid intelligence, attention, IQ or whatever.
+Paragraph here about individual differences in working memory capacity and their relationship to distraction. The second aim of this experiment was to investigate the extent to which individual capacity relatees to distractibility etc.
 
-change detection tasks are popular for measuring WM capacity across individuals. (basic outline, increasing popularity, benefits).
+```{r hiddenText1}
+#Working memory is central to functioning and important for stuff like fluid intelligence, attention, IQ or whatever.
 
-Many variations in change detection tasks. Pashler vs Cowan.
+#change detection tasks are popular for measuring WM capacity across individuals. (basic outline, increasing popularity, benefits).
 
-working memory related to attention and specifically distractor filtering things.
+#Many variations in change detection tasks. Pashler vs Cowan.
 
-Estimates of capacity may be effected by the number of distractors that are presented in the change detection task - our study.
+#working memory related to attention and specifically distractor filtering things.
 
-trial-to-trial context effects working memory so distractor effect may also be mediated by context - our study.
+#Estimates of capacity may be effected by the number of distractors that are presented in the change detection task - our study.
 
+#trial-to-trial context effects working memory so distractor effect may also be mediated by context - our study.
+```
 # Methods
 
 ## Participants
@@ -288,21 +293,25 @@ totalSubj <- length(summary(as.factor(demoTable$PID)))
 totalFemale <- sum(demoTable$SexBin)
 ```
 
-62 individuals participated in the task and all had either normal or corrected-to-normal vision. One participant did not complete the entire task and was therefore excluded from analysis. Five participants were deemed not to have performed the task properly (3 had over 25 non-responses, and two had less than 60% accuracy on the easiest condition where the set size was 2 and there were no distractors on screen). As a result, 56 individuals (`r totalFemale` female) with an age range of `r minAge` to `r maxAge` (mean = `r meanAge` and sd = `r sdAge`) were included in the analysis.
+62 individuals participated in the task and all had either normal or corrected-to-normal vision and were reimbursed for their time with a NZD $10 voucher. All participants gave written, informed consent prior to the start of the experiment and the research was approved by the University of Auckland Human Participants Ethics Committee. One participant did not complete the entire task and was therefore excluded from analysis. Five participants were deemed not to have performed the task properly (3 had over 25 non-responses, and two had less than 60% accuracy on the easiest condition where the set size was 2 and there were no distractors on screen). As a result, 56 individuals (`r totalFemale` female) with an age range of `r minAge` to `r maxAge` (mean = `r meanAge` and sd = `r sdAge`) were included in the analysis.
 
 ## Change detection task
 
-Participants were positioned 57cm away from the screen and performed two practice blocks of 12 trials each, followed by 18 blocks of 40 trials each for a total of 720 experimental trials. For each block, the participant was told which color (either blue or red) they would be focusing on for that block. Trials began with a 1 second fixation cross and involved being presented with a set of rectangles for 250ms, some of which matched the target color, and some of which were irrelevant colored distractors. Participants were required to encode only the subset of objects defined by the target color, maintain that information across a one second delay period, and were then presented with the retrieval display for 2 seconds (or until the participant responded). The retrieval display consisted of all of the stimuli presented in the encoding display however one of the target objects was marked with a probe and participants were required to indicate whether the probed object had changed since encoding. The probe object was rotated randomly on 50% of trials (constituting a non-match trial) and matched the encoded object on the other 50% of trials. A fixation cross was maintained in the center of the screen throughout the entire trial.
+Participants were positioned 57cm away from the screen and performed two practice blocks of 12 trials each, followed by 18 blocks of 40 trials each for a total of 720 experimental trials. For each block, the participant was told which color (either green or red) they would be focusing on for that block. Trials began with a 1 second fixation cross and involved being presented with a set of rectangles for 250ms, some of which matched the target color, and some of which were irrelevant colored distractors. Participants were required to encode only the subset of objects defined by the target color, maintain that information across a one second delay period, and were then presented with the retrieval display for 2 seconds (or until the participant responded). The retrieval display consisted of all of the stimuli presented in the encoding display however one of the target objects was marked with a probe and participants were required to indicate whether the probed object had changed since encoding. The probe object was rotated randomly on 50% of trials (constituting a non-match trial) and matched the encoded object on the other 50% of trials. A fixation cross was maintained in the center of the screen throughout the entire trial. See figure\ \@ref(fig:WMTrialExample)
 
-Blocks were separated into 6 different conditions. In four of the blocks, the number of distractors (objects of the irrelevant color) present at encoding and retrieval was fixed across the block at either 0, 2, 4, or 6. In the other two conditions, distractor number varied within the block. In one of these variable conditions, the number of distractors was simply the same as the number of targets on a given trial. In the other variable block, we sought to keep the total number of objects on screen the same, and therefore the number of distractors was always the inverse of the number of targets.
+```{r WMTrialExample, fig.cap = "Example of a single trial of the experiment. Participants would be required to store only one of the colours (as indicated by a cue at the start of each block). The probe display remained on for either 2000ms or until participant response.", fig.align = "center"}
+include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/WMBehav_Trial.pdf", auto_pdf = TRUE)
+```
+
+Blocks were separated into 6 different conditions. In four of the blocks, the number of distractors (objects of the irrelevant color) present at encoding and retrieval was fixed across the block at either 0, 2, 4, or 6. In the other two conditions, distractor number varied within the block. In one of these variable conditions (which we will refer to as the target-match blocks), the number of distractors was simply the same as the number of targets on a given trial. In the other variable condition (which we will refer to as the target-inverse blocks), we sought to keep the total number of objects on screen the same (in our case at eight objects), and therefore the number of distractors was always the inverse of the number of targets (eight minus the number of targets). In the fixed blocks therefore, the target to distractor ratio, and the number of onscreen items varied within the block but the absolute number of distractors was fixed and predictable. In the target-match blocks, the target to distractor ratio was fixed but the total number of objects on screen varied. In the target-inverse blocks, the target to distractor ratio varied but the total number of objects was fixed within the block.  diagram of all conditions and trial examples is shown in figure\ \@ref(fig:WMConditions).
+
+```{r WMConditions, fig.cap = "Diagram showing examples of each trial type within each block context. In these examples red objects are the targets and green objects are the distractors.", fig.align = "center"}
+include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/WMBehav_Conditions.pdf", auto_pdf = TRUE)
+```
 
 ## Stimulus presentation
 
-All stimuli were presented on a .X. monitor in  using psychopy (v.). The fixation cross0 .5x0.5 degrees and was fixed in the center of the screen throughout each trial. Each memory stimulus was a 0.5X2 degree bar of either red() or green() and rotated to one of four orientations  (0,45,90,135). The probe consisted of a 0.5x0.5 white square positioned on the center of the probed stimulus. All stimuli were kept within .X. degrees of the fixation cross and were separated by at least .X. degrees. Python code used to run the task is available at .X.link.
-
-## Data processing
-Trials which had no response were removed for all participants and performance measures were calculated for each block type and set size. For each of these conditions we calculated accuracy, capacity, hit rate, false alarm rate, D', and C.
-groups created by...
+Experimental stimuli were presented on a 23 inch Samsung LCD monitor positioned 57cm away from the participant and psychopy (version 1.83.04) was used to control stimulus presentation and record participant responses. All stimuli were presented on a grey background and a black fixation cross was maintained in the center of the screen throughout each trial. Each memory stimulus was a red or green bar (subtending 0.5$^\circ$x2$^\circ$ of visual angle) rotated to one of four orientations (0$^\circ$,45$^\circ$,90$^\circ$, or 135$^\circ$). The probe consisted of a white square (0.5$^\circ$x0.5$^\circ$) positioned on the center of the probed stimulus. All stimuli were kept within six degrees of the fixation cross and were separated by at least 0.2 degrees. Python code used to run the task is available at .X.link.
 
 # Results
 ## Target number
@@ -796,7 +805,7 @@ include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/WMBehav_criteri
 ## Individual capacity and distraction
 ```{r reliability,echo=FALSE,include=FALSE}
 #Greate Group
-extractGroupData <- subset(fixed.Vals,DistNum==0&targetNum>2)
+extractGroupData <- subset(fixed.Vals,DistNum==0&targetNum>0)
 groupDataSummary <- dplyr::summarise(group_by(extractGroupData, PID),capacity=mean(cowanC))
 for (subj in unique(fixed.Vals$PID)) {
   fixed.Vals$avgCapacity[fixed.Vals$PID==subj] <- groupDataSummary$capacity[groupDataSummary$PID==subj]
@@ -806,13 +815,13 @@ for (subj in unique(fixed.Vals$PID)) {
   fixVmat.Vals$avgCapacity[fixVmat.Vals$PID==subj] <- groupDataSummary$capacity[groupDataSummary$PID==subj]
 }
 
-evenGroupData <- subset(evenTable,DistNum==0)
+evenGroupData <- subset(evenTable,DistNum==0&targetNum>0)
 evenDataSummary <- dplyr::summarise(group_by(evenGroupData, PID),capacity=mean(cowanC),acc=mean(correctResponse))
 for (subj in unique(evenTable$PID)) {
   evenTable$avgCapacity[evenTable$PID==subj] <- evenDataSummary$capacity[evenDataSummary$PID==subj]
 }
 
-oddGroupData <- subset(oddTable,DistNum==0)
+oddGroupData <- subset(oddTable,DistNum==0&targetNum>0)
 oddDataSummary <- dplyr::summarise(group_by(oddGroupData, PID),capacity=mean(cowanC),acc=mean(correctResponse))
 for (subj in unique(oddTable$PID)) {
   oddTable$avgCapacity[oddTable$PID==subj] <- oddDataSummary$capacity[oddDataSummary$PID==subj]
@@ -830,7 +839,7 @@ In our final set of analyses we sought to test the relationship between an indiv
 ```{r measuringDistractorEffectInFixed,echo=FALSE,include=FALSE}
 #"First, we examined the correlation between the filtering cost described above and WM span."
 zeroDist <- subset(fixed.Vals, DistNum==0)
-nonZeroDist <- subset(fixed.Vals, DistNum!=0)
+nonZeroDist <- subset(fixed.Vals, DistNum==2)
 zeroDist<- dplyr::summarise(group_by(zeroDist,PID),accuracy=mean(D))
 nonZeroDist<- dplyr::summarise(group_by(nonZeroDist,PID),accuracy=mean(D))
 for (subj in unique(allData$PID)) {
@@ -876,7 +885,7 @@ fixedRegressSheet$m1Residual <- resid(fixedModel1)
 ggplot(fixedRegressSheet, aes(x=Capacity, y=m1Residual)) + geom_point() +geom_smooth(method=lm) +theme_apa()
 ```
 
-To evaluate the effect of capacity on distraction, first we entered capacity as a covariate in the above ANOVA which tested for the effect of distractor number on accuracy in the fixed distractor blocks. Although the results showed that there was a significant main effect of working memory capacity (`r fixed.ancova$full_result$avgCapacity`), such that individuals with larger capacities were more accurate on the task (r=0.40, p<0.001), capacity did not interact with distractor number (`r fixed.ancova$full_result$avgCapacity_DistNum`). Next, we performed a correlation to test for a relationship between working memory capacity and filtering cost in the fixed blocks. Filtering cost was calculated by subtracting accuracy in the the distractor present blocks from accuracy in the distractor absent blocks. The results showed a marginally significant relationship between capacity and filtering cost such that as capacity increased, the cost of distractors also increased (r = 0.27, p = 0.045).
+To evaluate the effect of capacity on distraction, first we entered capacity as a covariate in the above ANOVA which tested for the effect of distractor number on accuracy in the fixed distractor blocks. Although the results showed that there was a significant main effect of working memory capacity (`r fixed.ancova$full_result$avgCapacity`), such that individuals with larger capacities were more accurate on the task (r=0.40, p<0.001), capacity did not interact with distractor number (`r fixed.ancova$full_result$avgCapacity_DistNum`). Next, we performed a correlation to test for a relationship between working memory capacity and filtering cost in the fixed blocks. Filtering cost was calculated by subtracting accuracy in the the distractor present blocks from accuracy in the distractor absent blocks. The results did not show a significant relationship between capacity and filtering cost (r = `r round(corValuep$estimate,2)`, p = `r round(corValuep$p.value,2)`).
 
 ### Individual differences in the target-match blocks
 ```{r measuringDistractorEffectIntargEqual,echo=FALSE,include=FALSE}
@@ -907,8 +916,10 @@ regressSheet$Capacity <- dplyr::summarise(group_by(subset(fixed.Vals, DistNum==0
 model1 <- lm(varAcc ~fixNZ,regressSheet)
 model2 <- lm(varAcc ~fixNZ+Capacity,regressSheet)
 hRegression <- anova(model1,model2)
+colnames(hRegression)[6] <- "p.value"
 #Plot the part correlation of capacity after accounting for fixNZ accuracy
-regressSheet$m1Residual <-residual <- resid(model1)
+TMResid <- resid(model1)
+regressSheet$m1Residual <- resid(model1)
 ggplot(regressSheet, aes(x=Capacity, y=m1Residual)) + geom_point() +geom_smooth(method=lm) +theme_apa()
 ```
 
@@ -920,21 +931,22 @@ m1Sum <- format(round(m1Full$coefficients[,1:3],2),nsmall=2)
 m2Sum <- format(round(m2Full$coefficients[,1:3],2),nsmall=2)
 m1Sum <- cbind(m1Sum,format(round(m1Full$coefficients[,4],3),nsmall=3))
 m2Sum <- cbind(m2Sum,format(round(m2Full$coefficients[,4],3),nsmall=3))
-m1Sum[as.numeric(m1Sum[,4])<0.001,4]="<0.001"
-m2Sum[as.numeric(m2Sum[,4])<0.001,4]="<0.001"
+m1Sum[as.numeric(m1Sum[,4])<0.001,4]="<.001"
+m2Sum[as.numeric(m2Sum[,4])<0.001,4]="<.001"
 fullTable <- rbind(c(""),m1Sum,c(""),m2Sum)
 #fullTable <- format(round(fullTable,2),nsmall=2)
-fullTable <- cbind(c("Step 1","Constant","Fixed trials","Step 2","Constant","Fixed trials","Capacity"),fullTable)
+fullTable <- cbind(c("Step 1","\\hskip .5cm Constant","\\hskip .5cm Fixed trials","Step 2","\\hskip .5cm Constant","\\hskip .5cm Fixed trials","\\hskip .5cm Capacity"),fullTable)
 fullTable <- data.frame(fullTable)
 
-R <- c(format(round(m1Full$r.squared,2),nsmall=2),"","",format(round(m2Full$r.squared,2),nsmall=2),"","","")
+#R <- c(format(round(m1Full$r.squared,2),nsmall=2),"","",format(round(m2Full$r.squared,2),nsmall=2),"","","")
 Adj.R <- c(format(round(m1Full$adj.r.squared,2),nsmall=2),"","",format(round(m2Full$adj.r.squared,2),nsmall=2),"","","")
-p.value <- c("<0.001","","","<0.001","","","")
+p.value <- c("<.001","","","<.001","","","")
 F.value <- c(format(round(m1Full$fstatistic[1],2),nsmall=2),"","",format(round(m2Full$fstatistic[1],2),nsmall=2),"","","")
 df <- c(paste(as.character(round(m1Full$fstatistic[2])),",",round(m1Full$fstatistic[3]),sep=""),"","",paste(as.character(round(m2Full$fstatistic[2])),",",round(m2Full$fstatistic[3]),sep=""),"","","")
-frame = data.frame(R,Adj.R,F.value,df,p.value)
+frame = data.frame(Adj.R,F.value,df,p.value)
 fullTable <- cbind(fullTable,frame)
-colnames(fullTable) <- c("","$B$","SE","t","p","$R^2$","$Adj. R^2$","F","df","p")
+colnames(fullTable) <- c("","$B$","$SE\\textsubscript{B}$","$t$","$p$","$R^2 (adj)$","$F$","$df$","$p$")
+fullTable <- fullTable[-c(2,5),]
 
 
 modelTable <- xtable(fullTable, caption = "Summary of the hierarchical regression results predicting performance in the target-match blocks", label = "tab:modelOneTable")
@@ -944,7 +956,7 @@ modelTable <- xtable(fullTable, caption = "Summary of the hierarchical regressio
 print(modelTable, comment=FALSE, caption.placement = "top", latex.environments="flushleft",include.rownames=FALSE, sanitize.text.function = function(x) {x})
 ```
 
-To evaluate the effect of capacity on distraction in the target-match blocks, first we entered capacity as a covariate in the above ANOVA which tested for the effect of block type and distractor number on accuracy in the target-match blocks. The results showed that there was no significant main effect of working memory capacity (`r fixVmat.ancova$full_result$avgCapacity`), and capacity did not interact with either block type (`r fixVmat.ancova$full_result$avgCapacity_Block`), distractor number (`r fixVmat.ancova$full_result$avgCapacity_numDist`), or the interaction between block type and distractor number (`r fixVmat.ancova$full_result$avgCapacity_numDist_Block`). Next, we used regression to estimate the shared variance between the targMat trials and their fixed block equivalents. After controlling for this variance, any residual shared variance between working memory capacity and accuracy in the targMat block should be due to working memory control abilities that are unique to inter-trial effects in the targMat block. As shown in table .X., accuracy in the fixed block trials accounts for a significant amount of variance in targMat accuracy, however working memory capacity also accounts for a unique portion of variance in the targMat block and significantly improves the model's performance (F(1,53)=7.92, p=0.007). Individuals with a higher working memory capacity perform more accurately on the target-inverse trials, even after controlling for the shared variance between their fixed block accuracy and target-inverse accuracy.  For a summary of the regression results see table\ \@ref(tab:modelOneTable).
+To evaluate the effect of capacity on distraction in the target-match blocks, first we entered capacity as a covariate in the above ANOVA which tested for the effect of block type and distractor number on sensitivity in the target-match blocks. The results showed that there was no significant main effect of working memory capacity (`r fixVmat.ancova$full_result$avgCapacity`), and capacity did not interact with either block type (`r fixVmat.ancova$full_result$avgCapacity_Block`), distractor number (`r fixVmat.ancova$full_result$avgCapacity_numDist`), or the interaction between block type and distractor number (`r fixVmat.ancova$full_result$avgCapacity_numDist_Block`). Next, we used regression to estimate the shared variance between the targget-match trials and their fixed block equivalents. After controlling for this variance, any residual shared variance between working memory capacity and sensitivity in the target-match blocks should be due to working memory control abilities that are unique to inter-trial effects in the target-match blocks. As shown in table\ \@ref(tab:modelOneTable), sensitivity in the fixed block trials accounts for a significant amount of variance in target-match sensitivity, however working memory capacity also accounts for a unique portion of variance in the target-match blocks and significantly improves the model's performance (F(`r round(hRegression$Df[2],2)`,`r round(hRegression$Res.Df[2],2)`) = `r round(hRegression$F[2],2)`, p `r ifelse(hRegression$p.value[2]<0.001,"< 0.001",paste("=",round(hRegression$p.value[2],3)))`). Individuals with a higher working memory capacity perform have increased sensitivity on the target-match trials, even after controlling for the shared variance between fixed block sensitivity and target-match sensitivity.
 
 ### Individual differences in the target-inverse blocks
 ```{r measuringDistractorEffectIntargOpp,echo=FALSE,include=FALSE}
@@ -972,9 +984,14 @@ regressSheet$Capacity <- dplyr::summarise(group_by(subset(fixed.Vals, DistNum==4
 model1 <- lm(varAcc ~fixNZ,regressSheet)
 model2 <- lm(varAcc ~fixNZ+Capacity,regressSheet)
 hRegression <- anova(model1,model2)
+colnames(hRegression)[6] <- "p.value"
 #Plot the part correlation of capacity after accounting for fixNZ accuracy
+TIResid <- resid(model1)
 regressSheet$m1Residual <-residual <- resid(model1)
 ggplot(regressSheet, aes(x=Capacity, y=m1Residual)) + geom_point() +geom_smooth(method=lm) +theme_apa()
+
+#Correlate step 1 residuals from the two regressions
+residComp <- cor.test(TIResid,TMResid)
 ```
 
 ```{r makeM2RegressionTable, include=FALSE,echo=FALSE}
@@ -985,21 +1002,22 @@ m1Sum <- format(round(m1Full$coefficients[,1:3],2),nsmall=2)
 m2Sum <- format(round(m2Full$coefficients[,1:3],2),nsmall=2)
 m1Sum <- cbind(m1Sum,format(round(m1Full$coefficients[,4],3),nsmall=3))
 m2Sum <- cbind(m2Sum,format(round(m2Full$coefficients[,4],3),nsmall=3))
-m1Sum[as.numeric(m1Sum[,4])<0.001,4]="<0.001"
-m2Sum[as.numeric(m2Sum[,4])<0.001,4]="<0.001"
+m1Sum[as.numeric(m1Sum[,4])<0.001,4]="<.001"
+m2Sum[as.numeric(m2Sum[,4])<0.001,4]="<.001"
 fullTable <- rbind(c(""),m1Sum,c(""),m2Sum)
 #fullTable <- format(round(fullTable,2),nsmall=2)
-fullTable <- cbind(c("Step 1","Constant","Fixed trials","Step 2","Constant","Fixed trials","Capacity"),fullTable)
+fullTable <- cbind(c("Step 1","\\hskip .5cm Constant","\\hskip .5cm Fixed trials","Step 2","\\hskip .5cm Constant","\\hskip .5cm Fixed trials","\\hskip .5cm Capacity"),fullTable)
 fullTable <- data.frame(fullTable)
 
-R <- c(format(round(m1Full$r.squared,2),nsmall=2),"","",format(round(m2Full$r.squared,2),nsmall=2),"","","")
+#R <- c(format(round(m1Full$r.squared,2),nsmall=2),"","",format(round(m2Full$r.squared,2),nsmall=2),"","","")
 Adj.R <- c(format(round(m1Full$adj.r.squared,2),nsmall=2),"","",format(round(m2Full$adj.r.squared,2),nsmall=2),"","","")
-p.value <- c("<0.001","","","<0.001","","","")
+p.value <- c("<.001","","","<.001","","","")
 F.value <- c(format(round(m1Full$fstatistic[1],2),nsmall=2),"","",format(round(m2Full$fstatistic[1],2),nsmall=2),"","","")
 df <- c(paste(as.character(round(m1Full$fstatistic[2])),",",round(m1Full$fstatistic[3]),sep=""),"","",paste(as.character(round(m2Full$fstatistic[2])),",",round(m2Full$fstatistic[3]),sep=""),"","","")
-frame = data.frame(R,Adj.R,F.value,df,p.value)
+frame = data.frame(Adj.R,F.value,df,p.value)
 fullTable <- cbind(fullTable,frame)
-colnames(fullTable) <- c("","$B$","SE","t","p","$R^2$","$Adj. R^2$","F","df","p")
+colnames(fullTable) <- c("","$B$","$SE\\textsubscript{B}$","$t$","$p$","$R^2 (adj)$","$F$","$df$","$p$")
+fullTable <- fullTable[-c(2,5),]
 
 
 modelTable <- xtable(fullTable, caption = "Summary of the hierarchical regression results predicting performance in the target-inverse blocks", label = "tab:modelTwoTable")
@@ -1009,22 +1027,45 @@ modelTable <- xtable(fullTable, caption = "Summary of the hierarchical regressio
 print(modelTable, comment=FALSE, caption.placement = "top", latex.environments="flushleft",include.rownames=FALSE, sanitize.text.function = function(x) {x})
 ```
 
-To evaluate the effect of capacity on distraction, first we entered capacity as a covariate in the above ANOVA which tested for the effect of bock type and distractor number on accuracy in the target-inverse blocks. The results showed that there was no significant main effect of working memory capacity (`r fixVopp.ancova$full_result$avgCapacity`), and capacity did not interact with either block type (`r fixVopp.ancova$full_result$avgCapacity_Block`), distractor number (`r fixVopp.ancova$full_result$avgCapacity_numDist`), or the interaction between block type and distractor number (`r fixVopp.ancova$full_result$avgCapacity_numDist_Block`). Next, we used regression to estimate the shared variance between the target-inverse trials and their fixed block equivalents. After controlling for this variance, any residual shared variance between working memory capacity and accuracy in the target-inverse block should be due to working memory control abilities that are unique to inter-trial effects in the target-inverse block. As shown in table .X., accuracy in the fixed block trials accounts for a significant amount of variance in target-inverse accuracy, however working memory capacity also accounts for a unique portion of variance in the target-inverse block and significantly improves the model's performance (F(1,53)=8.05, p=0.006). Individuals with a higher working memory capacity perform more accurately on the target-inverse trials, even after controlling for the shared variance between their fixed block accuracy and target-inverse accuracy. For a summary of the regression results see table\ \@ref(tab:modelTwoTable).
+To evaluate the effect of capacity on distraction, first we entered capacity as a covariate in the above ANOVA which tested for the effect of bock type and distractor number on sensitivity in the target-inverse blocks. The results showed that there was no significant main effect of working memory capacity (`r fixVopp.ancova$full_result$avgCapacity`), and capacity did not interact with either block type (`r fixVopp.ancova$full_result$avgCapacity_Block`), distractor number (`r fixVopp.ancova$full_result$avgCapacity_numDist`), or the interaction between block type and distractor number (`r fixVopp.ancova$full_result$avgCapacity_numDist_Block`). Next, we used regression to estimate the shared variance between the target-inverse trials and their fixed block equivalents. After controlling for this variance, any residual shared variance between working memory capacity and sensitivity in the target-inverse block should be due to working memory control abilities that are unique to inter-trial effects in the target-inverse block. As shown in table\ \@ref(tab:modelTwoTable), sensitivity in the fixed block trials accounts for a significant amount of variance in target-inverse sensitivity, however working memory capacity also accounts for a unique portion of variance in the target-inverse blocks and significantly improves the model's performance  (F(`r round(hRegression$Df[2],2)`,`r round(hRegression$Res.Df[2],2)`) = `r round(hRegression$F[2],2)`, p `r ifelse(hRegression$p.value[2]<0.001,"< 0.001",paste("=",round(hRegression$p.value[2],3)))`). Individuals with a higher working memory capacity perform more accurately on the target-inverse trials, even after controlling for the shared variance between their fixed block sensitivity and target-inverse sensitivity. The results of this analysis as well as the target-match regression above raised the question of whether capacity was predicting the same cognitive ability in each of the variable block types. In order to follow this up we correlated the residuals from the first step of each regression but did not find a significant relationship (r = `r round(residComp$estimate,2)`, p = `r round(residComp$p.value,2)`).
 
 # Discussion
 
-The number of irrelevant objects presented in the change detection task effects performance on the task.
+The first aim of this experiment was to systematically examine the effect that irrelevant distractors can have on performance in a change detection task. Our results showed that increasing the number of distractors present in a trial leads to decreases in an individual's change detection accuracy. Convergent measures of performance show that this appears to be the result of changes in sensitivity to the change rather than changes in response bias, and that this effects estimates of working memory capacity. We also demonstrated small differential effects that block context can have on the relationship between distractor number and performance. Variability of distractor number within a block led to worse performance on the easiest trials, and better performance on the most difficult trials when compared to equivalent trial types from a fixed distractor context. However these effects were only present in the target-match blocks when the number of distractors varied in such a way that they matched target number on a given trial, there was no effect in the target-inverse blocks when distractor number varied in proportion to target number to keep the total number of objects constant.
 
-There was little evidence of an effect of block context on individual performance.
- 
-Our variable distractor blocks never had 0 distractors, maybe this would boost block context effects as currently participants might be maintaining a filter the entire block whereas if there were 0 distractor trials maybe they would be fluctuating between active suppression or not. While we see some differences between distractor number in the fixed trials, the largest effects are between 0 and other blocks.
+The general observation of intertrial effects on working memory performance is not in itself novel, however the specific effect that we observed can inform the details of this phenomenon in change detection tasks. Previous research from a variety of short term memory paradigms has shown that information from previous trials can intrude on performance in the current trial [@quinlan_positional_2015;@fischer-baum_representation_2015;@drewnowski_role_1980;@jonides_inhibition_1998;@berman_search_2009;@atkinson_search_1974]. Our results show that similar effects can arise in a change detection task from a specific interaction between variability in the number of distractors and variability in the total number of objects. In the fixed distractor blocks, the absolute number of distractors remains the same throughout the block while the number of targets varies. This means that while the number of distractors is fixed, the proportion of targets to distractors, and the total number of objects on screen varies from trial to trial. In the target-match blocks however, the proportion of targets to distractors is held constant leading to variability in the absolute number of distractors on each trial, and variability in the total number of objects on screen. Differences between the two block contexts could therefore be the result of differences in any one of these three factors.
 
-What about estimating the R across distractor number on jack knifed estimates of capacity etc. as measure of distractor effect (average of individual R is no the same as R of averaged data.)
+While in theory block context effects could be attributed to distractor variability, total object variability, or target to distractor ratio, comparisons with the target-inverse blocks make target to distractor ratio the most likely candidate. If the difference between fixed blocks and target-match blocks were simply due to the unpredictability of distractor number, then we would expect to see similar differences between fixed blocks and target-inverse blocks (where distractor number also varies from 2 to 6 on each trial). Variability in the total number of objects also appears unlikely to explain the context effect. Total object number varies in both the fixed blocks and the target-match blocks, and while the range is larger for the target-match conditions this explanation would again predict similar differences between the fixed blocks and the target-inverse blocks (which have total object number controlled for across the block). As a result, the block context effects that we measured are most likely a result of trial to trial differences in target to distractor ratio.
 
-Kinda makes sense that target-inverse no diff from fixed because in both cases, the proportion of targs to dists is changing on a trial by trial basis.
+The mechanism by which target to distractor ratio could impact on change detection performance is difficult to determine from the current data. It is important to emphasise that there was no main effect of block context on performance, and therefore it's not simply the case that one of these block contexts was easier than the other. Our results show instead that when target to distractor ratio is fixed, performance on the easiest trials gets worse, and performance on the hardest trials gets easier. One way to conceive of this effect is that there is less performance variability within the target-match blocks than within the fixed distractor blocks. When target to distractor ratio is fixed, performance on each trial is closer to average block performance whereas when it varies, performance for each trial is less dependent on the surrounding context. This may be the result of an interaction between the properties which make each of these block types easier than the other. On the one hand, a fixed distractor condition allows for predictability of the distractor number and may afford targets a pop-out effect as they the only thing that varies from trial to trial. In the case of a two distractor block, the benefit of this pop-out effect leads to increased performance relative to the context in which distractor number is varying. However in the six distractor blocks, the constant presence of large amounts of information on screen means that the pop-out benefit diminishes relative to the target-match blocks and as a result so does performance.
+
+The second aim of our experiment was to investigate the relationship between these distractor effects and individual capacity in our task. Overall our results show significant effects of individual capacity as measured from the zero distractor blocks, on performance in the other block conditions. In the fixed distractor blocks, individual capacity was not related to filtering cost which is the difference in performance between distractor present and distractor absent trials. This is contrary to previous work which showed that increased working memory capacity is correlated with smaller filtering costs [@unsworth_influence_2016;@lee_visual_2010]. The main difference between our task and these previous tasks is that in their case, distractor absent and distractor present trials are presented within the same block. The block context in our case means that distractor presence and number is highly predictable, and previous work has shown with auditory distraction, that associations between capacity and distraction are present only when distractors are infrequent or unexpected [@hughes_cognitive_2013;@sorqvist_high_2010]. This suggests that in our task, effects of capacity on distraction are likely to found in the variable distractor block contexts.
+
+When we focused our individual difference analyses on the variable distractor blocks, we showed that capacity is predictive of those cognitive control mechanisms which are unique to the variability in these blocks. We used a regression based approach based on the work of @robison_individual_2018 to show that even after controlling for general working memory control abilities present at the single trial level, increased working memory capacity predicted better performance in both the target-match blocks and the target-inverse blocks. The single factor shared by the target-match and target-inverse blocks which separates them from the fixed blocks is the variability in distractor number on a trial to trial basis. The parsimonious assumption therefore is that working memory capacity predicts an individual's ability to deal with unpredictable variability in distractor number. If this were the case however then we would expect that residual variance in the target-inverse blocks (after controlling for fixed block performance), would be correlated with the residual variance in the target-match blocks (after controlling for fixed block performance). We do not find evidence of this association in our data, and therefore capacity may be important for predicting the distinct cognitive control abilities that are unique to each of these variable block types.
+
+One of the limitations of our design is that we don't have any zero distractor trials in either of the variable block types. This may have reduced the size of block context effects because while distractor number is unpredictable, distractor presence is constant. Whereas in the current implementation filtering is required on every trial, adding zero distractor trials may cause participants to flexibly engage and disengage filtering mechanisms within the block. This may allow future experiments to increase the magnitude of the filtering effects that we observe in the variable blocks via mechanisms that are similar to those proposed by @robison_individual_2018. In their study, @robison_individual_2018 showed that changing the target colour on a trial by trial basis increased the observed effects of capacity on measures of filtering ability in a change detection task. A secondary benefit of adding zero distractor trials to the variable distractor blocks would be the ability to subtract distractor present performance from distractor absent performance and therefore measure filtering cost in the same way as we did for the fixed block performance.
+
+# Conclusion
+
+This research attempted to answer two main questions central to working memory research. First, we investigated the extent to which distractor number and distractor context contribute to individual performance and therefore estimates of capacity in a change detection task. We show that distractor number has significant effects on working memory capacity both in contexts where the number of distractors is fixed throughout the block, and in contexts where distractor number varies. The relationship appears to be complex, with performance varying based not only on distractor number for a given trial, but interacting with the target to distractor ratio within a block. Secondly, we examined the relationship between individual working memory capacity and filtering ability in these different distractor contexts. Our results show that working memory capacity has a limited relationship to filtering in the case where distractor number is fixed, and that capacity is instead related to cognitive processes that are unique to contexts in which distractor number is unpredictable. Previous associations between working memory capacity and filtering may therefore be reflective of general cognitive abilities that allow individuals to flexibly adjust to changing context than to the specific requirements for selecting and ignoring information at the single trial level.
+
+```{r hiddenText2}
+#The number of irrelevant objects presented in the change detection task effects performance on the task.
+
+#There was little evidence of an effect of block context on individual performance.
+
+#Our variable distractor blocks never had 0 distractors, maybe this would boost block context effects as currently participants might be maintaining a filter the entire block whereas if there were 0 distractor trials maybe they would be fluctuating between active suppression or not. While we see some differences between distractor number in the fixed trials, the largest effects are between 0 and other blocks.
+
+#What about estimating the R across distractor number on jack knifed estimates of capacity etc. as measure of distractor effect (average of individual R is no the same as R of averaged data.)
+
+#Kinda makes sense that target-inverse no diff from fixed because in both cases, the proportion of targs to dists is changing on a trial by trial basis.
+
+#In their task, @unsworth_influence_2016 measured capacity using performance on all trials, including distractor present trials. This means that an individual's ability to perform in the face of distraction is incorporated into their capacity estimate. 
+
+#What abou collapse the variable bocks to control for targetXdist number confound and then look for capacity and filtering cost effects?
+```
 
 \newpage
-
 
 # References
 ```{r WMB_create_r-references}
