@@ -1,0 +1,36 @@
+
+# Introduction
+
+For most of our daily lives our senses are bombarded with huge amounts of information. Even the most mundane tasks like grocery shopping can involve encountering thousands of objects, people, and sounds. Successfuly completing even small short-term goals like finding a specific flavoured ice cream involves holding information in mind while we sift through the near unlimited amount of information available in the environment. The images we hold in memory inform those objects that capture our attention. We might recall a specific colour from the packaging and filter information based on whhether it matches that colour, or we might remember its general location and select information from that area. At the same time, the information we receive from the environment updates what we have stored in memory. We store the prices, and sizes of the objects we have encountered and use this information to compare across different brands. Successful performance in everyday situations depends on the effortless execution of a continual back and forth between these complex processes. In this very real-world sense, the processes of selective attention and short-term memory are functionally linked.           
+
+Since the beginning of experimental psychology in the late 19th century, the study of human cognition has been parcellated into a set of distinct, fundamental constructs. Typically, these distinctions have been made based on the intuitions of foundational thinkers in psychology, and in his seminal work \textit{The Principles of Psychology}, William James recapitulated one such historic distinction between the constructs of attention and memory. Throughout the course of the 20th century, conceptions of attention and memory were specified, and formalized. The performance of selective attention encompasses a set of underlying distinctions like overt versus covert orienting, and endogenous versus exogenous attention. Similarly, the concept of memory was separated into specialized processes like short-term versus long-term memory, and semantic versus episodic memory. These processes have in turn been parcellated into even more specific functional units such that the deployment of endogenous, covert attention for example, is dependent on fundamental neural processes like target selection, and distractor suppression.
+
+Recently, empirical work has started to show that the fundamental units necessary for the optimal functioning of selective attention, may be related to, or shared by, the fundamental units necessary for the maintenance of objects in short-term memory. Modern models of short-term memory, or working memory as it has come to be known, typically depend on a system of executive control which has the role of determining what gains access to the limited resources that are involved in storing and processing information in the short term. The role of this executive control system has a lot of conceptual overlap with the role that selective attention plays more broadly in information processing in the human brian. Modern approaches in experimental psychology and cognitive neuroscience are now beginning to unify these two historically disparate constructs and specify the nature of their interaction.
+
+While historically, experimental psychology has been based predominantly on measures of behaviour, a range of non-invasive techniques now exist which allow for the measurement of brain activity in awake humans. One of the most popular techniques for recording neural activity is electroencephalography (EEG) which allows for the direct measurement of neural activity at the time scale of actual neural processing. Methods of EEG data analysis have matured to the point where modern work has started to rely on direct measures of neural activity in order to make nuanced distinctions between processes that are invisible to behavioural measures. The event-related potential (ERP) technique is one such method of EEG processing which has gained wide adoption and can provide reliable, and dissociable measures of fundamental neural processes like target selection and distractor suppression.
+
+The aim of this thesis is to expand our understanding of the relationship between working memory and selective attention, and to specify the neural mechanisms that may be shared by these two seemingly disparate systems. In study one, we used a behavioural task in order to perform a systematic analysis of the effect that irrelevant objects have on performance in the change-detection task. The change-detection task is a popular way of measuring visual working memory capacity however there are a number of subtle variations in the way it has been used and the effect of these variations on capacity measures is undetermined. Study one sought to fill this gap in the literature. Studies two and three aimed to follow up two of the benchmark effects established by study one while using EEG to simultaneously measure neural indices of attentional control. In study two we were interested in seeing the effect that increased working memory load can have on neural measures of target selection, and distractor supression. In study three, our aim was to understand how the effect of irrelevant objects in a change detection task effect neural indices of target selection and distractor suppression.
+
+# Working Memory
+
+Dedicated study of the concept of memory in western thought goes back at least as far as Aristotle (WHBurnham, AJP vol2). Working memory however is a relatively new term coined by Pribram, Miller, and Galanter (1960) to define a cognitive system which temporarily stores information for the purposes of active processing and manipulation. 
+
+## 
+## Individual capacity
+# Selective attention
+
+https://www.researchgate.net/post/Estimates_of_quantified_human_sensory_system_throughput10
+
+\begin{quote}
+"Everyone knows what attention is. It is the taking possession by the mind, in clear and vivid form, of one out of what seem several simultaneously possible objects or trains of thought. Focalization, concentration, of consciousness are of its essence. It implies withdrawal from some things in order to deal effectively with others, and is a conditions which has a real opposite in the confused, dazed, scattered state which in French is called distraction, and Zerstreutheit in German."
+\end{quote} - William James
+
+# working memory and selective attention
+## Working memory bechmarks and relevant attention effects
+# Measuring attention with EEG
+## Alpha
+## Regular components
+## Lateralized components
+### N2pc
+### Ptc/Pd
+### SPCN
