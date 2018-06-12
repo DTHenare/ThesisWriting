@@ -43,7 +43,7 @@ output            : papaja::apa6_pdf #apa6_word or apa6_wordpdf
 
 \raggedbottom
 
-```{r load_packages, include = FALSE}
+```{r SDload_packages, include = FALSE}
 library(papaja)
 library(reshape)
 library(dplyr)
@@ -59,7 +59,7 @@ library(gdata)
 library(cowplot)
 ```
 
-```{r helperFunctions, echo = FALSE, warning=FALSE}
+```{r SDhelperFunctions, echo = FALSE, warning=FALSE}
 corstars <-function(x, method=c("pearson", "spearman"), removeTriangle=c("upper", "lower"),
                      result=c("none", "html", "latex")){
     #Compute correlation matrix
@@ -105,7 +105,7 @@ corstars <-function(x, method=c("pearson", "spearman"), removeTriangle=c("upper"
 } 
 ```
 
-```{r analysis_setup, echo=FALSE}
+```{r SDanalysis_setup, echo=FALSE}
 # Seed for random number generation
 set.seed(4609948)
 # Load the behavioural data along with the subtracted data
@@ -159,6 +159,7 @@ longTarg$Cond = substr(longTarg$variable,start=1,stop=3)
 longTarg$Component = substr(longTarg$variable,start=10,stop=12)
 # Tidy the variable Names
 longTarg$Component[longTarg$Component == "N2p"] <- "N2pc"
+longTarg$Component[longTarg$Component == "Ptc"] <- "SPCN"
 longTarg$Cond[longTarg$Cond == "NOO"] <- "NO"
 
 # Do the same for latencies
@@ -223,7 +224,7 @@ All statistical anaysis was performed in version 1.1.423 of RStudio [@rstudio_de
 
 ## Behavioural measures
 
-```{r behavioural_stats, include=FALSE}
+```{r SDbehavioural_stats, include=FALSE}
 wmAcc_out <- t.test(behavData$WM_YES_Acc, behavData$WM_NOO_Acc, paired = TRUE, alternative = "two.sided")
 wmRT_out <- t.test(behavData$WM_YES_RT,  behavData$WM_NOO_RT, paired = TRUE, alternative = "two.sided")
 vsAcc_out <- t.test(behavData$VS_YES_Acc, behavData$VS_NOO_Acc, paired = TRUE, alternative = "two.sided")
@@ -270,15 +271,15 @@ dev.off()
 ```
 
 
-```{r violinPlots, fig.cap = "This is where I'd put the figure caption.", fig.align = "center"}
+```{r SDviolinPlots, fig.cap = "This is where I'd put the figure caption.", fig.align = "center"}
 include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/SAWMDIST_behavViolinPlot.pdf", auto_pdf = TRUE)
 ```
 
-Mean response times and percent correct are shown as a function of working memory distractr presence for each task ( working memory and visual search) in figure\ \@ref(fig:violinPlots). Paired samples T-tests were carried out to test the effect of working memory distractor presence on response times(ms) and accuracy(%) in both the working memory and visual search tasks. The results of the T-tests showed that the hpresence of a distractor in the working memory task did result in both significantly slower (`r apa_print(wmRT_out)$full`) and less accurate (`r apa_print(wmAcc_out)$full`) responses to the working memory test display. The results also showed that participants were significantly less accurate on the visual search task when a working memory distractor had been presented (`r apa_print(vsAcc_out)$full`) however there was no significant effect of working memory distractor presence on visual search response times (`r apa_print(vsRT_out)$full`). These data confirm firstly that the presence of a distractor during working memory encoding and retrieval effected performance on the working memory task, and secondly that this manipulation also effected performance on a concurrent visual search task.
+Mean response times and percent correct are shown as a function of working memory distractor presence for each task ( working memory and visual search) in figure\ \@ref(fig:SDviolinPlots). Paired samples t-tests were carried out to test the effect of working memory distractor presence on response times(ms) and accuracy(%) in both the working memory and visual search tasks. The results of the T-tests showed that the presence of a distractor in the working memory task did result in significantly slower (`r apa_print(wmRT_out)$full`), and less accurate (`r apa_print(wmAcc_out)$full`) responses to the working memory test display (although the latter effect is only trending toward significance). The results also showed that participants were significantly less accurate on the visual search task when a working memory distractor had been presented (`r apa_print(vsAcc_out)$full`) however there was no significant effect of working memory distractor presence on visual search response times (`r apa_print(vsRT_out)$full`). These data confirm firstly that the presence of a distractor during working memory encoding and retrieval effected performance on the working memory task, and secondly that this manipulation also effected performance on a concurrent visual search task.
 
 ## Within-subject electrophysiological measures
 
-```{r Subtracted_ANOVA, echo=FALSE, warning =FALSE}
+```{r SDSubtracted_ANOVA, echo=FALSE, warning =FALSE}
 # Run the distractor ANOVA (two way, Load x Component on distractor amplitudes)
 dist.aov <- aov_ez(
   data = longDist,
@@ -305,6 +306,15 @@ targ.interaction.cond.emmeans <- emmeans(targ.aov, ~Cond|Component)
 targ.interaction.cond.posthoc <- pairs(targ.interaction.cond.emmeans)
 targ.interaction.component.emmeans <- emmeans(targ.aov, ~Component|Cond)
 targ.interaction.component.posthoc <- pairs(targ.interaction.component.emmeans)
+#Descriptives
+YNmean <- round(mean(subset(longTarg,Cond=="YES"&Component=="N2pc")$value),2)
+YSmean <- round(mean(subset(longTarg,Cond=="YES"&Component=="SPCN")$value),2)
+NNmean <- round(mean(subset(longTarg,Cond=="NO"&Component=="N2pc")$value),2)
+NSmean <- round(mean(subset(longTarg,Cond=="NO"&Component=="SPCN")$value),2)
+YNsd <- round(sd(subset(longTarg,Cond=="YES"&Component=="N2pc")$value),2)
+YSsd <- round(sd(subset(longTarg,Cond=="YES"&Component=="SPCN")$value),2)
+NNsd <- round(sd(subset(longTarg,Cond=="NO"&Component=="N2pc")$value),2)
+NSsd <- round(sd(subset(longTarg,Cond=="NO"&Component=="SPCN")$value),2)
 
 # ANOVA tanles
 dist.result <- apa_print(dist.aov)
@@ -317,26 +327,26 @@ targ.interaction.component.posthoc.table <- xtable(summary(targ.interaction.comp
 
 ```
 
-```{r targANOVATable, results = 'asis'}
+```{r SDtargANOVATable, results = 'asis'}
 apa_table(targ.result$table, caption = "This is the subtracted CondxComponent target ANOVA", escape = FALSE)
 ```
 
-```{r targANOVAcomponentTable, results = 'asis'}
+```{r SDtargANOVAcomponentTable, results = 'asis'}
 print(targ.interaction.cond.posthoc.table, comment=FALSE, caption.placement = "top", latex.environments="flushleft")
 print(targ.interaction.component.posthoc.table, comment=FALSE, caption.placement = "top", latex.environments="flushleft")
 ```
 
-In order to test for the effect of working memory load on lateralised ERP components related to target and distractor processing, two repeated measures ANOVAs were performed, one for lateralised targets and one for lateralised distractors. For both analyses, the repeated measures factors were working memory distractor (present and absent), and component (N2pc, and Ptc). Greenhouse-Geisser corrected values are used in all cases. The results for targets showed no significant main effect of either component (`r targ.result$full$Component`), nor working memory distractor presence (`r targ.result$full$Cond`). There was however a significant interaction between component and working memory distractino (`r targ.result$full$Cond_Component`) and pairwise comparisons using Tukey correction were performed in order to follow up this effect.. The results showed that when a working memory distractor is absent, N2pc elicited by the visual search displays is significantly more negative than the Ptc, however there is no significant difference between N2pc and Ptc when the working memory distractor is present. These results lso show that the N2pc is significantly larger uwhen the working memory distractor is present than when it is absent, however there is no effect of working memory distractor presence on Ptc amplitude. Full results shown in table\ \@ref(tab:followupTargetComponentTable).
+In order to test for the effect of working memory load on lateralised ERP components related to target and distractor processing, two repeated measures ANOVAs were performed, one for lateralised targets and one for lateralised distractors. For both analyses, the repeated measures factors were working memory distractor (present and absent), and component (N2pc and SPCN for targets, and N2pc and Ptc for distractors). Greenhouse-Geisser corrected values are used in all cases. The results for targets showed no significant main effect of either component (`r targ.result$full$Component`), nor working memory distractor presence (`r targ.result$full$Cond`). There was however a significant interaction between component and working memory distraction (`r targ.result$full$Cond_Component`) and pairwise comparisons using Tukey correction were performed in order to follow up this effect. The results showed that when a working memory distractor is absent, N2pc elicited by the visual search displays (`r paste("M = ",NNmean,", SD =",NNsd,sep="")`) is significantly more negative than the SPCN (`r paste("M = ",NSmean,", SD =",NSsd,", t(22.93) = 2.64, p = 0.015",sep="")`), however when the working memory distractor is present there is no significant difference between N2pc (`r paste("M = ",YNmean,", SD =",YNsd,sep="")`) and SPCN (`r paste("M = ",YSmean,", SD =",YSsd,", t(22.93) = 0.19, p > 0.05",sep="")`). These results also show that the N2pc is significantly larger uwhen the working memory distractor is present than when it is absent (`r "t(23.32) = 2.62, p = 0.015"`), however there is no effect of working memory distractor presence on SPCN amplitude (`r "t(23.32) = 0.29, p > 0.5"`).
 
-```{r distANOVATable, results='asis'}
+```{r SDdistANOVATable, results='asis'}
 apa_table(dist.result$table, caption = "This is the subtracted CondxComponent distractor ANOVA", escape = FALSE)
 ```
 
-The results for distractors showed a significant main effect of component (`r dist.result$full$Component`) with N2pc being more negative than Ptc, but no significant main effect of working memory distractor presence (`r dist.result$full$Cond`), nor a significant interaction between component and working memory distractor presence (`r dist.result$full$Cond_Component`) (see table\ \@ref(tab:componentMainEffectDistractors)).
+The results for distractors showed a significant main effect of component (`r dist.result$full$Component`) with N2pc being more negative than Ptc, but no significant main effect of working memory distractor presence (`r dist.result$full$Cond`), nor a significant interaction between component and working memory distractor presence (`r dist.result$full$Cond_Component`).
 
 ## Between-subject electrophysiological measures
 
-```{r correlograms, echo=FALSE, warning=FALSE, include=FALSE}
+```{r SDcorrelograms, echo=FALSE, warning=FALSE, include=FALSE}
 areaColumns <- c("WMAcc", "WMRT", "VSAcc", "VSRT", "TargP", "TargN", "DistP", "DistN")
 colnames(noAreaData) <- areaColumns
 colnames(yesAreaData) <- areaColumns
@@ -364,7 +374,7 @@ plot_grid(VSRTbyDISTP,VSRTbyDISTN,VSRTbyTARGP,WMRTbyDISTP, labels = c("A","B","C
 dev.off()
 ```
 
-```{r correlationText, echo=FALSE, warning=FALSE, include=FALSE}
+```{r SDcorrelationText, echo=FALSE, warning=FALSE, include=FALSE}
 no.RowLabels=c()
 no.ColLabels=c()
 yes.RowLabels=c()
@@ -417,7 +427,7 @@ yes.results.string[i] <- paste("r  = ",curR, ", p = ", curP)
 
 ```
 
-```{r correlationTables, results='asis'}
+```{r SDcorrelationTables, results='asis'}
 print(xtable(corstars(noAreaData,method="pearson",removeTriangle = "upper", result = "none"),
              caption = "Correlation matrix for the no distractor condition showing the relationships between all behavioural and ERP measures.", 
              label = "tab:noCorrelationTable"),
@@ -437,29 +447,27 @@ print(xtable(corstars(yesAreaData,method="pearson",removeTriangle = "upper", res
 p < .001 '****'; p < .01 '***'; p < .05 '**'; p < .1 '*'} \\\\"), comment = FALSE)
 ```
 
-```{r lowScatterGraphing, fig.cap = "This is where I'd put the figure caption.", fig.align = "center"}
+```{r SDlowScatterGraphing, fig.cap = "This is where I'd put the figure caption.", fig.align = "center"}
 include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/SAWMDIST_noScatterPlot.pdf", auto_pdf = TRUE)
 ```
 
-```{r correlogramLow, fig.cap = "This is where I'd put the figure caption.", fig.align = "center"}
+```{r SDcorrelogramLow, fig.cap = "This is where I'd put the figure caption.", fig.align = "center"}
 include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/SAWMDIST_noCorrelogram.pdf", auto_pdf = TRUE)
 ```
 
-```{r correlogramHigh, fig.cap = "This is where I'd put the figure caption.", fig.align = "center"}
+```{r SDcorrelogramHigh, fig.cap = "This is where I'd put the figure caption.", fig.align = "center"}
 include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/SAWMDIST_yesCorrelogram.pdf", auto_pdf = TRUE)
 ```
 
-In order to investigate the relationship between lateralised activity and behaviour in the tasks, a correlation matrix was made for each working memory load condition. Each matrix contained the behavioural measures (accuracy and response time) on both tasks (working memory task and visual search task), as well as the total lateralised positive area for each stimulus (targets and distractors) and the total lateralised negative area for each stimulus. Under low working memory load, there is a significant correlation between visual search response times and the positivity to targets, positivity to distractors, and the negativity to distractors. Individuals with larger positivities to targets appear to perform faster on the visual search task (.X.) as do individuals with larger positivities to distractors (.X.). Individuals with a larger negativity to distractors however, perform slower (.X.). There is also a significant correlation between working memory response times and the distractor negativity such that individuals with larger negativities to distractors perform slower on the working memory task (.X.). Scatter plots for these relationships are shown in figure\ \@ref(fig:lowScatterGraphing). Under high load however, these effects disappear and the only significant relationship between lateralised amplitude and behaviour shows that individuals with a larger target negativity tend to perform more accurately on the task  (.X.). While we have only reported on the relationships between amplitudes and behaviour here, all significant correlations are visualized for the low load condition in  figure\ \@ref(fig:correlogramLow) and for the high load condition in figure\ \@ref(fig:correlogramHigh). For the full correlation matrix for the low load condition see table\ \@ref(tab:noCorrelationTable), and for the high load condition see table\ \@ref(tab:highCorrelationTable).
+In order to investigate the relationship between lateralised activity and behaviour in the tasks, a correlation matrix was made for each working memory load condition. Each matrix contained the behavioural measures (accuracy and response time) on both tasks (working memory task and visual search task), as well as the total lateralised positive area for each stimulus (targets and distractors) and the total lateralised negative area for each stimulus. Under low working memory load, there is a significant correlation between visual search response times and the positivity to targets, positivity to distractors, and the negativity to distractors. Individuals with larger positivities to targets appear to perform faster on the visual search task (.X.) as do individuals with larger positivities to distractors (.X.). Individuals with a larger negativity to distractors however, perform slower (.X.). There is also a significant correlation between working memory response times and the distractor negativity such that individuals with larger negativities to distractors perform slower on the working memory task (.X.). Scatter plots for these relationships are shown in figure\ \@ref(fig:SDlowScatterGraphing). Under high load however, these effects disappear and the only significant relationship between lateralised amplitude and behaviour shows that individuals with a larger target negativity tend to perform more accurately on the task  (.X.). While we have only reported on the relationships between amplitudes and behaviour here, all significant correlations are visualized for the low load condition in  figure\ \@ref(fig:SDcorrelogramLow) and for the high load condition in figure\ \@ref(fig:SDcorrelogramHigh). For the full correlation matrix for the low load condition see table\ \@ref(tab:noCorrelationTable), and for the high load condition see table\ \@ref(tab:highCorrelationTable).
 
-```{r latencyTtests}
+```{r SDlatencyTtests}
 #LDistP.minus.HDistP.D <- mean(lowLatData$LDist_PLat-highLatData$HDist_PLat)
 #LDistP.minus.HDistP.se <- sqrt((19/20)*sum(((lowLatData$LDist_PLat-highLatData$HDist_PLat)-LDistP.minus.HDistP.D)^2))
 #LDistP.minus.HDistP.T <- LDistP.minus.HDistP.D/LDistP.minus.HDistP.se
-
-
 ```
 
-```{r latcorrelograms, echo=FALSE, warning=FALSE, include=FALSE}
+```{r SDlatcorrelograms, echo=FALSE, warning=FALSE, include=FALSE}
 #latColumns <- c("WMAcc", "WMRT", "VSAcc", "VSRT", "DistPLat", "TargPLat", "DistNLat", "TargNLat")
 #colnames(lowLatData) <- latColumns
 #colnames(highLatData) <- latColumns
@@ -488,15 +496,15 @@ In order to investigate the relationship between lateralised activity and behavi
 
 ```
 
-```{r lowLatScatterGraphing, fig.cap = "This is where I'd put the figure caption.", fig.align = "center"}
+```{r SDlowLatScatterGraphing, fig.cap = "This is where I'd put the figure caption.", fig.align = "center"}
 #include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/lowLatScatterPlot.pdf", auto_pdf = TRUE)
 ```
 
-```{r correlogramLowLat, fig.cap = "This is where I'd put the figure caption lowLat.", fig.align = "center"}
+```{r SDcorrelogramLowLat, fig.cap = "This is where I'd put the figure caption lowLat.", fig.align = "center"}
 #include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/lowLatCorrelogram.pdf", auto_pdf = TRUE)
 ```
 
-```{r correlogramHighLat, fig.cap = "This is where I'd put the figure caption highLat.", fig.align = "center"}
+```{r SDcorrelogramHighLat, fig.cap = "This is where I'd put the figure caption highLat.", fig.align = "center"}
 #include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/highLatCorrelogram.pdf", auto_pdf = TRUE)
 ```
 
