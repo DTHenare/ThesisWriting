@@ -1,0 +1,94 @@
+---
+header-includes: 
+  - \pagenumbering{roman}
+#  - \AtBeginDocument{\let\maketitle\relax}
+  - \thispagestyle{empty}
+  - \usepackage{setspace}
+  - \setstretch{2}
+  - \AtBeginEnvironment{tabular}{\doublespacing}
+  - \AtBeginEnvironment{lltable}{\doublespacing}
+  - \AtBeginEnvironment{tablenotes}{\doublespacing}
+  - \captionsetup[table]{font={stretch=1.5}}
+  - \captionsetup[figure]{font={stretch=1.5}}
+
+title             : "Working memory and selective attention: A love story"
+shorttitle        : #"Effects of distractor number on change detection"
+
+author: 
+  - name          : "Dion T. Henare"
+#    affiliation   : "1"
+#    corresponding : yes    # Define only one corresponding author
+#    address       : "School of Psychology, University of Auckland, Private Bag 92019, Auckland 1010, New Zealand"
+#    email         : "dion.henare@auckland.ac.nz"
+#  - name          : "Paul M. Corballis"
+#    affiliation   : "1"
+
+affiliation:
+#  - id            : "1"
+    institution   : "School of Psychology, Univeristy of Auckland"
+
+author_note: |
+  \begin{center} A thesis submitted in fulfilment of the requirements for the degree of Doctorate of Philosophy in Psychology, the University of Auckland, 2018. \\ This thesis is for examination purposes only and is confidential to the examination process. \end{center}
+
+abstract: |
+  Enter abstract here. Each new line herein must be indented, like this line. 
+  
+  \pagestyle{plain}
+  \newpage
+  
+  \centerline{Acknowledgements} \
+  I would like to thank the world for attempting to contain me.
+
+bibliography      : ["r-references.bib"]
+
+figsintext        : no
+figurelist        : no
+tablelist         : no
+footnotelist      : no
+lineno            : no
+mask              : no
+
+numbersection     : yes
+toc               : TRUE
+class             : "man"
+output            : papaja::apa6_pdf
+---
+
+\raggedbottom
+
+\newpage
+\addcontentsline{toc}{subsection}{\listfigurename}
+\listoffigures
+\newpage
+\addcontentsline{toc}{subsection}{\listtablename}
+\listoftables
+\newpage
+\pagenumbering{arabic}
+
+\section{Chapter 1: General Introduction}
+\newpage
+```{r child = 'GeneralIntroduction.Rmd'}
+```
+
+\newpage
+\section{Chapter 2: Working memory capacity in a change detection task is affected by the number of irrelevant
+objects in the display}
+\newpage
+```{r child = 'T-WMBehav.Rmd'}
+```
+
+\newpage
+\section{Chapter 3: Working memory availability affects neural indices of distractor processing during visual
+search}
+\newpage
+```{r child = 'T-SAWMLoad.Rmd'}
+```
+
+# References
+
+```{r create_r-references}
+r_refs(file = "r-references.bib")
+```
+
+\setlength{\parindent}{-0.5in}
+\setlength{\leftskip}{0.5in}
