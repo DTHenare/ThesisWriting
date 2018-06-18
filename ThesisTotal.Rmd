@@ -48,7 +48,7 @@ footnotelist      : no
 lineno            : no
 mask              : no
 
-numbersection     : yes
+numbersection     : no
 toc               : TRUE
 class             : "man"
 output            : papaja::apa6_pdf
