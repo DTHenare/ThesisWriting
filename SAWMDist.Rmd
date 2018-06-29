@@ -206,7 +206,7 @@ At this point the visual search task would begin, first with a fixation cross pr
 
 Once the 4th visual search was completed, the working memory retrieval display would appear on screen for 2000ms and participants had to press 'm' with their left hand if the shape on screen matched the encoded shape, or 'x' if it did not. The shapes matched on half of the trials. Finally, participants would receive feedback on the working memory portion of the task with a 1000ms display of either "Correct!", "Wrong", or "Too Slow" depending on their response. For an example trial, see figure\ \@ref(fig:SDTrialExample).
 
-```{r TrialExample, fig.cap = "Example of a single trial of the experiment. This example shows a working memory distractor present condition. In a working memory distractor absent trial, only the cued shape would be present.", fig.align = "center"}
+```{r SDTrialExample, fig.cap = "Example of a single trial of the experiment. This example shows a working memory distractor present condition. In a working memory distractor absent trial, only the cued shape would be present.", fig.align = "center"}
 include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/SDTrialExample.pdf", auto_pdf = TRUE)
 ```
 
@@ -528,7 +528,11 @@ In order to investigate the relationship between lateralised activity and behavi
 
 # Discussion
 
+Compare effects to SAWMLoad.
 
+Calculate filtering cost and correlate.
+
+What does increased N2pc mean historically? Why is N2pc larger for distractor present trials.
 
 # Notes
 
