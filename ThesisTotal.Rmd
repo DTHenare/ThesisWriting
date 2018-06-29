@@ -84,6 +84,15 @@ search}
 ```{r child = 'T-SAWMLoad.Rmd'}
 ```
 
+
+\newpage
+\section{Chapter 4: Working memory distractor presence affects neural indices of target processing during visual
+search}
+\newpage
+```{r child = 'T-SAWMDist.Rmd'}
+```
+
+\newpage
 # References
 
 ```{r create_r-references}
