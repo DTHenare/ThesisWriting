@@ -12,7 +12,7 @@ header-includes:
   - \captionsetup[figure]{font={stretch=1.5}}
 
 title             : "Working memory and selective attention: A love story"
-shorttitle        : #"Effects of distractor number on change detection"
+shorttitle        : "."
 
 author: 
   - name          : "Dion T. Henare"
