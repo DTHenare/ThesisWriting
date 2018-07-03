@@ -142,8 +142,6 @@ Consensus is now building in favour of the general view that working memory and 
 
 ## Target selection
 
-`r #blurb about target selection as a process?`
-
 One critical function required in order to perform effectively in a goal directed task is the identification and selection of relevant targets. Target selection is essential to the successful performance of selective attention at all levels, from the overt oriting of the head and eyes to place relevant objects onto the fovea, to covert orienting of neural resources which increase the processing of target representations in the cortex [@carrasco_visual_2011]. When investigating the overlap between working memory and attention therefore, a number of researchers have focussed on the process of target selection and its overlapping role in the use of these two cognitive constructs.
 
 @scalf_working_2011 paired fMRI with a dual task in order to suggest that working memory load affects the speed with which individuals can deploy attention to relevant targets. In their task, participants were presented with a target set of symbols (T1) and attempted to store their identity and location. After a short delay a letter (T2) was shown on screen and after further delay participants were tested on their storage of T1. In some trials, participants were instructed to ignore T2, and in the other trials they were required to report the letter's identity. fMRI revealed a delayed response to T2 in the visual cortex when it followed T1 at a short delay, and when the encoding demands of T1 were high. @scalf_working_2011 interpreted this as evidence that increased working memory demands lead to a delay in processes of target selection as a result of their concurrent use in the working memory task.
