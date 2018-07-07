@@ -65,34 +65,34 @@ output            : papaja::apa6_pdf
 \newpage
 \pagenumbering{arabic}
 
-\section{Chapter 1: General Introduction}
+\section{CHAPTER 1: General Introduction}
 \newpage
 ```{r child = 'GeneralIntroduction.Rmd'}
 ```
 
 \newpage
-\section{Chapter 2: Working memory capacity in a change detection task is affected by the number of irrelevant
+\section{CHAPTER 2: Working memory capacity in a change detection task is affected by the number of irrelevant
 objects in the display}
 \newpage
 ```{r child = 'T-WMBehav.Rmd'}
 ```
 
 \newpage
-\section{Chapter 3: Working memory availability affects neural indices of distractor processing during visual
+\section{CHAPTER 3: Working memory availability affects neural indices of distractor processing during visual
 search}
 \newpage
 ```{r child = 'T-SAWMLoad.Rmd'}
 ```
 
 \newpage
-\section{Chapter 4: Working memory distractor presence affects neural indices of target processing during visual
+\section{CHAPTER 4: Working memory distractor presence affects neural indices of target processing during visual
 search}
 \newpage
 ```{r child = 'T-SAWMDist.Rmd'}
 ```
 
 \newpage
-\section{Chapter 5: General Discussion}
+\section{CHAPTER 5: General Discussion}
 \newpage
 ```{r child = 'GeneralDiscussion.Rmd'}
 ```
