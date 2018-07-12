@@ -1,0 +1,518 @@
+
+```{r SDload_packages, include = FALSE}
+library(papaja)
+library(reshape)
+library(dplyr)
+library(afex)
+library(multcomp)
+library(stringi)
+library(xtable)
+library(doBy)
+library(Hmisc)
+library(corrplot)
+library(knitr)
+library(gdata)
+library(cowplot)
+```
+
+```{r SDhelperFunctions, echo = FALSE, warning=FALSE}
+corstars <-function(x, method=c("pearson", "spearman"), removeTriangle=c("upper", "lower"),
+                     result=c("none", "html", "latex")){
+    #Compute correlation matrix
+    require(Hmisc)
+    x <- as.matrix(x)
+    correlation_matrix<-rcorr(x, type=method[1])
+    R <- correlation_matrix$r # Matrix of correlation coeficients
+    p <- correlation_matrix$P # Matrix of p-value 
+    
+    ## Define notions for significance levels; spacing is important.
+    mystars <- ifelse(p < .001, "****", ifelse(p < .01, "*** ", ifelse(p < .05, "**  ", ifelse(p < .1, "*   ", "    "))))
+    
+    ## trunctuate the correlation matrix to two decimal
+    R <- format(round(cbind(rep(-1.11, ncol(x)), R), 2))[,-1]
+    
+    ## build a new matrix that includes the correlations with their apropriate stars
+    Rnew <- matrix(paste(R, mystars, sep=""), ncol=ncol(x))
+    diag(Rnew) <- paste(diag(R), " ", sep="")
+    rownames(Rnew) <- colnames(x)
+    colnames(Rnew) <- paste(colnames(x), "", sep="")
+    
+    ## remove upper triangle of correlation matrix
+    if(removeTriangle[1]=="upper"){
+      Rnew <- as.matrix(Rnew)
+      Rnew[upper.tri(Rnew, diag = TRUE)] <- ""
+      Rnew <- as.data.frame(Rnew)
+    }
+    
+    ## remove lower triangle of correlation matrix
+    else if(removeTriangle[1]=="lower"){
+      Rnew <- as.matrix(Rnew)
+      Rnew[lower.tri(Rnew, diag = TRUE)] <- ""
+      Rnew <- as.data.frame(Rnew)
+    }
+    
+    ## remove last column and return the correlation matrix
+    Rnew <- cbind(Rnew[1:length(Rnew)-1])
+    if (result[1]=="none") return(Rnew)
+    else{
+      if(result[1]=="html") print(xtable(Rnew), type="html")
+      else print(xtable(Rnew), type="latex") 
+    }
+} 
+```
+
+```{r SDanalysis_setup, echo=FALSE}
+# Seed for random number generation
+set.seed(4609948)
+# Load the behavioural data along with the subtracted data
+subData <-read.table("P:/dhen061/Experiment_1.1/EEG_Data/Output-One/Subtracted  Explore/non-GFPStats.txt", header = TRUE)
+
+distData <- subset(subData, select = c(1,2,3,4))
+targData <- subset(subData, select = c(5,6,7,8))
+behavData <- subset(subData, select = c(9,10,11,12,13, 14,15,16))
+yesAreaData <- subset(subData, select = c(9,13,11,15, 18,22,17,21))
+noAreaData <- subset(subData, select = c(10,14,12,16, 20,24,19,23))
+yesLatData <- subset(subData, select = c(9,13,11,15, 30,34,29,33))
+noLatData <- subset(subData, select = c(10,14,12,16, 32,36,31,35))
+latData <- subset(subData, select = c(29,30,33,34, 31,32,35,36))
+
+# Add participant ID column to each subset
+PID = c(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18)
+distData$PID = PID
+targData$PID = PID
+behavData$PID = PID
+latData$PID = PID
+
+# Convert accuracies to %
+behavData$WM_YES_Acc = behavData$WM_YES_Acc*100
+behavData$WM_NOO_Acc = behavData$WM_NOO_Acc*100
+behavData$VS_YES_Acc = behavData$VS_YES_Acc*100
+behavData$VS_NOO_Acc = behavData$VS_NOO_Acc*100
+
+# Convert from wide to long form dataframe
+longDist = melt(distData, id="PID")
+longTarg = melt(targData, id="PID")
+longBehav = melt(behavData, id="PID")
+longLat =melt(latData, id="PID")
+
+# Create Task, Load, and Measure columns for bahveioural data
+longBehav$Task <- substr(longBehav$variable,start=1,stop=2)
+longBehav$Cond <- substr(longBehav$variable,start=4,stop=6)
+longBehav$Measure <- substr(longBehav$variable,start=8,stop=9)
+#Tidy the variable names
+longBehav$Measure[longBehav$Measure == "Ac"] <- "Accuracy"
+longBehav$Cond[longBehav$Cond == "NOO"] <- "NO"
+
+# Create a Load and Variable column
+longDist$Cond = substr(longDist$variable,start=1,stop=3)
+longDist$Component = substr(longDist$variable,start=10,stop=12)
+# Tidy the variable Names
+longDist$Component[longDist$Component == "N2p"] <- "N2pc"
+longDist$Cond[longDist$Cond == "NOO"] <- "NO"
+
+# Create Cond, and Comp for targets
+longTarg$Cond = substr(longTarg$variable,start=1,stop=3)
+longTarg$Component = substr(longTarg$variable,start=10,stop=12)
+# Tidy the variable Names
+longTarg$Component[longTarg$Component == "N2p"] <- "N2pc"
+longTarg$Component[longTarg$Component == "Ptc"] <- "SPCN"
+longTarg$Cond[longTarg$Cond == "NOO"] <- "NO"
+
+# Do the same for latencies
+longLat$Load = substr(longLat$variable,start=1,stop=1)
+longLat$Stim = substr(longLat$variable,start=2,stop=5)
+longLat$Sign = substr(longLat$variable,start=7,stop=7)
+
+# Delete redundant column
+longDist$variable <- NULL
+longTarg$variable <- NULL
+longBehav$variable <- NULL
+longLat$variable <- NULL
+```
+
+## Introduction
+
+In everyday tasks like driving a car, safe and efficient performance relies on cognitive processes which focus attention on relevant objects, ignore irrelevant distractors, and store goal relevant information for short periods of time. A large body of research has now established that cognitive processes which flexibly allocate attention, and the cognitive processes that store information in working memory are critically dependent on one another. Early evidence established that attention is involved in working memory encoding, maintenance, and retrieval. Similarly, experiments have demonstrated that the representations stored in working memory, are used to guide attention in the external world. Contemporary accounts of working memory now typically incorporate attentional control either as an important contributor to working memory capacity [@kane_controlled-attention_2001;@shipstead_mechanisms_2014], or in some cases as the primary determinant of working memory capacity [@engle_working_2018]. While there is general consensus that working memory and selective attention are mutually interacting, the specific mechanisms underlying this relationship are still unknown.
+
+Most of the research on the relationship between working memory and selective attention has focused on how attentional control is affected by increased working memory load. A benchmark finding in working memory tasks is that increasing the number of to-be-encoded targets leads to decreases in performance on the working memory task. Experimental evidence has demonstrated that increasing the working memory load on an individual leads to impaired performance on concurrent attention based tasks [@ahmed_focusing_2012;@de_fockert_role_2001;@stins_role_2004]. A complementary set of evidence has also shown that individuals low in working memory capacity show greater interference on a standard Stroop task [@kane_working-memory_2003], as well as greater interference on an Eriksen flanker task [@shipstead_working_2012]. These effects have been interpreted as evidence that the processes involved in storing objects in working memory, are the same processes used for performing attention based tasks, and represents a large base of the evidence used to reinforce claims that working memory and attention share neural resources [@de_fockert_beyond_2013].
+
+Another effect observed in working memory tasks is that introducing irrelevant distractor objects leads to decreases in performance.  Behavioural work has shown that the inclusion of distractors in a change detection task leads to a filtering cost, and that this filtering cost is correlated with working memory capacity [@unsworth_influence_2016;@lee_visual_2010]. @vogel_neural_2004 have also used evidence from EEG measures of memory storage to show that while high capacity individuals store task relevant objects in memory, low capacity individuals store both the relevant and irrelevant items. fMRI evidence has shown that preparation for filtering trials leads to different patterns of activity in the bilateral posterior middle frontal gyrus and the left basal ganglia and that this activity is also correlated with an individual's working memory capacity [@mcnab_prefrontal_2008]. This set of evidence demonstrates not only that the presence of distractors in a working memory task influences working memory performance, but that the way in which these distractors effect processing is an underlying component of individual working memory capacity.
+
+In spite of the body of work showing that working memory distractors impact negatively on the storage of relevant information, little is currently known about the attentional dynamics underlying this effect. Optimal performance of selective attention relies on several underlying processes including; target identification and selection, proactive suppression of possible distractors, and efficient disengagement from irrelevant distractors that capture attention [@carrasco_visual_2011]. Current research has attempted to specify the separate effects that working memory load has on target selection [@heitz_focusing_2007; @scalf_working_2011], distractor suppression [@fukuda_human_2009; @vogel_neural_2005], and distractor disengagement [@fukuda_individual_2011], hoever equivalent work interrogating the mechanisms involved in the processing of working memory distractors is nascent.
+
+The processes of target selection, distractor suppression, and distractor disengagement are difficult to tease apart using only behavioral measures. Nonetheless, recent research has identified a set of lateralized event-related potential (ERP) components that may provide dissociable measures of these processes. The first of these is the N2pc component, defined as an increased negative voltage at posterior electrodes contralateral to an attended stimulus. Accumulating evidence suggests that the N2pc indexes the shift of visual attention onto an attended object [@dellacqua_spatial_2006;@hickey_electrophysiological_2006;@luck_spatial_1994]. N2pc amplitude has also been used as a measure of attentional capture by relevant stimuli [@kiss_attentional_2008], or pop-out objects [@eimer_attentional_2007;@holguin_n2pc_2009]. In the present study, we took advantage of the contralateral control method in order to measure the N2pc elicited separately by targets and distractors [@hickey_electrophysiological_2009;@hilimire_dynamics_2011;@hilimire_event-related_2014]. This method provided us with independent measures of N2pc to targets, reflecting target selection, and N2pc to distractors, reflecting initial distractor capture. 
+
+The second identified lateralized ERP component is an enhanced positivity contralateral to distracting or irrelevant objects [@hickey_electrophysiological_2009;@hilimire_competitive_2009;@toffanin_p4pc:_2011]. Research by @hickey_electrophysiological_2009 concluded that this component was a positivity related to distractor processing, thus they referred to it as 'Pd'. Findings from research by @hilimire_target_2012 suggest that the component reflects distractor suppression during the disambiguation of target features. A similar (or possibly identical) positive component referred to as "Ptc", to reflect its temporal and contralateral scalp distribution has been identified in research by @hilimire_competitive_2009. Findings from research by @hilimire_dynamics_2011 suggests that Ptc, like Pd, appears to reflect distractor suppression. However, evidence that both Pd and Ptc can be elicited by target objects suggests that Pd and Ptc may more generally reflect attentional disengagement from an attended stimulus [@burra_distractor_2014;@hilimire_event-related_2014;@sawaki_common_2012].
+
+The final lateralized component relevant to attentional control during visual search is a sustained lateralized negativity associate with short term maintenance of task relevant features. A sustained negativity associated with working memory storage was first identified by @klaver_event-related_1999 and has since been demonstrated to be sensitive to the number of objects being stored [@vogel_neural_2004]. A similar sustained posterior contralateral negativity (SPCN) has been observed in visual search tasks and is believed to reflect the short term maintenance of target feature. Initial evidence for the role of SPCN in visual short term memory was the fact that it is elicited in visual search paradigms that require in-depth processing of a target before responses can be made, suggesting that it indexes maintenance of those relevant features [@jolicoeur_attentional_2006;@mazza_attentional_2007;@kiss_n2pc_2008]. Subsequently @jolicoeur_dissociation_2008 used a simple visual search task to dissociate N2pc and SPCN by showing that while lateralized targets in their displays elicited both an N2pc and SPCN, only the SPCN was modulated by the number of targets that required a response. This dissociation establishes that SPCN is not simply sustained, or delayed processes of spatial attention indexed by N2pc, but rather an index of visual short term memory storage.
+
+This set of lateralized ERP components provide us with fine-grained indices of functionally distinct attentional mechanisms which are otherwise difficult to dissociate. In this study we measured lateralised ERPs separately for targets and distractors during the delay period of a working memory task. By varying distractor presence on the working memory portion of the task, we were able to test specific predictions regarding the attentional mechanism which is affected by the presence of irrelevant objects in a working memory display. We expected targets to elicit an N2pc and SPCN, and that any effect of irrelevant working memory objects on target selection to be reflected in modulation of the target N2pc, whereas effects of irrelevant working memory objects on visual short term memory storage would be reflected in modulations of the SPCN amplitude. Distractors on the other hand were predicted to elicit an N2pc and Ptc. Any effect of irrelevant working memory objects on distractor capture would be reflected in distractor N2pc ampliutude, whereas effects on distractor disengagement would be indexd by modulation of the Ptc amplitude.
+
+## Methods
+
+### Participants
+
+23 individuals (7 males) between the ages of 18 and 32 (M = 21.91 years, SD = 4.24) participated in the experiment and were reimbursed with a NZD $10 voucher. All participants reported that they had normal or corrected-to-normal vision. All participants gave written, informed consent prior to the start of the experiment and the research was approved by the University of Auckland Human Participants Ethics Committee.
+
+### Procedure
+
+Testing took place in a dimly lit, electrically shielded chamber. Experimental stimuli were presented on a 23 inch Samsung LCD monitor positioned 57cm away from the participant with the viewing distance maintained through use of a chinrest. E-prime software (version 2.0.8.74) was used to control stimulus presentation, synchronise stimulus presentation with the electrophysiological recording, and record participant responses. Participants performed a dual working memory and selective attention task in which they encoded one shape (which was accompanied half of the time by a second, irrelevant shape) at the start of a trial which they had to match to a test display after some delay. During the delay period of this working memory task, participants performed 4 visual searches in a series of target-decoy displays. Each block consisted of 8 trials (8 working memory trials, 32 visual searches) and all participants completed a practice block followed by 18 testing blocks. This resulted in a total of 144 working memory trials and 576 visual search trials for analysis. Participants had a minimum 30 second break between each block and on half of the breaks they could choose to take a longer break.
+
+Each trial began with a fixation cross on screen for 1500ms, and then the working memory cue appeared for 1000ms. The cue would point either up or down (with equal probability) indicating the location of the upcoming target object. The working memory encode display would then be presented for 2000ms and participants had to encode the shape indicated by the cue.
+
+At this point the visual search task would begin, first with a fixation cross presented for between 500 and 1500ms (randomly selected on each trial), followed by the presentation of the visual search display which appeared for 200ms. Participants had 1600ms to respond to the orientation of the target letter. If the colored T was upright they would press '1' on a standard keyboard numpad with their right hand, whereas if the T was rotated 180$^\circ$ then they would press '2'. Participants were instructed to respond as quickly as possible while attempting to maintain their accuracy above 90%. The visual search portion of the task was repeated 4 times in each trial.
+
+Once the 4th visual search was completed, the working memory retrieval display would appear on screen for 2000ms and participants had to press 'm' with their left hand if the shape on screen matched the encoded shape, or 'x' if it did not. The shapes matched on half of the trials. Finally, participants would receive feedback on the working memory portion of the task with a 1000ms display of either "Correct!", "Wrong", or "Too Slow" depending on their response. For an example trial, see figure\ \@ref(fig:SDTrialExample).
+
+```{r SDTrialExample, fig.cap = "Example of a single trial of the experiment. This example shows a working memory distractor present condition. In a working memory distractor absent trial, only the cued shape would be present.", fig.align = "center"}
+include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/SDTrialExample.pdf", auto_pdf = TRUE)
+```
+
+### Stimuli
+
+All stimuli were presented on a black background, and a grey fixation cross (0.2$^\circ$ x 0.2$^\circ$) was maintained in the centre of the screen throughout the trial. The working memory cue consisted of a grey vertical arrow (0.4$^\circ$ x 1.5$^\circ$) which replaced the fixation cross and pointed either up or down. The working memory encoding and retrieval displays consisted of either one or two colored shapes (each 1.2$^\circ$ x 1.2$^\circ$) presented on the midline, centred 2.5$^\circ$ above and/or 2.5$^\circ$ below the fixation cross. These stimuli could be one of four shapes (triangle, square, circle, diamond) in one of two colors (green or orange) however the two stimuli were never the same shape or color on a given trial. The visual search displays consisted of 16 letters (Ts and Ls; 0.6$^\circ$ x 0.6$^\circ$) arranged in equal intervals around an imaginary circle centred on the fixation cross with a radius of 3$^\circ$. Fourteen of the letters were grey Ts randomly rotated 90$^\circ$ to either the left or the right. The remaining two letters were a colored T (the target) and a colored L (the distractor). The target was randomly selected to be either green or orange on each trial, and the distractor was always the color not selected for the target. The target and distractor were randomly selected to be either upright or rotated by 180$^\circ$ on each trial, independent of one another. One of these two objects was always placed on the midline (half of the time the target, half of the time the distractor) while the other was lateralised to the left or right but always in the same visual field (upper or lower) as the midline object. This ensured that there was only ever one salient lateralised object for the calculation of lateralised ERPs.
+
+### Electrophysiological recording
+
+EEG activity was recorded continuously at 1000Hz on an Electrical Geodesics Inc. (EGI) Hydrocel-GSN-128-channel Ag/AgCl electrode net (Electrical Geodesics Inc.,Eugene, OR, USA). The electrodes have a geodesic arrangement and extend inferior to the axial plane containing F9/10 in the 10-10 system. The online reference electrode is Cz (placed on the vertex) and a COM sensor is located on the z axis between Pz and POz equivalents. EEG activity was amplified with an EGI net amps 400 amplifier with 24-bit A/D conversion, an input impedance of $\ge$ 200 $\text{M}\Omega$, and a 4kHz antialiasing filter (500Hz low pass cut off). Electrode impedance levels were kept below 40$\text{k}\Omega$ and EGI's implementation of the driven common technique (Common Active Noise Sensing and Limiting) was used throughout.
+
+### EEG Processing
+
+```{r SDdistERPs, fig.cap = "Subtracted event-related potentials showing the lateralized response to distractors under high and low load. Each component was calculated from the average of a slightly different cluster of electrodes (based on the condition averaged scalp topography of that component's time window).", fig.align = "center"}
+include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/SAWMDIST_Dist_ERPs.pdf", auto_pdf = TRUE)
+```
+
+```{r SDtargERPs, fig.cap = "Subtracted event-related potentials showing the lateralized response to targets under high and low load. Each component was calculated from the average of a slightly different cluster of electrodes (based on the condition averaged scalp topography of that component's time window).", fig.align = "center"}
+include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/SAWMDIST_Targ_ERPs.pdf", auto_pdf = TRUE)
+```
+
+EEG data were processed twice, firstly in a way which was optimized for the performance of independent component analysis (ICA), and secondly in a way which was optimized for the production of ERP components. ICA weights from the first set of data could then be copied across in order to perform artifact correction in the ERP data. All EEG preprocessing was performed using MATLAB (2017a, The Mathworks Inc.) and the EEGLAB toolbox [@DELORME2004].
+
+For the performance of ICA, data were down-sampled to 250 Hz. Data were Band pass filtered from 1 to 30Hz using a butterworth filter implemented in ERPLAB [@ERPLAB]. Channel locations were loaded. Bad channels were detected, removed, and replaced with a spherical interpolation of surrounding electrodes. Data were then re-referenced to the average of all electrodes. ICA was then performed on the data, using the PCA option to reduce dimensions to account for the number of interpolated channels. ICA weights were then stored in order to be applied to data which had been pre-processed for the production of ERPs. For the production of ERPs, data were first down-sampled to 250Hz. Data were Band pass filtered from 0.1 to 30Hz using a butterworth filter implemented in ERPLAB [@ERPLAB]. Channel locations were loaded. Bad channels were detected, removed, and replaced with a spherical interpolation of surrounding electrodes. Data were then re-referenced to the average of all electrodes. Data were then epoched from 200ms pre-stimulus to 800ms post-stimulus. Epochs containing horizontal eye movements were removed (identified as any epoch containing a greater than 32 microvolt difference between electrodes location at the outer canthi of each eye). ICA weights were then copied over to this set of data in order to perform artifact correction. The ADJUST toolbox was used in order to identify artifact components [@ADJUST_tb]. All components identified as artifacts by ADJUST were removed from the data. Subsequently, epochs which contained any activity above 100 microvolts or below -100 microvolts were removed from the data. Participants with less than 60% of their trials remaining at this point were rejected, resulting in 3 rejections.
+
+In order to isolate activity elicited contralateral to the lateralized object, all trials containing a right visual field target or distractor had their EEG activity flipped along the longitudinal axis such that for all trials, right hemisphere electrodes now represent activity contralateral to the lateralized stimulus and left hemisphere electrodes represent activity ipsilateral to the lateralized object. Ipsilateral activity was then subtracted from both hemispheres and the remaining contralateral activity was then mirrored onto the left hemisphere. At this stage, scalp activity represents only that portion of the EEG signal which is greater contralateral to the lateralized stimulus, mirrored onto both sides of the scalp. Importantly for our results, this means that in target lateralized trials (where the distractor is on the midline), activity elicited by the distractors is subtracted out of the data and only target related activity remains. Conversely, in the distractor lateralized trials (where the target is on the midline), activity elicited by targets has been removed.
+
+Participant averages were formed separately for lateralized target and lateralized distractor trials and global field power (GFP) was then calculated for each of these conditions (across all electrodes posterior to Cz). In order to find unbiased estimates of the component latencies and their widths, Matlab's built-in findpeaks function was used to detect the five most prominent peaks in the GFP for each stimulus type as well as their widths (using half-prominence). Peaks detected that the approximate latency of our components of interest outlined by @hilimire_dynamics_2011 were selected for analysis. Electrode clusters were then selected for each component by averaging across working memory distractor presence and plotting the topographies for each window. Electrode selection was similar for all components and centered around P7/8. For the targets, this resulted in an N2pc latency range of 220 to 244ms, and and SPCN latency range of 372 to 484ms (shown in figure\ \@ref(fig:SDtargERPs)). For distractors, this resulted in an N2pc latency range of 216 to 244ms and Ptc latency range of 308 to 392ms (shown in figure\ \@ref(fig:SDdistERPs)). Average amplitude for each individual was extracted for these component windows for targets and distractors for each level of working memory distractor. For the individual differences analyses we used a signed-area approach similar to that used by @gaspar_inability_2016 and @sawaki_common_2012. First we calcuated the positive and negative area across all components for targets and distractors under high and low load. In order to correct for the effect of noise in these estimates we followed the procedure of @gaspar_inability_2016 and subtracted the equivalent calculation taken from the prestimulus area in each condition (and in our case this value was multiplied in order to account the different lengths of time between the prestimulus period and the area of the components).
+
+All statistical anaysis was performed in version 1.1.423 of RStudio [@rstudio_desk_2016] using `r cite_r("r-references.bib")`.
+
+## Results
+
+### Behavioural measures
+
+```{r SDbehavioural_stats, include=FALSE}
+wmAcc_out <- t.test(behavData$WM_YES_Acc, behavData$WM_NOO_Acc, paired = TRUE, alternative = "two.sided")
+wmRT_out <- t.test(behavData$WM_YES_RT,  behavData$WM_NOO_RT, paired = TRUE, alternative = "two.sided")
+vsAcc_out <- t.test(behavData$VS_YES_Acc, behavData$VS_NOO_Acc, paired = TRUE, alternative = "two.sided")
+vsRT_out <- t.test(behavData$VS_YES_RT, behavData$VS_NOO_RT, paired = TRUE, alternative = "two.sided")
+
+#Make violin plot data
+WMRT = filter(longBehav, Task == "WM" & Measure == "RT")
+WMAcc = filter(longBehav, Task == "WM" & Measure == "Accuracy")
+VSRT = filter(longBehav, Task == "VS" & Measure == "RT")
+VSAcc = filter(longBehav, Task == "VS" & Measure == "Accuracy")
+
+# Create violin plots
+WMRT.violin <- ggplot(data=WMRT, aes( x=Cond,y=value)) +
+  geom_violin(trim=FALSE, fill="gray") +
+  labs( y = "Working memory RT(ms)") +
+  #ylim(50,100) +
+  #geom_dotplot(binaxis='y', stackdir='center', dotsize=1) +
+  geom_boxplot(width=0.1) +
+  theme_apa()
+WMAcc.violin <- ggplot(data=WMAcc, aes( x=Cond,y=value)) +
+  geom_violin(trim=FALSE, fill="gray") +
+  labs( y = "Working memory Acc(%)") +
+  ylim(50,100) +
+  #geom_dotplot(binaxis='y', stackdir='center', dotsize=1) +
+  geom_boxplot(width=0.1)+
+  theme_apa()
+VSRT.violin <- ggplot(data=VSRT, aes( x=Cond,y=value)) +
+  geom_violin(trim=FALSE, fill="gray") +
+  labs( y = "Visual Search RT(ms)") +
+  #ylim(50,100) +
+  #geom_dotplot(binaxis='y', stackdir='center', dotsize=1) +
+  geom_boxplot(width=0.1)+
+  theme_apa()
+VSAcc.violin <- ggplot(data=VSAcc, aes( x=Cond,y=value)) +
+  geom_violin(trim=FALSE, fill="gray") +
+  labs( y = "Visual Search Acc(%)") +
+  ylim(50,100) +
+  #geom_dotplot(binaxis='y', stackdir='center', dotsize=1) +
+  geom_boxplot(width=0.1) +
+  theme_apa()
+pdf("C:/Users/dhen061/Desktop/ThesisWriting/Figures/SAWMDIST_behavViolinPlot.pdf", width = 7, paper = "special")
+plot_grid(WMRT.violin, WMAcc.violin, VSRT.violin, VSAcc.violin, labels = c("A","B","C","D"))
+dev.off()
+```
+
+
+```{r SDviolinPlots, fig.cap = "Violin plots showing the effect of working memory distractor presence on A) Working memory response times, B) working memory accuracy, C) visual search response times, and D) visual search accuracy.", fig.align = "center"}
+include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/SAWMDIST_behavViolinPlot.pdf", auto_pdf = TRUE)
+```
+
+Mean response times and percent correct are shown as a function of working memory distractor presence for each task (working memory and visual search) in figure\ \@ref(fig:SDviolinPlots). Paired samples t-tests were carried out to test the effect of working memory distractor presence on response times(ms) and accuracy(%) in both the working memory and visual search tasks. The results of the T-tests showed that the presence of a distractor in the working memory task did result in significantly slower (`r apa_print(wmRT_out)$full`), and less accurate (`r apa_print(wmAcc_out)$full`) responses to the working memory test display (although the latter effect is only trending toward significance). The results also showed that participants were significantly less accurate on the visual search task when a working memory distractor had been presented (`r apa_print(vsAcc_out)$full`) however there was no significant effect of working memory distractor presence on visual search response times (`r apa_print(vsRT_out)$full`). These data confirm firstly that the presence of a distractor during working memory encoding and retrieval effected performance on the working memory task, and secondly that this manipulation also effected performance on a concurrent visual search task.
+
+### Within-subject electrophysiological measures
+
+```{r SDSubtracted_ANOVA, echo=FALSE, warning =FALSE}
+# Run the distractor ANOVA (two way, Load x Component on distractor amplitudes)
+dist.aov <- aov_ez(
+  data = longDist,
+  dv = "value",
+  id = "PID", 
+  within = c("Cond", "Component")
+)
+
+# Descriptives for distractors
+#summaryBy(value ~ Load + Component, data = longDist, FUN = function(x) { c(Mean = mean(x), SD = sd(x)) } )
+dist.comp.d <- summaryBy(value ~ Component, data = longDist, FUN = function(x) { c(Mean = mean(x), SD = sd(x)) } )
+dist.cond.d <- summaryBy(value ~ Cond, data = longDist, FUN = function(x) { c(Mean = mean(x), SD = sd(x)) } )
+
+targ.aov <- aov_ez(
+  data = longTarg,
+  dv = "value",
+  id = "PID",
+  within = c("Cond", "Component")
+)
+targ.component.emmeans <- emmeans(targ.aov, ~ Component)
+targ.component.posthoc <- pairs(targ.component.emmeans)
+
+targ.interaction.cond.emmeans <- emmeans(targ.aov, ~Cond|Component)
+targ.interaction.cond.posthoc <- pairs(targ.interaction.cond.emmeans)
+targ.interaction.component.emmeans <- emmeans(targ.aov, ~Component|Cond)
+targ.interaction.component.posthoc <- pairs(targ.interaction.component.emmeans)
+#Descriptives
+YNmean <- round(mean(subset(longTarg,Cond=="YES"&Component=="N2pc")$value),2)
+YSmean <- round(mean(subset(longTarg,Cond=="YES"&Component=="SPCN")$value),2)
+NNmean <- round(mean(subset(longTarg,Cond=="NO"&Component=="N2pc")$value),2)
+NSmean <- round(mean(subset(longTarg,Cond=="NO"&Component=="SPCN")$value),2)
+YNsd <- round(sd(subset(longTarg,Cond=="YES"&Component=="N2pc")$value),2)
+YSsd <- round(sd(subset(longTarg,Cond=="YES"&Component=="SPCN")$value),2)
+NNsd <- round(sd(subset(longTarg,Cond=="NO"&Component=="N2pc")$value),2)
+NSsd <- round(sd(subset(longTarg,Cond=="NO"&Component=="SPCN")$value),2)
+
+# ANOVA tanles
+dist.result <- apa_print(dist.aov)
+targ.result <- apa_print(targ.aov)
+
+# Follow-up tables
+targ.component.posthoc.table <- xtable(summary(targ.component.posthoc), caption = "This is the table caption", label = "tab:followupTargetComponentTable")
+targ.interaction.cond.posthoc.table <- xtable(summary(targ.interaction.cond.posthoc), caption = "This is the table caption", label = "tab:TIntLoadLabel")
+targ.interaction.component.posthoc.table <- xtable(summary(targ.interaction.component.posthoc), caption = "This is the table caption", label = "tab:TIntCompLabel")
+
+```
+
+```{r SDtargANOVATable, results = 'asis'}
+#apa_table(targ.result$table, caption = "Summary of the 2 x 2 repeated measures ANOVA used to test the effects of working memory distractor presence and component on the lateraliesd neural response to targets during visual search.", escape = FALSE)
+```
+
+```{r SDtargANOVAcomponentTable, results = 'asis'}
+#print(targ.interaction.cond.posthoc.table, comment=FALSE, caption.placement = "top", latex.environments="flushleft")
+#print(targ.interaction.component.posthoc.table, comment=FALSE, caption.placement = "top", latex.environments="flushleft")
+```
+
+In order to test for the effect of working memory load on lateralised ERP components related to target and distractor processing, two repeated measures ANOVAs were performed, one for lateralised targets and one for lateralised distractors. For both analyses, the repeated measures factors were working memory distractor (present and absent), and component (N2pc and SPCN for targets, and N2pc and Ptc for distractors). Greenhouse-Geisser corrected values are used in all cases. The results for targets showed no significant main effect of either component (`r targ.result$full$Component`), nor working memory distractor presence (`r targ.result$full$Cond`). There was however a significant interaction between component and working memory distraction (`r targ.result$full$Cond_Component`) and pairwise comparisons using Tukey correction were performed in order to follow up this effect. The results showed that when a working memory distractor is absent, N2pc elicited by the visual search displays (`r paste("M = ",NNmean,", SD =",NNsd,sep="")`) is significantly more negative than the SPCN (`r paste("M = ",NSmean,", SD =",NSsd,", t(22.93) = 2.64, p = 0.015",sep="")`), however when the working memory distractor is present there is no significant difference between N2pc (`r paste("M = ",YNmean,", SD =",YNsd,sep="")`) and SPCN (`r paste("M = ",YSmean,", SD =",YSsd,", t(22.93) = 0.19, p > 0.05",sep="")`). These results also show that the N2pc is significantly larger uwhen the working memory distractor is present than when it is absent (`r "t(23.32) = 2.62, p = 0.015"`), however there is no effect of working memory distractor presence on SPCN amplitude (`r "t(23.32) = 0.29, p > 0.5"`).
+
+```{r SDdistANOVATable, results='asis'}
+#apa_table(dist.result$table, caption = "This is the subtracted CondxComponent distractor ANOVA", escape = FALSE)
+```
+
+The results for distractors showed a significant main effect of component (`r dist.result$full$Component`) with N2pc being more negative than Ptc, but no significant main effect of working memory distractor presence (`r dist.result$full$Cond`), nor a significant interaction between component and working memory distractor presence (`r dist.result$full$Cond_Component`).
+
+### Between-subject electrophysiological measures
+
+```{r SDcorrelograms, echo=FALSE, warning=FALSE, include=FALSE}
+areaColumns <- c("WMAcc", "WMRT", "VSAcc", "VSRT", "TargP", "TargN", "DistP", "DistN")
+colnames(noAreaData) <- areaColumns
+colnames(yesAreaData) <- areaColumns
+
+no.area.corr <- rcorr(as.matrix(noAreaData))
+yes.area.corr <- rcorr(as.matrix(yesAreaData))
+colnames(no.area.corr$r) <- areaColumns
+colnames(yes.area.corr$r) <- areaColumns
+rownames(no.area.corr$r) <- areaColumns
+rownames(yes.area.corr$r) <- areaColumns
+pdf("C:/Users/dhen061/Desktop/ThesisWriting/Figures/SAWMDIST_noCorrelogram.pdf", width = 7, paper = "special")
+corrplot(no.area.corr$r, method = "ellipse", type = "lower",p.mat = no.area.corr$P, sig.level = 0.05, insig = "blank")
+dev.off()
+pdf("C:/Users/dhen061/Desktop/ThesisWriting/Figures/SAWMDIST_yesCorrelogram.pdf", width = 7, paper = "special")
+corrplot(yes.area.corr$r, method = "ellipse", type = "lower",p.mat = yes.area.corr$P, sig.level = 0.05, insig = "blank")
+dev.off()
+
+# Scatterplots
+VSRTbyDISTP <- ggplot(noAreaData, aes(x=VSRT, y=DistP)) + geom_point() +geom_smooth(method=lm) +theme_apa()
+VSRTbyDISTN <- ggplot(noAreaData, aes(x=VSRT, y=DistN)) + geom_point() +geom_smooth(method=lm) +theme_apa()
+VSRTbyTARGP <- ggplot(noAreaData, aes(x=VSRT, y=TargP)) + geom_point() +geom_smooth(method=lm) +theme_apa()
+WMRTbyDISTP <- ggplot(noAreaData, aes(x=WMRT, y=DistP)) + geom_point() +geom_smooth(method=lm) +theme_apa()
+pdf("C:/Users/dhen061/Desktop/ThesisWriting/Figures/SAWMDIST_noScatterPlot.pdf", width = 7, paper = "special")
+plot_grid(VSRTbyDISTP,VSRTbyDISTN,VSRTbyTARGP,WMRTbyDISTP, labels = c("A","B","C","D"))
+dev.off()
+```
+
+```{r SDcorrelationText, echo=FALSE, warning=FALSE, include=FALSE}
+no.RowLabels=c()
+no.ColLabels=c()
+yes.RowLabels=c()
+yes.ColLabels=c()
+# Automatically get stats for significant correlations for low load
+for (row in 5:8){
+  for (col in 1:4){
+    if (row > col){
+      if (no.area.corr$P[row,col] < 0.05){
+        no.RowLabels = c(no.RowLabels,rownames(no.area.corr$P)[row])
+        no.ColLabels = c(no.ColLabels,rownames(no.area.corr$P)[col])
+      }
+    }
+  }
+}
+# Do the same for high load
+for (row in 5:8){
+  for (col in 1:4){
+    if (row > col){
+      if (yes.area.corr$P[row,col] < 0.05){
+        yes.RowLabels = c(yes.RowLabels,rownames(yes.area.corr$P)[row])
+        yes.ColLabels = c(yes.ColLabels,rownames(yes.area.corr$P)[col])
+      }
+    }
+  }
+}
+
+# Make low load reults strings
+if (length(no.RowLabels)>0) {
+no.results.string = c()
+for (i in 1:length(no.ColLabels)){
+row.match.log = rownames(no.area.corr$P)==no.RowLabels[i]
+col.match.log = colnames(no.area.corr$P)==no.ColLabels[i]
+curR <- toString(round(no.area.corr$r[row.match.log,col.match.log], 3))
+curP <- toString(round(no.area.corr$P[row.match.log,col.match.log], 3))
+no.results.string[i] <- paste("r  = ",curR, ", p = ", curP)
+}
+}
+# Make high load reults strings
+if (length(yes.RowLabels)>0) {
+yes.results.string = c()
+for (i in 1:length(yes.ColLabels)){
+row.match.log = rownames(yes.area.corr$P)==yes.RowLabels[i]
+col.match.log = colnames(yes.area.corr$P)==yes.ColLabels[i]
+curR <- toString(round(yes.area.corr$r[row.match.log,col.match.log], 3))
+curP <- toString(round(yes.area.corr$P[row.match.log,col.match.log], 3))
+yes.results.string[i] <- paste("r  = ",curR, ", p = ", curP)
+}
+}
+
+```
+
+```{r SDcorrelationTables, results='asis'}
+print(xtable(corstars(noAreaData,method="pearson",removeTriangle = "upper", result = "none"),
+             caption = "Correlation matrix for the no distractor condition showing the relationships between all behavioural and ERP measures.", 
+             label = "tab:noCorrelationTable"),
+      caption.placement = "top",
+      latex.environments = "flushleft",
+      add.to.row = list(list(8),  
+"\\hline  \\multicolumn{8}{l}{\\text{Note: }
+p < .001 '****'; p < .01 '***'; p < .05 '**'; p < .1 '*'} \\\\"), comment = FALSE)
+
+print(xtable(corstars(yesAreaData,method="pearson",removeTriangle = "upper", result = "none"),
+             caption = "Correlation matrix for the yes distractor condition showing the relationships between all behavioural and ERP measures.", 
+             label = "tab:yesCorrelationTable"),
+      caption.placement = "top",
+      latex.environments = "flushleft",
+      add.to.row = list(list(8),
+"\\hline  \\multicolumn{8}{l}{\\text{Note: }
+p < .001 '****'; p < .01 '***'; p < .05 '**'; p < .1 '*'} \\\\"), comment = FALSE)
+```
+
+```{r SDlowScatterGraphing, fig.cap = "This is where I'd put the figure caption.", fig.align = "center"}
+#include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/SAWMDIST_noScatterPlot.pdf", auto_pdf = TRUE)
+```
+
+```{r SDcorrelogramLow, fig.cap = "This is where I'd put the figure caption.", fig.align = "center"}
+#include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/SAWMDIST_noCorrelogram.pdf", auto_pdf = TRUE)
+```
+
+```{r SDcorrelogramHigh, fig.cap = "This is where I'd put the figure caption.", fig.align = "center"}
+#include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/SAWMDIST_yesCorrelogram.pdf", auto_pdf = TRUE)
+```
+
+In order to investigate the relationship between lateralised activity and behaviour in the tasks, a correlation matrix was made for each level of working memory distractor presence. Each matrix contained the behavioural measures (accuracy and response time) on both tasks (working memory task and visual search task), as well as the total lateralized positive area for each stimulus (targets and distractors) and the total lateralised negative area for each stimulus. The results show no evidence of any association between lateralized amplitude and any behavioral measure. For the full correlation matrix for the working memory distractor absent condition see table\ \@ref(tab:noCorrelationTable), and for the working memory distractor present condition see table\ \@ref(tab:yesCorrelationTable).
+
+```{r SDlatencyTtests}
+#LDistP.minus.HDistP.D <- mean(lowLatData$LDist_PLat-highLatData$HDist_PLat)
+#LDistP.minus.HDistP.se <- sqrt((19/20)*sum(((lowLatData$LDist_PLat-highLatData$HDist_PLat)-LDistP.minus.HDistP.D)^2))
+#LDistP.minus.HDistP.T <- LDistP.minus.HDistP.D/LDistP.minus.HDistP.se
+```
+
+```{r SDlatcorrelograms, echo=FALSE, warning=FALSE, include=FALSE}
+#latColumns <- c("WMAcc", "WMRT", "VSAcc", "VSRT", "DistPLat", "TargPLat", "DistNLat", "TargNLat")
+#colnames(lowLatData) <- latColumns
+#colnames(highLatData) <- latColumns
+
+#low.lat.corr <- rcorr(as.matrix(lowLatData))
+#high.lat.corr <- rcorr(as.matrix(highLatData))
+#colnames(low.lat.corr$r) <- latColumns
+#colnames(high.lat.corr$r) <- latColumns
+#rownames(low.lat.corr$r) <- latColumns
+#rownames(high.lat.corr$r) <- latColumns
+#pdf("C:/Users/dhen061/Desktop/ThesisWriting/Figures/lowLatCorrelogram.pdf", width = 7, paper = "special")
+#corrplot(low.lat.corr$r, method = "ellipse", type = "lower",p.mat = low.lat.corr$P, sig.level = 0.05, insig = "blank")
+#dev.off()
+#pdf("C:/Users/dhen061/Desktop/ThesisWriting/Figures/highLatCorrelogram.pdf", width = 7, paper = "special")
+#corrplot(high.lat.corr$r, method = "ellipse", type = "lower",p.mat = high.lat.corr$P, sig.level = 0.05, insig = "blank")
+#dev.off()
+
+## Scatterplot
+#WMAccbyDISTPLat <- ggplot(lowLatData, aes(x=VSAcc, y=TargPLat)) +geom_point() +geom_smooth(method=lm) +theme_apa()
+#WMAccbyDISTNLat <- ggplot(highLatData, aes(x=VSAcc, y=TargPLat)) +geom_point() +geom_smooth(method=lm) +theme_apa()
+#WMRTbyTARGNLat <- ggplot(lowLatData, aes(x=WMRT, y=TargPLat)) +geom_point() +geom_smooth(method=lm) +theme_apa()
+#highWMAccbyDISTNLat <- ggplot(highLatData, aes(x=WMAcc, y=TargNLat)) +geom_point() +geom_smooth(method=lm) +theme_apa()
+#pdf("C:/Users/dhen061/Desktop/ThesisWriting/Figures/lowLatScatterPlot.pdf", width = 7, paper = "special")
+#plot_grid(WMAccbyDISTPLat,WMAccbyDISTNLat,WMRTbyTARGNLat,highWMAccbyDISTNLat, labels = c("A","B","C","D"))
+#dev.off()
+
+```
+
+```{r SDlowLatScatterGraphing, fig.cap = "This is where I'd put the figure caption.", fig.align = "center"}
+#include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/lowLatScatterPlot.pdf", auto_pdf = TRUE)
+```
+
+```{r SDcorrelogramLowLat, fig.cap = "This is where I'd put the figure caption lowLat.", fig.align = "center"}
+#include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/lowLatCorrelogram.pdf", auto_pdf = TRUE)
+```
+
+```{r SDcorrelogramHighLat, fig.cap = "This is where I'd put the figure caption highLat.", fig.align = "center"}
+#include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/highLatCorrelogram.pdf", auto_pdf = TRUE)
+```
+
+## Discussion
+
+The aim of this study was to specify the attentional mechanisms involved in filtering irrelevant objects during a working memory task. Our results replicated previous research showing that participants incur a filtering cost when irrelevant objects are presented in a working memory task. We also show that this filtering cost is associated with behavioural impairment on a concurrent visual search task, mirroring the effects seen as a result of manipulations of working memory load. Our ERP results suggest that when irrleevant objects are included in the working memory portion of the task, this specifically effects target processing and the ability of individuals to shift attention onto target obejcts. We found no evidence that lateralized distractor processing is affected by the presence of irrelevant objects in a concurrent working memory task, and no evidence of any associations between the amplitude of lateralized activity and behavioural perfromance on any aspect of the task. 
+
+In a previous experiment using a similar dual task paradigm, @henare_working_2018 showed the effect that increased working memory load has on the N2pc, Ptc, and SPCN components. In their task, participants were cued to encode either one or two coloured shapes at the start of the trial, and performed a set of visual searches during the maintenance period of the working memory task. Their results shoed that the Ptc elicited by distractors is reduced when working memory load is increased suggesting that increased working memory load impacts on an individual's ability to disengage from distractor objects. Their results showed no evidence of an effect of working memory load on target N2pc and therefore the result we observe here is unlikely to be attributable to unnecessary storage of the irrelevant object in the working memory distractor present trials. If that were the case, we would expect to see similar effects of increased working memory load on distractor Ptc amplitude. This suggests that the effects we see in our study are the result of specific mechanisms involved in the filtering of working memory distractors.
+
+The fact that target N2pc amplitude increased in the presence of a working memory distractor is somewhat couunter-intuitive. Historically increased N2pc amplitude has been interpreted as representing more efficient allocation of attention to an object. Increased N2pc amplitude is elicited by threatening stimuli [@weymar_specific_2013], highly rewarding stimuli [@kiss_reward_2009], and stimuli whose processing has been facilitated by intertrial priming [@tollner2008electrophysiological]. Therefore if the presence of a working memory distractor leads to attentional impairments, as suggested by our behavioural results, then we would have intuitively expected to see a concomitant decrease in N2pc amplitude. The observation instead that the presence of a working memory distractor leads to impaired behavioural performance but larger N2pc amplitudes requires further investigation.
+
+One possible mechanism which could explain modulation of the target N2pc is the effect that working memory representations have been shown to have on the guidance of attention. Previous research using dual tasks similar to the one we used have shown that the contents of memory can automatically guide attention in the secondary visual search task. When coloured shapes are held in working memory, subsequent visual search performance is improved when the visual search target is placed within an object matching the stored shape [@kumar_electrophysiological_2009]. Similary when participants are holding a particular colour in working memory, distractors of that colour in a subsequent visual search task cause more performance impairments than distractors of a differenct colour [@olivers_feature-based_2006]. These results suggest that attention is automatically directed to the location of objects which match the contents of working memory, and it has also been shown that visual search targets that match working memory contents elicit larger N2pc components [@kumar_electrophysiological_2009]. 
+
+In our task, the working memory objects and the visual search items were all either green or orange, therefore the contents of working memory may have influenced our N2pc amplitude. In both the working memory distractor present, and working memory distractor absent conditions, only one object was supposed to be stored and therefore this object matched the colour of the visual search targets on 50% of trials. In working memory distrcator present trials however, there's a possibility that participants were encoding both objects on at least some portion of trials. This idea is supported by previous literature which used EEG evidence to show that irrelevant objects are often unnecessarily encoded into working memory [@@vogel_neural_2004]. In our case, this would mean that both colours are stored in working memory and therefore the visual search target will match working memory contents on more than 50% of trials. The increased amplitude of the N2pc to targets in the working memory distractor present condition may be a result of the increased proportion of trials where the contents of working memory guide attention to matching visual search targets.
+
+However, if attention is being guided to targets by working memory contents more often for the distractor present trials, then we would expect performance on these trials to be improved. In fact, our results show that behavioural performance is negatively effected by working memory distractor presence. The apparent contradiction of a larger N2pc in the condition where performance was impaired may be evidence against the idea that N2pc reflects atttention to a location in space. An alternate hypothesis which is consistent with the current results is that N2pc reflects neural processes which localise target locations in order to initiate the deployment of attention to that location [@tan_understanding_2015]. In their model, N2pc indexes a process which takes place prior to the deployment of attention and @tan_understanding_2015 show that this conception is consistent with a range of effects previously observed in experiments investigating N2pc. This model also provides a potential resolution to the contradiction we observe in our results. While working memory contents may be able to guide attention in the initial stages of identifying the location of potential targets, it does not simultaneously improve the subsequent deployment of attention to those locations.
+
+An alternate account could be related to the effects of competitive interactions between a spatially bound working memory item, and a spatially located visual search target. A large body of evidence has accumulated to show that when two objects fall into the receptive field of a neuron, they compete for control of that neuron's firing via mutual suppression. N2pc has been shown to index this competitive suppression by @hilimire_competitive_2009 who showed that as objects in a visual display are moved closer together, N2pc amplitude is attenuated. Separate work in the working memory domain has shown that in order to maintain items in working memory, attention is directed to the location of the stored object. These two observations suggest that it in our paradigm, when the working memory item is being represented as a spatially bound set of features, the appearance of the visual search target could result in competition for representation. Therefore if the working memory distractor absent condition allows for more efficient storage of the item as a spatially bound object then we would see more of this competitive suppression represented as attenuated amplitude of the N2pc.
+
+Evidence suggests that attentional control is important for the binding of object features in working memory, and therefore the introduction of a working memory distractor could preoccupy attentional control and impair the binding process. @fougnie_attentive_2009 have shown that when an attention-demanding task is perforned concurrently with a working memory task, memory for bound colour-shape representations is impaired above and beyond the impairments observed for object features alone. Location also seems to play a central role in the encoding, maintenance, and retrieval of these bound representations [@treisman_location_2006]. It is plausibe in our case that the presentation of an irrelevant distractor during working memory encoding engages attentional control mechanisms which would otherwise be involved in creating and maintaining a spatially located, bound representation of the target object. The difference between our working memory conditions would therefore represent differences in the extent to which the target object features are location bound, and N2pc attenuation in the distractor absent condition is the result of the visual search target competing for representation with this location bound working memory representation. 
+
+This proposal again appears to contradict our behavioural results. If competition for representation is increased in the working memory distractor absent condition, we would expect behavioural responses to that visual search target to be impaired. Once again the simplest explanation for this is that there are competing effects ocurring and N2pc amplitude represents a process which is itself not the sole determinant of behavioural output. All other things being equal, we would expect N2pc amplitude to reflect behaviour, and in their original investigation of N2pc as an index of competition @hilimire_competitive_2009 observed decreased visual search performance as localised competition increased. However in the current case, the effect of competition is proposed to be a result of increased availablity of attentional control in the working memory portion of the task. Therefore it is plausible that this availability could lead to performance gains above and beyond the impairments caused by localized attentional interference. The lack of evidence for any association between lateralised ERP responses and behavioural performance in our task is consistent with this view. At this point the mechanism underlying these results is unclear and future research will be needed to tease apart the possible explanations. While competition between working memory items and external objects is plausible based on the convergence of indirect evidence, there is currently no direct observation of this phenomenon.
+
+Research over the past decade has demonstrated significant functional overlap between attention and working memory, however the multifaceted nature of the relationship between these two constructs is not well understood [@fougnie_relationship_2008;@de_fockert_beyond_2013]. While most of this evidence has focused on the effect that increased working memory load has on attentional control, the results have been mixed. While some evidence suggests that working memory load impairs processes of target selection and maintenance, others have suggested that it interferes with distractor capture, or distractor disengagement. One possible explanation for the heterogeneity of these results is the effect of irrelevant objects presented during the working memory task. Increasing the number of to-be-remembered targets, and increasing the number of irrelevant working memory distractors both lead to impairments in concurrent visual search, however comparison of our results to @henare_working_2018 suggests that this is not because they impair the same mechanisms of attention control.
+
+At present, investigation of working memory filtering is nascent. Our results show that as opposed to working memory load, which others have shown effects distractor disengagement [@fukuda_individual_2011], working memory tasks requiring filtering effect the subsequent processing of visual search targets. Our behavioural data show that the engagement of working memory filtering leads to impaired visual search performance, while our ERP evidence shows that working memory filtering changes the lateralised neural response to targets. The mechanism involved in modulating target processing is unspecified however future work would benefit from understanding the role that attention plays in binding working memory objects to specific locations, and the possibility of competitive interactions between stored representations and objects in the external world.
+
+## Notes
+
+-----------------------
+Compare effects to SAWMLoad. Effects of WMD are different from effects of load. 
+
+Some research has suggested working memory affects target processing, some have suggested it affects distractor processing. Heterogeneous effects of working memory on attention mechanisms may be a result of conflating working memory load and working memory filtering.
+
+Calculate filtering cost and correlate.
