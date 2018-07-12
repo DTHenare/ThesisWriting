@@ -11,43 +11,6 @@ While historically, progress in experimental psychology has been based on measur
 
 The aim of this thesis is to expand our understanding of the relationship between working memory and selective attention, and to specify the neural mechanisms that may be shared by these two seemingly disparate systems. In study one, we used a behavioral task to perform a systematic analysis of the effect that irrelevant objects have on performance in the change-detection task. The change-detection task is a popular way of measuring visual working memory capacity however there are a number of subtle variations in the way it has been used and the effect of these variations on capacity measures is undetermined. Study one sought to fill this gap in the literature. Studies two and three aimed to follow up two of the benchmark effects established by study one while using EEG to simultaneously measure neural indices of attentional control. In study two we were interested in seeing the effect that increased working memory load can have on neural measures of target selection, and distractor suppression. In study three, our aim was to understand how the effect of irrelevant objects in a change detection task effect neural indices of target selection and distractor suppression.
 
-## Working Memory
-
-Dedicated study of the concept of memory in western thought goes back at least as far as Aristotle [@burnham1888memory], however systematic study of the short-term retention of information began in earnest with investigations into short-term memory span originally published in 1885 by Hermann Ebbinghaus [-@ebbinghaus2013memory]. Working memory is a relatively new term coined by  Miller, Galanter, and Pribram, (1960) which has largely supplanted the concept of short-term memory to define a cognitive system which temporarily stores information for the purposes of active processing and manipulation. The dominant model of working memory which survives to this day (albeit with revisions) was originally proposed by Baddeley and Hitch in 1974 sand has placed working memory at the center of perception, memory, and action. A large body of empirical work has accumulated to show the important role that working plays in diverse areas of cognitive functioning, and as a result, methods for the measurement and understanding of working memory have become increasingly important.
-
-### Short-term memory.
-MEASURES OF SHORT-TERM MEMORY: A HISTORICAL REVIEW
-John T.E. Richardson
-
-### Miller coining term and magical numbers.
-
-### Baddeley model.
-WORKING MEMORY: LOOKING BACK AND LOOKING FORWARD
-Alan Baddeley
-
-### Working memory and its role in other abilities.
-
-### The measurement of capacity.
-There's a lot of variation in working memory capacity between individuals and this can be measured by each of these tasks. In OSPAN  etc... blah blah, in nback ... in sternberg... in change detection ..
-Can't train it, says William James and modern stuff (not really relevant)
-Working Memory Updating and Binding Training: Bayesian Evidence Supporting the Absence of Transfer - JEP:G
-### Neuroanatomy of working memory/neural measures of working memory (kinda irrelevant).
-
-## Selective Attention
-```{r notesText} 
-#Main goal of this section should be to determine what abilities underlie successful performance of selective attention. End up talking about the dual importance of selecting relevant information and suppressing irrelevant information. Then discuss neural measures of these things.
-
-#https://www.researchgate.net/post/Estimates_of_quantified_human_sensory_system_throughput10
-
-#\begin{quote}
-#"Everyone knows what attention is. It is the taking possession by the mind, in clear and vivid form, of one out of what seem several simultaneously possible objects or trains of thought. Focalization, concentration, of consciousness are of its essence. It implies withdrawal from some things in order to deal effectively with others, and is a conditions which has a real opposite in the confused, dazed, scattered state which in French is called distraction, and Zerstreutheit in German."
-#\end{quote} - William James
-```
-
-### Sub-processes of attention
-
-### Neural measures of attention.
-
 ## Interactions Between Working Memory and Attention
 ```{r copiedTextFromSAWMDistIntro}
 #Everyday situations such as grocery shopping and driving depend on our ability to both efficiently allocate attention to relevant objects while suppressing distraction, as well as maintain and retrieve information from working memory. Although research over the past decade has demonstrated significant functional overlap between attention and working memory, the multifaceted nature of the relationship between these two constructs is not well understood [@fougnie_relationship_2008;@de_fockert_beyond_2013]. Converging evidence suggests that when load on a concurrent working memory task is increased, performance on an attention task is subject to increased interference from irrelevant distractors [@ahmed_focusing_2012;@de_fockert_role_2001;@stins_role_2004]. There is also evidence that individuals low in working memory capacity show greater interference on a standard Stroop task [@kane_working-memory_2003], as well as greater interference on an Eriksen flanker task [@shipstead_working_2012]. Taken together, these findings suggest that the relationship between selective attention and working memory may be better framed in terms of working memory availability. From this perspective, increasing the working memory load on an individual would lead to a decrease in their working memory availability. What's more, individuals with low working memory capacity would have less overall available working memory (see @de_fockert_beyond_2013 for a review).
