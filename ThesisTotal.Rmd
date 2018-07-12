@@ -71,22 +71,22 @@ output            : papaja::apa6_pdf
 ```
 
 \newpage
-\section{CHAPTER 2: Working memory capacity in a change detection task is affected by the number of irrelevant
-objects in the display}
+\section{CHAPTER 2: Working Memory Capacity in a Change Detection Task is Affected by the Number of Irrelevant
+Objects in the Display}
 \newpage
 ```{r child = 'T-WMBehav.Rmd'}
 ```
 
 \newpage
-\section{CHAPTER 3: Working memory availability affects neural indices of distractor processing during visual
-search}
+\section{CHAPTER 3: Working Memory Availability Affects Neural Indices of Distractor Processing During Visual
+Search}
 \newpage
 ```{r child = 'T-SAWMLoad.Rmd'}
 ```
 
 \newpage
-\section{CHAPTER 4: Working memory distractor presence affects neural indices of target processing during visual
-search}
+\section{CHAPTER 4: Working Memory Distractor Presence Affects Neural Indices of Target Processing During Visual
+Search}
 \newpage
 ```{r child = 'T-SAWMDist.Rmd'}
 ```

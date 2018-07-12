@@ -160,11 +160,11 @@ In this study we measured lateralized ERPs separately for targets and distractor
 
 ## Methods
 
-### Participants
+### Participants.
 
 22 individuals (8 males) between the ages of 18 and 29 (M = 22.09 years, SD = 3.13) participated in the experiment and were reimbursed with a NZD $10 voucher. All participants reported that they had normal or corrected-to-normal vision. All participants gave written, informed consent prior to the start of the experiment and the research was approved by the University of Auckland Human Participants Ethics Committee.
 
-### Procedure
+### Procedure.
 
 Testing took place in a dimly lit, electrically shielded chamber. Experimental stimuli were presented on an LCD computer monitor (Samsung Sync Master P2270), with screen dimensions of 47.7 x 26.8cm and a resolution of 1920 x 1080 pixels. The participant was positioned 57cm away from the monitor with the viewing distance maintained through use of a chinrest. E-prime software (version 2.0.8.74, Psychology Software Tools) was used to control stimulus presentation, synchronize stimulus presentation with the electrophysiological recording, and record participant responses. Participants performed a dual working memory task and a selective attention task in which they encoded either one or two shapes at the start of a trial that they had to match to a test display after some delay. During the delay period of the working memory task, participants performed 4 visual searches in a series of target-decoy displays. Each block consisted of 8 trials (8 working memory trials, 32 visual searches) and all participants completed a practice block followed by 18 testing blocks. This resulted in a total of 144 working memory trials and 576 visual search trials for analysis. Participants had a minimum 30 second break between each block and on half of the breaks they could choose to take a longer break.
 
@@ -178,15 +178,15 @@ Once the 4th visual search was completed, the working memory retrieval display w
 include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/TrialExample.pdf", auto_pdf = TRUE)
 ```
 
-### Stimuli
+### Stimuli.
 
 All stimuli were presented on a black background, and a gray fixation cross (0.2$^\circ$ x 0.2$^\circ$) was maintained in the center of the screen throughout the trial. The working memory cue consisted of a gray vertical arrow (0.4$^\circ$ x 1.5$^\circ$) which replaced the fixation cross and pointed either up, down, or both up and down. The working memory encoding and retrieval displays consisted of two colored shapes (each 1.2$^\circ$ x 1.2$^\circ$) presented on the midline, one centered 2.5$^\circ$ above and one centered 2.5$^\circ$ below the fixation cross. These stimuli could be one of four shapes (triangle, square, circle, diamond) in one of four colors (green, blue, orange, pink) however the two stimuli were never the same shape or color on a given trial. The visual search displays consisted of 16 letters (Ts and Ls; 0.6$^\circ$ x 0.6$^\circ$) arranged in equal intervals around an imaginary circle centered on the fixation cross with a radius of 3$^\circ$. Fourteen of the letters were gray Ts randomly rotated 90$^\circ$ to either the left or the right. The remaining two letters were a colored T (the target) and a colored L (the distractor). The target was randomly selected to be either green or orange on each trial, and the distractor was always the color not selected for the target. The target and distractor were randomly selected to be either upright or rotated by 180$^\circ$ on each trial, independent of one another. One of these two objects was always placed on the midline (half of the time the target, half of the time the distractor) while the other was lateralized to the left or right but always in the same visual field (upper or lower) as the midline object. This ensured that there was only ever one salient lateralized object for the calculation of lateralized ERPs.
 
-### Electrophysiological recording
+### Electrophysiological recording.
 
 EEG activity was recorded continuously at 1000Hz on an Electrical Geodesics Inc. (EGI) Hydrocel-GSN-128-channel Ag/AgCl electrode net (Electrical Geodesics Inc.,Eugene, OR, USA). The electrodes have a geodesic arrangement and extend inferior to the axial plane containing F9/10 in the 10-10 system. The online reference electrode is Cz (placed on the vertex) and a COM sensor is located on the z axis between Pz and POz equivalents. EEG activity was amplified with an EGI net amps 400 amplifier with 24-bit A/D conversion, an input impedance of $\ge$ 200 $\text{M}\Omega$, and a 4kHz antialiasing filter (500Hz low pass cut off). Electrode impedance levels were kept below 40$\text{k}\Omega$ and EGI's implementation of the driven common technique (Common Active Noise Sensing and Limiting) was used throughout.
 
-### EEG Processing
+### EEG Processing.
 
 ```{r ERP_Plots, include=FALSE}
 erpData <-read.table("P:/dhen061/Experiment_1/EEG_Data/RAW_Files/Output-Final/Subtracted/Average_ERP_Data.txt", header = TRUE)
@@ -253,13 +253,13 @@ In order to isolate activity elicited contralateral to the lateralized object, a
 
 Participant averages were formed separately for lateralized target and lateralized distractor trials and global field power (GFP) was then calculated for each of these conditions (across all electrodes posterior to Cz). In order to find unbiased estimates of the component latencies and their widths, Matlab's built-in findpeaks function was used to detect the five most prominent peaks in the GFP for each stimulus type as well as their widths (using half-prominence). If any of these peaks overlapped with the pre-stimulus period then they were ignored, leaving 4 components of interest for both the target and the distractor lateralized conditions. Electrode clusters were then selected for each component by averaging across working memory load and plotting the topographies for each window. Electrode selection was similar for all components and centered around P7/8. For the targets, an early positivity (156 to 180ms), followed by three negativities (208 to 252ms, 380 to 488ms, and 676 to 700ms). The latencies and scalp distributions of these components line up with the P1pc, N2pc, and two parts of the SPCN component, as a result we will refer to them as the P1pc, N2pc, SPCNa, and SPCNb (shown in figure\ \@ref(fig:targERPs)). For the distractors, this method identified an initial negativity (208 to 256ms), followed by a positivity (296 to 360ms), followed by two negativities (532 to 596ms, and 700 to 728ms). These latencies and scalp distributions are consistent with the N2pc, Ptc, and two portions of the SPCN component and we will therefore refer to them as the N2pc, Ptc, SPCNa, and SPCNb (shown in figure\ \@ref(fig:distERPs)). For the individual diffrences analyses we used a signed-area approach similar to that used by @gaspar_inability_2016 and @sawaki_common_2012. First we calcuated the positive and negative area across all components for targets and distractors under high and low load. In order to correct for the effect of noise in these estimates we followed the procedure of @gaspar_inability_2016 and subtracted the equivalent calculation taken from the prestimulus area in each condition (and in our case this value was multiplied in order to account the different lengths of time between the prestimulus period and the area of the components).
 
-### Statistical analysis
+### Statistical analysis.
 
 All statistical anaysis was performed in version 1.1.423 of RStudio [@rstudio_desk_2016] using `r cite_r("r-references.bib")`. The data and code used to generate this manuscript (including analyses and plots) can be found at https://osf.io/wm3t6/.
 
 ## Results
 
-### Behavioral measures
+### Behavioral measures.
 
 ```{r behavioral_stats, include=FALSE}
 wmAcc_out <- t.test(behavData$WM_High_Acc, behavData$WM_Low_Acc, paired = TRUE, alternative = "two.sided")
@@ -313,7 +313,7 @@ include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/behavViolinPlot
 
 Mean response times and percent correct are shown as a function of working memory load for each task (working memory and visual search) in figure\ \@ref(fig:violinPlots). Paired samples T-tests were carried out to test the effect of working memory load on response times (ms) and accuracy (%) in both the working memory and visual search tasks. The results of the T-tests showed that the high load condition did result in both significantly slower (`r apa_print(wmRT_out)$full`) and less accurate (`r apa_print(wmAcc_out)$full`) responses to the working memory task. The results also showed that participants were significantly slower on the visual search task under high working memory load (`r apa_print(vsRT_out)$full`) however there was no significant effect of working memory load on visual search accuracy (`r apa_print(vsAcc_out)$full`). These data confirm firstly that the working memory task effectively manipulated the load on a participant's working memory, and secondly that this manipulation also effected performance on a concurrent visual search task.
 
-### Within-subject electrophysiological measures
+### Within-subject electrophysiological measures.
 
 ```{r Subtracted_ANOVA, echo=FALSE, warning =FALSE}
 # Run the distractor ANOVA (two way, Load x Component on distractor amplitudes)
@@ -375,7 +375,7 @@ print(dist.interaction.load.posthoc.table, comment=FALSE, caption.placement = "t
 
 The results for distractors showed a significant main effect of component (`r dist.result$full$Component`), and a significant main effect of working memory load (`r dist.result$full$Load`) indicating that the response to distractors under high load is significantly more negative (M =`r printnum(dist.load.d$value.Mean[dist.load.d$Load == "High"])`, SD = `r printnum(dist.load.d$value.SD[dist.load.d$Load == "Low"])`) than the response to distractors under low load (M = `r printnum(dist.load.d$value.Mean[dist.load.d$Load == "Low"])`, SD = `r printnum(dist.load.d$value.SD[dist.load.d$Load == "Low"])`). There was no significant interaction between working memory load and component (`r dist.result$full$Load_Component`). Pairwise comparisons using Tukey correction were performed in order to follow up the main effect of component. The results showed that the Ptc is significantly more positive in amplitude (M = 0.75, SE = 0.13) when compared to the N2pc (M = -0.63, SE = 0.09,  p <  0.001), SPCNa (M = -0.74, SE = 0.13, p < 0.001), and SPCNb (M = -0.56, SE = 0.11, p < 0.001). There were no other significant differences between the N2pc, SPCNa, and SPCNb (see table\ \@ref(tab:componentMainEffectDistractors)). In order to check for specifity of the effect we performed pairwise comparisons which compared the amplitude of each component under high versus low load. These comparisons suggest that the only component which was significantly affected by working memory load was the Ptc which was smaller under high load (see table\ \@ref(tab:dableLabel)) however the lack of an interaction between load and component in the ANOVA suggests this specific effect could be accounted for by a generally more positive lateralized response to the distractor under low load.
 
-### Between-subject electrophysiological measures
+### Between-subject electrophysiological measures.
 
 ```{r correlograms, echo=FALSE, warning=FALSE, include=FALSE}
 areaColumns <- c("WMAcc", "WMRT", "VSAcc", "VSRT", "TargP", "TargN", "DistP", "DistN")

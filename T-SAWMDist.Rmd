@@ -150,11 +150,11 @@ This set of lateralized ERP components provide us with fine-grained indices of f
 
 ## Methods
 
-### Participants
+### Participants.
 
 23 individuals (7 males) between the ages of 18 and 32 (M = 21.91 years, SD = 4.24) participated in the experiment and were reimbursed with a NZD $10 voucher. All participants reported that they had normal or corrected-to-normal vision. All participants gave written, informed consent prior to the start of the experiment and the research was approved by the University of Auckland Human Participants Ethics Committee.
 
-### Procedure
+### Procedure.
 
 Testing took place in a dimly lit, electrically shielded chamber. Experimental stimuli were presented on a 23 inch Samsung LCD monitor positioned 57cm away from the participant with the viewing distance maintained through use of a chinrest. E-prime software (version 2.0.8.74) was used to control stimulus presentation, synchronise stimulus presentation with the electrophysiological recording, and record participant responses. Participants performed a dual working memory and selective attention task in which they encoded one shape (which was accompanied half of the time by a second, irrelevant shape) at the start of a trial which they had to match to a test display after some delay. During the delay period of this working memory task, participants performed 4 visual searches in a series of target-decoy displays. Each block consisted of 8 trials (8 working memory trials, 32 visual searches) and all participants completed a practice block followed by 18 testing blocks. This resulted in a total of 144 working memory trials and 576 visual search trials for analysis. Participants had a minimum 30 second break between each block and on half of the breaks they could choose to take a longer break.
 
@@ -168,15 +168,15 @@ Once the 4th visual search was completed, the working memory retrieval display w
 include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/SDTrialExample.pdf", auto_pdf = TRUE)
 ```
 
-### Stimuli
+### Stimuli.
 
 All stimuli were presented on a black background, and a grey fixation cross (0.2$^\circ$ x 0.2$^\circ$) was maintained in the centre of the screen throughout the trial. The working memory cue consisted of a grey vertical arrow (0.4$^\circ$ x 1.5$^\circ$) which replaced the fixation cross and pointed either up or down. The working memory encoding and retrieval displays consisted of either one or two colored shapes (each 1.2$^\circ$ x 1.2$^\circ$) presented on the midline, centred 2.5$^\circ$ above and/or 2.5$^\circ$ below the fixation cross. These stimuli could be one of four shapes (triangle, square, circle, diamond) in one of two colors (green or orange) however the two stimuli were never the same shape or color on a given trial. The visual search displays consisted of 16 letters (Ts and Ls; 0.6$^\circ$ x 0.6$^\circ$) arranged in equal intervals around an imaginary circle centred on the fixation cross with a radius of 3$^\circ$. Fourteen of the letters were grey Ts randomly rotated 90$^\circ$ to either the left or the right. The remaining two letters were a colored T (the target) and a colored L (the distractor). The target was randomly selected to be either green or orange on each trial, and the distractor was always the color not selected for the target. The target and distractor were randomly selected to be either upright or rotated by 180$^\circ$ on each trial, independent of one another. One of these two objects was always placed on the midline (half of the time the target, half of the time the distractor) while the other was lateralised to the left or right but always in the same visual field (upper or lower) as the midline object. This ensured that there was only ever one salient lateralised object for the calculation of lateralised ERPs.
 
-### Electrophysiological recording
+### Electrophysiological recording.
 
 EEG activity was recorded continuously at 1000Hz on an Electrical Geodesics Inc. (EGI) Hydrocel-GSN-128-channel Ag/AgCl electrode net (Electrical Geodesics Inc.,Eugene, OR, USA). The electrodes have a geodesic arrangement and extend inferior to the axial plane containing F9/10 in the 10-10 system. The online reference electrode is Cz (placed on the vertex) and a COM sensor is located on the z axis between Pz and POz equivalents. EEG activity was amplified with an EGI net amps 400 amplifier with 24-bit A/D conversion, an input impedance of $\ge$ 200 $\text{M}\Omega$, and a 4kHz antialiasing filter (500Hz low pass cut off). Electrode impedance levels were kept below 40$\text{k}\Omega$ and EGI's implementation of the driven common technique (Common Active Noise Sensing and Limiting) was used throughout.
 
-### EEG Processing
+### EEG Processing.
 
 ```{r SDdistERPs, fig.cap = "Subtracted event-related potentials showing the lateralized response to distractors under high and low load. Each component was calculated from the average of a slightly different cluster of electrodes (based on the condition averaged scalp topography of that component's time window).", fig.align = "center"}
 include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/SAWMDIST_Dist_ERPs.pdf", auto_pdf = TRUE)
@@ -198,7 +198,7 @@ All statistical anaysis was performed in version 1.1.423 of RStudio [@rstudio_de
 
 ## Results
 
-### Behavioural measures
+### Behavioural measures.
 
 ```{r SDbehavioural_stats, include=FALSE}
 wmAcc_out <- t.test(behavData$WM_YES_Acc, behavData$WM_NOO_Acc, paired = TRUE, alternative = "two.sided")
@@ -253,7 +253,7 @@ include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/SAWMDIST_behavV
 
 Mean response times and percent correct are shown as a function of working memory distractor presence for each task (working memory and visual search) in figure\ \@ref(fig:SDviolinPlots). Paired samples t-tests were carried out to test the effect of working memory distractor presence on response times(ms) and accuracy(%) in both the working memory and visual search tasks. The results of the T-tests showed that the presence of a distractor in the working memory task did result in significantly slower (`r apa_print(wmRT_out)$full`), and less accurate (`r apa_print(wmAcc_out)$full`) responses to the working memory test display (although the latter effect is only trending toward significance). The results also showed that participants were significantly less accurate on the visual search task when a working memory distractor had been presented (`r apa_print(vsAcc_out)$full`) however there was no significant effect of working memory distractor presence on visual search response times (`r apa_print(vsRT_out)$full`). These data confirm firstly that the presence of a distractor during working memory encoding and retrieval effected performance on the working memory task, and secondly that this manipulation also effected performance on a concurrent visual search task.
 
-### Within-subject electrophysiological measures
+### Within-subject electrophysiological measures.
 
 ```{r SDSubtracted_ANOVA, echo=FALSE, warning =FALSE}
 # Run the distractor ANOVA (two way, Load x Component on distractor amplitudes)
@@ -320,7 +320,7 @@ In order to test for the effect of working memory load on lateralised ERP compon
 
 The results for distractors showed a significant main effect of component (`r dist.result$full$Component`) with N2pc being more negative than Ptc, but no significant main effect of working memory distractor presence (`r dist.result$full$Cond`), nor a significant interaction between component and working memory distractor presence (`r dist.result$full$Cond_Component`).
 
-### Between-subject electrophysiological measures
+### Between-subject electrophysiological measures.
 
 ```{r SDcorrelograms, echo=FALSE, warning=FALSE, include=FALSE}
 areaColumns <- c("WMAcc", "WMRT", "VSAcc", "VSRT", "TargP", "TargN", "DistP", "DistN")
@@ -507,12 +507,3 @@ This proposal again appears to contradict our behavioural results. If competitio
 Research over the past decade has demonstrated significant functional overlap between attention and working memory, however the multifaceted nature of the relationship between these two constructs is not well understood [@fougnie_relationship_2008;@de_fockert_beyond_2013]. While most of this evidence has focused on the effect that increased working memory load has on attentional control, the results have been mixed. While some evidence suggests that working memory load impairs processes of target selection and maintenance, others have suggested that it interferes with distractor capture, or distractor disengagement. One possible explanation for the heterogeneity of these results is the effect of irrelevant objects presented during the working memory task. Increasing the number of to-be-remembered targets, and increasing the number of irrelevant working memory distractors both lead to impairments in concurrent visual search, however comparison of our results to @henare_working_2018 suggests that this is not because they impair the same mechanisms of attention control.
 
 At present, investigation of working memory filtering is nascent. Our results show that as opposed to working memory load, which others have shown effects distractor disengagement [@fukuda_individual_2011], working memory tasks requiring filtering effect the subsequent processing of visual search targets. Our behavioural data show that the engagement of working memory filtering leads to impaired visual search performance, while our ERP evidence shows that working memory filtering changes the lateralised neural response to targets. The mechanism involved in modulating target processing is unspecified however future work would benefit from understanding the role that attention plays in binding working memory objects to specific locations, and the possibility of competitive interactions between stored representations and objects in the external world.
-
-## Notes
-
------------------------
-Compare effects to SAWMLoad. Effects of WMD are different from effects of load. 
-
-Some research has suggested working memory affects target processing, some have suggested it affects distractor processing. Heterogeneous effects of working memory on attention mechanisms may be a result of conflating working memory load and working memory filtering.
-
-Calculate filtering cost and correlate.
