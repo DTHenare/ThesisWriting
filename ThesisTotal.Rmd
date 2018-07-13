@@ -16,32 +16,32 @@ shorttitle        : "."
 
 author: 
   - name          : "Dion T. Henare"
-#    affiliation   : "1"
-#    corresponding : yes    # Define only one corresponding author
-#    address       : "School of Psychology, University of Auckland, Private Bag 92019, Auckland 1010, New Zealand"
-#    email         : "dion.henare@auckland.ac.nz"
-#  - name          : "Paul M. Corballis"
-#    affiliation   : "1"
 
 affiliation:
-#  - id            : "1"
     institution   : "School of Psychology, Univeristy of Auckland"
 
 author_note: |
   \begin{center} A thesis submitted in fulfilment of the requirements for the degree of Doctorate of Philosophy in Psychology, the University of Auckland, 2018. \\ This thesis is for examination purposes only and is confidential to the examination process. \end{center}
 
 abstract: |
-  Optimal performance of everyday tasks like driving depend critically on both the ability to store and retrieve small amounts of information in the short term, and the ability to selectively find and process relevant objects while ignoring distraction. These two abilities have traditionally been viewed as distinct processes in human cognition, however research now demonstrates significant overlap between the constructs of working memory and selective attention. Previous work has established a role for working memory resources in the successful control of attention, however there are many processes underlying successful attentional control, and affecting any one of them would produce the general results documented so far. In this thesis we investigated the relationship between working memory and selective attention to provide more specific understanding of the processes underlying the relationship between attention and working memory. Studies in this thesis used both behavioural and electroencephalographic evidence to provide insight into the mechanisms underlying this relationship.
+  Optimal performance of everyday tasks like driving depend critically on both the ability to store and retrieve small amounts of information in the short term, and the ability to selectively find and process relevant objects while ignoring distraction. These two abilities have traditionally been viewed as distinct processes in human cognition, however research now demonstrates significant overlap between the constructs of working memory and selective attention. Previous work has established a role for working memory resources in the successful control of attention, however there are many processes underlying successful attentional control, and affecting any one of them would produce the general results documented so far. In this thesis we used behavioural and encephalographic evidence to investigate working memory and selective attention, and to provide a more detailed understanding of the processes underlying the relationship between them.
+  
   Study 1 provided systematic documentation of the effect that distractor objects have on performance in a traditional working memory task, as well as the relationship between these effects and individual differences in working memory capacity. Study 2 used lateralised event-related potentials to measure dissociable components related to target selection, distractor capture, and distractor disengagement while working memory load was manipulated. Study 2 showed that increased working memory load has a specific effect on neural indices of distractor disengagement, while individual differences in working memory performance are related to neural indices of distractor capture. Study 3 used a similar paradigm to Study 2 to show that the presence of irrelevant objects during working memory encoding leads to impairments in performance and modulation of the neural response to targets in a concurrent visual search task. Together, our results provide greater specificity of the relationship between attention and working memory while demonstrating the utility of lateralised ERPs in providing dissociable measures of specific attentional sub-processes. This provides a promising tool for future research which investigates the relationship between working memory and selective attention.
   
   \pagestyle{plain}
   \newpage
   
   \centerline{Acknowledgements} \
-  I would first like to thank my primary supervisor Associate Professor Paul M. Corballis for allowing me to work in your lab and for providing a relaxed, friendly atmoesphere where I was able to develop my research skills and independence. You gave me the freedom to pursue my own line of research and never intervened to prevent me from pursuing experimental designs and analyses that I was passionate about. I have developed not only the research skills necessary for pursuing my scientific interests, but also had opportunities for research management and supervision that are unavailable to most people in my position. I leave your lab with a huge amount of confidence in my abilities and I owe that to the independent atmosphere you have fostered.
-  Katharina
-  Other science related helpers - Stuart,Veema
-  Friends - Nicole,Eric,Steph,Kristina
+  I would first like to thank my primary supervisor Associate Professor Paul M. Corballis for allowing me to work in your lab and for providing a relaxed, friendly atmoesphere where I was able to develop my research skills and independence. You gave me the freedom to pursue my own line of research and never intervened to prevent me from pursuing experimental designs and analyses that I was passionate about. I leave your lab with a huge amount of confidence in not only my research skills, but my ability to manage, and supervise other students. I owe that to the independent atmosphere you have fostered.
+  
+  I would also like to thank Katharina Limbach for being an amazing role model of not only scientific research practices, but how to create a supportive lab culture, and maintain a healthy work/life balance. I learnt so much from you ever since we started working tofether in that glorified closet down in the HSB dungeon, and I feel incredibly lucky to have shared so much time with you and your family.
+  
+  I am also very grateful to Stuart McGill who had such a large impact on my research practices. You spent a huge amount of time patiently explaining and demonstrating the programming skills which became one such a fundamental part of my degree. The entire lab benefitted from having you around and I'm especially grateful for your ability to put up with all of my simple questions without ever making me feel like the annoyance that I'm sure I was.
+  
+    Friends - Nicole(s),Eric,Steph,Kristina,Sreekari, Ashleigh, Haeme, Carolyn, Laura,Jordan,Aleea,Natalia,Emily
+    
+  All the people who worked behind the scenes smoothing the Rajni,Sharon, who dedicated their time to ensuring the smooth operation of the school but who were nevertheless dismissed by the university for all of their efforts. Michelle gave me so much support and showed so much concern for the people who worked for her. You were a role model for how to manage people without taking advantage of them and one of the few people in the department who looked out for the concerns and well being of the graduate teaching assistants who teach the undergraduate labs and tutorials. Veema who manageed the EEG lab
+  
   Family
 
 bibliography      : ["r-references.bib"]
