@@ -301,6 +301,7 @@ accuracy.fixedonly.aov <- aov_ez(
 )
 accuracy.fixed <- apa_print(accuracy.fixedonly.aov)
 accuracy.fixed.followup <- pairs(emmeans(accuracy.fixedonly.aov, ~DistNum))
+accuracy.fixed.followup@grid$contrast <- as.factor(c("Zero Dist - Two Dist", "Zero Dist - Four Dist", "Zero Dist - Six Dist", "Two Dist - Four Dist", "Two Dist - Six Dist", "Four Dist - Six Dist"))
 accuracy.fixed.distractors.table <- xtable(summary(accuracy.fixed.followup), caption = "Summary of the pairwise comparisons used to follow up the main effect of distractor number on accuracy", label = "tab:accuracyfixeddistractorstable")
 
 capacity.fixedonly.aov <- aov_ez(
@@ -311,6 +312,7 @@ capacity.fixedonly.aov <- aov_ez(
 )
 capacity.fixed <- apa_print(capacity.fixedonly.aov)
 capacity.fixed.followup <- pairs(emmeans(capacity.fixedonly.aov, ~DistNum))
+capacity.fixed.followup@grid$contrast <- as.factor(c("Zero Dist - Two Dist", "Zero Dist - Four Dist", "Zero Dist - Six Dist", "Two Dist - Four Dist", "Two Dist - Six Dist", "Four Dist - Six Dist"))
 capacity.fixed.distractors.table <- xtable(summary(capacity.fixed.followup), caption = "Summary of the pairwise comparisons used to follow up the main effect of distractor number on capacity", label = "tab:capacityfixeddistractorstable")
 
 sensitivity.fixedonly.aov <- aov_ez(
@@ -321,6 +323,7 @@ sensitivity.fixedonly.aov <- aov_ez(
 )
 sensitivity.fixed <- apa_print(sensitivity.fixedonly.aov)
 sensitivity.fixed.followup <- pairs(emmeans(sensitivity.fixedonly.aov, ~DistNum))
+sensitivity.fixed.followup@grid$contrast <- as.factor(c("Zero Dist - Two Dist", "Zero Dist - Four Dist", "Zero Dist - Six Dist", "Two Dist - Four Dist", "Two Dist - Six Dist", "Four Dist - Six Dist"))
 sensitivity.fixed.distractors.table <- xtable(summary(sensitivity.fixed.followup), caption = "Summary of the pairwise comparisons used to follow up the main effect of distractor number on sensitivity", label = "tab:sensitivityfixeddistractorstable")
 
 responseBias.fixedonly.aov <- aov_ez(
@@ -403,7 +406,11 @@ accuracy.fixVmatch.distractors.aov <- aov_ez(
 )
 #Interaction
 accuracy.fixVmatch.distractors.distXblock <- pairs(emmeans(accuracy.fixVmatch.distractors.aov, ~ numDist|Block))
+accuracy.fixVmatch.distractors.distXblock@grid$contrast <- as.factor(c("Two Dist - Four Dist", "Two Dist - Six Dist", "Four Dist - Six Dist", "Two Dist - Four Dist", "Two Dist - Six Dist", "Four Dist - Six Dist"))
+accuracy.fixVmatch.distractors.distXblock@grid$Block <- as.factor(c("Target-Match", "Target-Match", "Target-Match", "Fixed", "Fixed", "Fixed"))
 accuracy.fixVmatch.distractors.blockXdist <- pairs(emmeans(accuracy.fixVmatch.distractors.aov, ~ Block|numDist))
+accuracy.fixVmatch.distractors.blockXdist@grid$contrast <- as.factor(c("Target-Match - Fixed", "Target-Match - Fixed", "Target-Match - Fixed"))
+accuracy.fixVmatch.distractors.blockXdist@grid$numDist <- as.factor(c("Two", "Four", "Six"))
 
 #Create tables
 accuracy.fixVmatch.distractors.table <- apa_print(accuracy.fixVmatch.distractors.aov)
@@ -454,6 +461,7 @@ capacity.fixVmatch.distractors.distMain <- pairs(emmeans(capacity.fixVmatch.dist
 capacity.fixVmatch.distractors.distXblock <- pairs(emmeans(capacity.fixVmatch.distractors.aov, ~ numDist|Block))
 capacity.fixVmatch.distractors.blockXdist <- pairs(emmeans(capacity.fixVmatch.distractors.aov, ~ Block|numDist))
 
+
 #Create tables
 capacity.fixVmatch.distractors.table <- apa_print(capacity.fixVmatch.distractors.aov)
 #Create pairwise tables
@@ -501,7 +509,11 @@ sensitivity.fixVmatch.distractors.aov <- aov_ez(
 )
 #Interaction
 sensitivity.fixVmatch.distractors.distXblock <- pairs(emmeans(sensitivity.fixVmatch.distractors.aov, ~ numDist|Block))
+sensitivity.fixVmatch.distractors.distXblock@grid$contrast <- as.factor(c("Two Dist - Four Dist", "Two Dist - Six Dist", "Four Dist - Six Dist", "Two Dist - Four Dist", "Two Dist - Six Dist", "Four Dist - Six Dist"))
+sensitivity.fixVmatch.distractors.distXblock@grid$Block <- as.factor(c("Target-Match", "Target-Match", "Target-Match", "Fixed", "Fixed", "Fixed"))
 sensitivity.fixVmatch.distractors.blockXdist <- pairs(emmeans(sensitivity.fixVmatch.distractors.aov, ~ Block|numDist))
+sensitivity.fixVmatch.distractors.blockXdist@grid$contrast <- as.factor(c("Target-Match - Fixed", "Target-Match - Fixed", "Target-Match - Fixed"))
+sensitivity.fixVmatch.distractors.blockXdist@grid$numDist <- as.factor(c("Two", "Four", "Six"))
 
 #Create tables
 sensitivity.fixVmatch.distractors.table <- apa_print(sensitivity.fixVmatch.distractors.aov)
@@ -1002,7 +1014,7 @@ include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/WMBehav_TI_hPlo
 
 ## Discussion
 
-The first aim of this experiment was to systematically examine the effect that irrelevant distractors can have on performance in a change detection task. Our results showed that increasing the number of distractors present in a trial leads to decreases in an individual's change detection accuracy. Convergent measures of performance show that this appears to be the result of changes in sensitivity to the change rather than changes in response bias, and that this effects estimates of working memory capacity. We also demonstrated small differential effects that block context can have on the relationship between distractor number and performance. Variability of distractor number within a block led to worse performance on the easiest trials, and better performance on the most difficult trials when compared to equivalent trial types from a fixed distractor context. However these effects were only present in the target-match blocks when the number of distractors varied in such a way that they matched target number on a given trial, there was no effect in the target-inverse blocks when distractor number varied in proportion to target number to keep the total number of objects constant.
+The first aim of this experiment was to systematically examine the effect that irrelevant distractors can have on performance in a change detection task. Our results showed that increasing the number of distractors present in a trial leads to decreases in an individual's change detection accuracy. Convergent measures of performance show that this appears to be the result of changes in sensitivity to the change rather than changes in response bias, and that this affects estimates of working memory capacity. We also demonstrated small differential effects that block context has on the relationship between distractor number and performance. Variability of distractor number within a block led to worse performance on the easiest trials, and better performance on the most difficult trials when compared to equivalent trial types from a fixed distractor context. However these effects were only present in the target-match blocks where distractor number varied in such a way that it matched target number on a given trial. There was no effect in the target-inverse blocks when distractor number varied in proportion to target number to keep the total number of objects constant.
 
 The general observation of intertrial effects on working memory performance is not in itself novel, however the specific effect that we observed can inform the details of this phenomenon in change detection tasks. Previous research from a variety of short term memory paradigms has shown that information from previous trials can intrude on performance in the current trial [@quinlan_positional_2015;@fischer-baum_representation_2015;@drewnowski_role_1980;@jonides_inhibition_1998;@berman_search_2009;@atkinson_search_1974]. Our results show that similar effects can arise in a change detection task from a specific interaction between variability in the number of distractors and variability in the total number of objects. In the fixed distractor blocks, the absolute number of distractors remains the same throughout the block while the number of targets varies. This means that while the number of distractors is fixed, the proportion of targets to distractors, and the total number of objects on screen varies from trial to trial. In the target-match blocks however, the proportion of targets to distractors is held constant leading to variability in the absolute number of distractors on each trial, and variability in the total number of objects on screen. Differences between the two block contexts could therefore be the result of differences in any one of these three factors.
 
@@ -1012,7 +1024,7 @@ The mechanism by which target to distractor ratio could impact on change detecti
 
 The second aim of our experiment was to investigate the relationship between these distractor effects and individual capacity in our task. Overall our results show significant effects of individual capacity as measured from the zero distractor blocks, on performance in the other block conditions. In the fixed distractor blocks, individual capacity was not related to filtering cost which is the difference in performance between distractor present and distractor absent trials. This is contrary to previous work which showed that increased working memory capacity is correlated with smaller filtering costs [@unsworth_influence_2016;@lee_visual_2010]. The main difference between our task and these previous tasks is that in their case, distractor absent and distractor present trials are presented within the same block. The block context in our case means that distractor presence and number is highly predictable, and previous work has shown with auditory distraction, that associations between capacity and distraction are present only when distractors are infrequent or unexpected [@hughes_cognitive_2013;@sorqvist_high_2010]. This suggests that in our task, effects of capacity on distraction are likely to found in the variable distractor block contexts.
 
-When we focused our individual difference analyses on the variable distractor blocks, we showed that capacity is predictive of those cognitive control mechanisms which are unique to the variability in these blocks. We used a regression based approach based on the work of @robison_individual_2018 to show that even after controlling for general working memory control abilities present at the single trial level, increased working memory capacity predicted better performance in both the target-match blocks and the target-inverse blocks. The single factor shared by the target-match and target-inverse blocks which separates them from the fixed blocks is the variability in distractor number on a trial to trial basis. The parsimonious assumption therefore is that working memory capacity predicts an individual's ability to deal with unpredictable variability in distractor number. If this were the case however then we would expect that residual variance in the target-inverse blocks (after controlling for fixed block performance), would be correlated with the residual variance in the target-match blocks (after controlling for fixed block performance). We do not find evidence of this association in our data, and therefore capacity may be important for predicting the distinct cognitive control abilities that are unique to each of these variable block types.
+When we focused our individual difference analyses on the variable distractor blocks, we showed that capacity is predictive of those cognitive control mechanisms which are unique to the variability in these blocks. We used a regression based approach based on the work of @robison_individual_2018 to show that even after controlling for general working memory control abilities present at the single trial level, increased working memory capacity predicted better performance in both the target-match blocks and the target-inverse blocks. The single factor shared by the target-match and target-inverse blocks which separates them from the fixed blocks is the variability in distractor number on a trial to trial basis. The simplest assumption therefore is that working memory capacity predicts an individual's ability to deal with unpredictable variability in distractor number. However, if this were the case however then we would expect that residual variance in the target-inverse blocks (after controlling for fixed block performance), would reflect this filtering ability, and therefore correlate with the residual variance in the target-match blocks (after controlling for fixed block performance). We do not find evidence of this association in our data, and therefore capacity may be important for predicting the distinct cognitive control abilities that are unique to each of these variable block types.
 
 One of the limitations of our design is that we don't have any zero distractor trials in either of the variable block types. This may have reduced the size of block context effects because while distractor number is unpredictable, distractor presence is constant. Whereas in the current implementation filtering is required on every trial, adding zero distractor trials may cause participants to flexibly engage and disengage filtering mechanisms within the block. This may allow future experiments to increase the magnitude of the filtering effects that we observe in the variable blocks via mechanisms that are similar to those proposed by @robison_individual_2018. In their study, @robison_individual_2018 showed that changing the target colour on a trial by trial basis increased the observed effects of capacity on measures of filtering ability in a change detection task. A secondary benefit of adding zero distractor trials to the variable distractor blocks would be the ability to subtract distractor present performance from distractor absent performance and therefore measure filtering cost in the same way as we did for the fixed block performance.
 
