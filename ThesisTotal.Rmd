@@ -11,7 +11,7 @@ header-includes:
   - \captionsetup[table]{font={stretch=1.5}}
   - \captionsetup[figure]{font={stretch=1.5}}
 
-title             : "Working memory and selective attention: A love story"
+title             : "The Relationship Between Working Memory and Selective Attention"
 shorttitle        : "."
 
 author: 
