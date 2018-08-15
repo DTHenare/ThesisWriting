@@ -53,7 +53,7 @@ summarySE <- function(data=NULL, measurevar, groupvars=NULL, na.rm=FALSE,
 
 ```{r load_raw_data, incude = FALSE, echo=FALSE}
 #Find all files
-filePath <- "P:/dhen061/WMBehav-RawFolder/data/"
+filePath <- "Data/WM/"
 files <- list.files(path = filePath, pattern = ".csv")
 #load the first one and get the variable names
 allData <- read.csv(file=paste(filePath,files[1], sep=""), header=TRUE, sep=",")
