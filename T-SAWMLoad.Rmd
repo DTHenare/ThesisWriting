@@ -276,28 +276,28 @@ VSAcc = filter(longBehav, Task == "VS" & Measure == "Acc")
 # Create violin plots
 WMRT.violin <- ggplot(data=WMRT, aes( x=Load,y=value)) +
   geom_violin(trim=FALSE, fill="gray") +
-  labs( y = "Working memory RT(ms)") +
+  labs( y = "Working memory RT (ms)") +
   #ylim(50,100) +
   #geom_dotplot(binaxis='y', stackdir='center', dotsize=1) +
   geom_boxplot(width=0.1) +
   theme_apa()
 WMAcc.violin <- ggplot(data=WMAcc, aes( x=Load,y=value)) +
   geom_violin(trim=FALSE, fill="gray") +
-  labs( y = "Working memory Acc(%)") +
+  labs( y = "Working memory Acc (%)") +
   ylim(50,100) +
   #geom_dotplot(binaxis='y', stackdir='center', dotsize=1) +
   geom_boxplot(width=0.1)+
   theme_apa()
 VSRT.violin <- ggplot(data=VSRT, aes( x=Load,y=value)) +
   geom_violin(trim=FALSE, fill="gray") +
-  labs( y = "Visual Search RT(ms)") +
+  labs( y = "Visual Search RT (ms)") +
   #ylim(50,100) +
   #geom_dotplot(binaxis='y', stackdir='center', dotsize=1) +
   geom_boxplot(width=0.1)+
   theme_apa()
 VSAcc.violin <- ggplot(data=VSAcc, aes( x=Load,y=value)) +
   geom_violin(trim=FALSE, fill="gray") +
-  labs( y = "Visual Search Acc(%)") +
+  labs( y = "Visual Search Acc (%)") +
   ylim(50,100) +
   #geom_dotplot(binaxis='y', stackdir='center', dotsize=1) +
   geom_boxplot(width=0.1) +
@@ -396,15 +396,19 @@ corrplot(high.area.corr$r, method = "ellipse", type = "lower",p.mat = high.area.
 dev.off()
 
 # Scatterplots
-VSRTbyDISTP <- ggplot(lowAreaData, aes(x=VSRT, y=DistP)) + geom_point() +geom_smooth(method=lm) +theme_apa()
-VSRTbyDISTN <- ggplot(lowAreaData, aes(x=VSRT, y=DistN)) + geom_point() +geom_smooth(method=lm) +theme_apa()
-VSRTbyTARGP <- ggplot(lowAreaData, aes(x=VSRT, y=TargP)) + geom_point() +geom_smooth(method=lm) +theme_apa()
-WMRTbyDISTP <- ggplot(lowAreaData, aes(x=WMRT, y=DistN)) + geom_point() +geom_smooth(method=lm) +theme_apa()
+VSRTbyDISTP <- ggplot(lowAreaData, aes(x=VSRT, y=DistP)) + geom_point() +geom_smooth(method=lm)  + scale_y_continuous(name =expression(paste("Distractor Positivity (",mu,"v*ms)"))) +
+  scale_x_continuous("Visual Search RT (ms)") + theme_apa()
+VSRTbyDISTN <- ggplot(lowAreaData, aes(x=VSRT, y=DistN)) + geom_point() +geom_smooth(method=lm) + scale_y_continuous(name =expression(paste("Distractor Negativity (",mu,"v*ms)"))) +
+  scale_x_continuous("Visual Search RT (ms)")+theme_apa()
+VSRTbyTARGP <- ggplot(lowAreaData, aes(x=VSRT, y=TargP)) + geom_point() +geom_smooth(method=lm) + scale_y_continuous(name =expression(paste("Target Positivity (",mu,"v*ms)"))) +
+  scale_x_continuous("Visual Search RT (ms)")+theme_apa()
+WMRTbyDISTP <- ggplot(lowAreaData, aes(x=WMRT, y=DistN)) + geom_point() +geom_smooth(method=lm) + scale_y_continuous(name =expression(paste("Distractor Positivity (",mu,"v*ms)"))) +
+  scale_x_continuous("Working Memory RT (ms)")+theme_apa()
 pdf("Figures/SAWMLOAD_lowScatterPlot.pdf", width = 7, paper = "special")
 plot_grid(VSRTbyDISTP,VSRTbyDISTN,VSRTbyTARGP,WMRTbyDISTP, labels = c("A","B","C","D"))
 dev.off()
 
-VSACCbyTARGN  <- ggplot(highAreaData, aes(x=VSAcc, y=TargN)) + geom_point() +geom_smooth(method=lm) +theme_apa()
+VSACCbyTARGN  <- ggplot(highAreaData, aes(x=VSAcc, y=TargN)) + geom_point() +geom_smooth(method=lm) +scale_y_continuous(name =expression(paste("Target Negativity (",mu,"v*ms)"))) + scale_x_continuous("Visual Search Acc (%)") +theme_apa()
 pdf("Figures/SAWMLOAD_highScatterPlot.pdf", width = 7, paper = "special")
 VSACCbyTARGN
 dev.off()

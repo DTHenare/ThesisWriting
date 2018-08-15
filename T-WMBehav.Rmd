@@ -350,7 +350,7 @@ capacity.fixed.plot <- ggplot(capacity.fixed.summarydata, aes( x=DistNum,y=cowan
   geom_bar(position=position_dodge(), stat="identity") +
   geom_errorbar(aes(ymin=cowanC-se, ymax=cowanC+se), size=0.5,
     width=.25,position=position_dodge(.9)) +
-  scale_y_continuous("Capacity",expand = c(0, 0)) +
+  scale_y_continuous("Capacity (Cowan's C)",expand = c(0, 0)) +
   coord_cartesian(ylim=c(0,2)) +
   scale_x_discrete("Number of distractors across block") +
   theme_apa()
@@ -370,7 +370,7 @@ responseBias.fixed.plot <- ggplot(responseBias.fixed.summarydata, aes( x=DistNum
   geom_bar(position=position_dodge(), stat="identity") +
   geom_errorbar(aes(ymin=C-se, ymax=C+se), size=0.5,
     width=.25,position=position_dodge(.9)) +
-  scale_y_continuous("ResponseBias (C)",expand = c(0, 0)) +
+  scale_y_continuous("ResponseBias (c)",expand = c(0, 0)) +
   coord_cartesian(ylim=c(-1,0)) +
   scale_x_discrete("Number of distractors across block") +
   theme_apa()
@@ -418,16 +418,18 @@ accuracy.fixVmatch.distractors.table <- apa_print(accuracy.fixVmatch.distractors
 accuracy.fixVmatch.distractors.distXblock.table <- xtable(summary(accuracy.fixVmatch.distractors.distXblock), caption = "Summary of the pairwise comparisons used to follow up the main interaction (accuracy)", label = "tab:accuracyfixVmatchdistractorsdistXblocktable")
 accuracy.fixVmatch.distractors.blockXdist.table <- xtable(summary(accuracy.fixVmatch.distractors.blockXdist), caption = "Summary of the pairwise comparisons used to follow up the main interaction (accuracy)", label = "tab:accuracyfixVmatchdistractorsblockXdisttable")
 
+distLabels <- c(`2`="2 distractors", `4`="4 distractors", `6`="6 distractors")
+blockLabels <- c(targEqual = "Targ-Match", fixed = "Fixed")
 #Create plots
 accuracy.fixVmat.summarydata <- summarySE(fixVmat.Vals, measurevar="correctResponse", groupvars=c("Block","numDist"))
 accuracy.fixVmat.bar <- ggplot(accuracy.fixVmat.summarydata, aes( x=Block,y=correctResponse)) + 
   geom_bar(position=position_dodge(), stat="identity") +
   geom_errorbar(aes(ymin=correctResponse-se, ymax=correctResponse+se), size=0.5,   
     width=.25,position=position_dodge(.9)) +
-  facet_grid(~numDist, labeller = as_labeller(c(`2`="2 distractors", `4`="4 distractors", `6`="6 distractors"))) +
+  facet_grid(~numDist, labeller = labeller(numDist = distLabels, Block = blockLabels)) +
   scale_y_continuous("Accuracy (%)",expand = c(0, 0)) +
   coord_cartesian(ylim=c(50,100)) +
-  scale_x_discrete("Block type") +
+  scale_x_discrete("Block type", labels = c("targEqual" = "Targ-Match", "fixed" = "Fixed")) +
   theme_apa()
 pdf("Figures/WMBehav_accuracyfixvmatPlot.pdf", width = 7, paper = "special")
 accuracy.fixVmat.bar
@@ -477,7 +479,7 @@ capacity.fixVmat.bar <- ggplot(capacity.fixVmat.summarydata, aes( x=Block,y=cowa
     width=.25,position=position_dodge(.9)) +
   facet_grid(~numDist, labeller = as_labeller(c(`2`="2 distractors", `4`="4 distractors", `6`="6 distractors"))) +
   scale_y_continuous("Capacity (Cowan C)",expand = c(0, 0)) +
-  scale_x_discrete("Block type") +
+  scale_x_discrete("Block type", labels = c("targEqual" = "Targ-Match", "fixed" = "Fixed")) +
   theme_apa()
 pdf("Figures/WMBehav_capacityfixvmatPlot.pdf", width = 7, paper = "special")
 capacity.fixVmat.bar
@@ -528,8 +530,8 @@ sensitivity.fixVmat.bar <- ggplot(sensitivity.fixVmat.summarydata, aes( x=Block,
   geom_errorbar(aes(ymin=D-se, ymax=D+se), size=0.5,   
                 width=.25,position=position_dodge(.9)) +
   facet_grid(~numDist, labeller = as_labeller(c(`2`="2 distractors", `4`="4 distractors", `6`="6 distractors"))) +
-  scale_y_continuous("sensitivity (d')",expand = c(0, 0)) +
-  scale_x_discrete("Block type") +
+  scale_y_continuous("Sensitivity (d')",expand = c(0, 0)) +
+  scale_x_discrete("Block type", labels = c("targEqual" = "Targ-Match", "fixed" = "Fixed")) +
   theme_apa()
 pdf("Figures/WMBehav_sensitivityfixvmatPlot.pdf", width = 7, paper = "special")
 sensitivity.fixVmat.bar
@@ -572,8 +574,8 @@ criterion.fixVmat.bar <- ggplot(criterion.fixVmat.summarydata, aes( x=Block,y=C)
   geom_errorbar(aes(ymin=C-se, ymax=C+se), size=0.5,   
                 width=.25,position=position_dodge(.9)) +
   facet_grid(~numDist, labeller = as_labeller(c(`2`="2 dist", `4`="4 distractors", `6`="6 distractors"))) +
-  scale_y_continuous("criterion (c)",expand = c(0, 0)) +
-  scale_x_discrete("Block type") +
+  scale_y_continuous("Criterion (c)",expand = c(0, 0)) +
+  scale_x_discrete("Block type", labels = c("targEqual" = "Targ-Match", "fixed" = "Fixed")) +
   theme_apa()
 pdf("Figures/WMBehav_criterionfixvmatPlot.pdf", width = 7, paper = "special")
 criterion.fixVmat.bar
@@ -619,7 +621,7 @@ accuracy.fixVopp.bar <- ggplot(accuracy.fixVopp.summarydata, aes( x=Block,y=corr
   facet_grid(~numDist, labeller = as_labeller(c(`2`="2 distractors", `4`="4 distractors", `6`="6 distractors"))) +
   scale_y_continuous("Accuracy (%)",expand = c(0, 0)) +
   coord_cartesian(ylim=c(50,100)) +
-  scale_x_discrete("Block type") +
+  scale_x_discrete("Block type", labels = c("targOpp" = "Targ-Inverse", "fixed" = "Fixed")) +
   theme_apa()
 pdf("Figures/WMBehav_accuracyfixvoppPlot.pdf", width = 7, paper = "special")
 accuracy.fixVopp.bar
@@ -663,7 +665,7 @@ capacity.fixVopp.bar <- ggplot(capacity.fixVopp.summarydata, aes( x=Block,y=cowa
     width=.25,position=position_dodge(.9)) +
   facet_grid(~numDist, labeller = as_labeller(c(`2`="2 distractors", `4`="4 distractors", `6`="6 distractors"))) +
   scale_y_continuous("Capacity (Cowan C)",expand = c(0, 0)) +
-  scale_x_discrete("Block type") +
+  scale_x_discrete("Block type", labels = c("targOpp" = "Targ-Inverse", "fixed" = "Fixed")) +
   theme_apa()
 pdf("Figures/WMBehav_capacityfixvoppPlot.pdf", width = 7, paper = "special")
 capacity.fixVopp.bar
@@ -707,8 +709,8 @@ sensitivity.fixVopp.bar <- ggplot(sensitivity.fixVopp.summarydata, aes( x=Block,
   geom_errorbar(aes(ymin=D-se, ymax=D+se), size=0.5,   
                 width=.25,position=position_dodge(.9)) +
   facet_grid(~numDist, labeller = as_labeller(c(`2`="2 distractors", `4`="4 distractors", `6`="6 distractors"))) +
-  scale_y_continuous("sensitivity (d')",expand = c(0, 0)) +
-  scale_x_discrete("Block type") +
+  scale_y_continuous("Sensitivity (d')",expand = c(0, 0)) +
+  scale_x_discrete("Block type", labels = c("targOpp" = "Targ-Inverse", "fixed" = "Fixed")) +
   theme_apa()
 pdf("Figures/WMBehav_sensitivityfixvoppPlot.pdf", width = 7, paper = "special")
 sensitivity.fixVopp.bar
@@ -749,8 +751,8 @@ criterion.fixVopp.bar <- ggplot(criterion.fixVopp.summarydata, aes( x=Block,y=C)
   geom_errorbar(aes(ymin=C-se, ymax=C+se), size=0.5,   
                 width=.25,position=position_dodge(.9)) +
   facet_grid(~numDist, labeller = as_labeller(c(`2`="2 distractors", `4`="4 distractors", `6`="6 distractors"))) +
-  scale_y_continuous("criterion (c)",expand = c(0, 0)) +
-  scale_x_discrete("Block type") +
+  scale_y_continuous("Criterion (c)",expand = c(0, 0)) +
+  scale_x_discrete("Block type", labels = c("targOpp" = "Targ-Inverse", "fixed" = "Fixed")) +
   theme_apa()
 pdf("Figures/WMBehav_criterionfixvoppPlot.pdf", width = 7, paper = "special")
 criterion.fixVopp.bar
@@ -888,7 +890,7 @@ colnames(hRegression)[6] <- "p.value"
 #Plot the part correlation of capacity after accounting for fixNZ accuracy
 TMResid <- resid(model1)
 regressSheet$m1Residual <- resid(model1)
-TM.hPlot <- ggplot(regressSheet, aes(x=Capacity, y=m1Residual)) + geom_point() +geom_smooth(method=lm)+labs(y = "Residual sensitivity", x= "Working memory capacity") +theme_apa()
+TM.hPlot <- ggplot(regressSheet, aes(x=Capacity, y=m1Residual)) + geom_point() +geom_smooth(method=lm)+labs(y = "Residual sensitivity (d')", x= "Working memory capacity") +theme_apa()
 pdf("Figures/WMBehav_TM_hPlot.pdf", width = 7, paper = "special")
 TM.hPlot
 dev.off()
@@ -963,7 +965,7 @@ colnames(hRegression)[6] <- "p.value"
 #Plot the part correlation of capacity after accounting for fixNZ accuracy
 TIResid <- resid(model1)
 regressSheet$m1Residual <-residual <- resid(model1)
-TI.hPlot <- ggplot(regressSheet, aes(x=Capacity, y=m1Residual)) + geom_point() +geom_smooth(method=lm)+labs(y = "Residual sensitivity", x= "Working memory capacity") +theme_apa()
+TI.hPlot <- ggplot(regressSheet, aes(x=Capacity, y=m1Residual)) + geom_point() +geom_smooth(method=lm)+labs(y = "Residual sensitivity (d')", x= "Working memory capacity") +theme_apa()
 
 pdf("Figures/WMBehav_TI_hPlot.pdf", width = 7, paper = "special")
 TI.hPlot
