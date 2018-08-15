@@ -72,8 +72,8 @@ jTTest <-function(dataSheet, ConditionOne, ConditionTwo,N){
 # Seed for random number generation
 set.seed(4609948)
 # Load the behavioral data along with the subtracted data
-subData <-read.table("P:/dhen061/Experiment_1/EEG_Data/RAW_Files/Output-Final/Subtracted/SubtractedStatsAll.txt", header = TRUE)
-
+#subData <-read.table("P:/dhen061/Experiment_1/EEG_Data/RAW_Files/Output-Final/Subtracted/SubtractedStatsAll.txt", header = TRUE)
+subData <-read.table("data/SL_SubtractedStatsAll.txt", header = TRUE)
 # Divides data up into subsets
 distData = subset(subData, select = c(1,2,3,4,5,6,7,8))
 targData = subset(subData, select = c(9,10,11,12,13,14,15,16))
@@ -189,7 +189,7 @@ EEG activity was recorded continuously at 1000Hz on an Electrical Geodesics Inc.
 ### EEG Processing.
 
 ```{r ERP_Plots, include=FALSE}
-erpData <-read.table("P:/dhen061/Experiment_1/EEG_Data/RAW_Files/Output-Final/Subtracted/Average_ERP_Data.txt", header = TRUE)
+erpData <-read.table("data/SL_Average_ERP_Data.txt", header = TRUE)
 #Convert to long table format
 longERP = melt(erpData, id="xAxis")
 #Create variables

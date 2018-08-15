@@ -65,7 +65,7 @@ corstars <-function(x, method=c("pearson", "spearman"), removeTriangle=c("upper"
 # Seed for random number generation
 set.seed(4609948)
 # Load the behavioural data along with the subtracted data
-subData <-read.table("P:/dhen061/Experiment_1.1/EEG_Data/Output-One/Subtracted  Explore/non-GFPStats.txt", header = TRUE)
+subData <-read.table("data/SD_non-GFPStats.txt", header = TRUE)
 
 distData <- subset(subData, select = c(1,2,3,4))
 targData <- subset(subData, select = c(5,6,7,8))
