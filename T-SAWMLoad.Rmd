@@ -175,7 +175,7 @@ At this point, the visual search task would begin, first with a fixation cross p
 Once the 4th visual search was completed, the working memory retrieval display would appear on screen for 2000ms and participants had to press 'm' with their left hand if the shape(s) on screen matched the encoded shape(s), or 'x' if it did not. The shapes matched on half of the trials. Finally, participants received feedback on the working memory portion of the task with a 1000ms display of either "Correct!", "Wrong", or "Too Slow" depending on their response. For an example trial, see figure\ \@ref(fig:TrialExample).
 
 ```{r TrialExample, fig.cap = "Example of a single trial of the experiment. This example shows a high-load condition, as indicated by the double-headed arrow cue pointing to both locations. In a low load trial, the arrow cue would point at only one of the possible locations.", fig.align = "center"}
-include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/TrialExample.pdf", auto_pdf = TRUE)
+include_graphics("Figures/TrialExample.pdf", auto_pdf = TRUE)
 ```
 
 ### Stimuli.
@@ -228,21 +228,21 @@ targPlot <- ggplot(data=targERP, aes( x=xAxis,y=value, group=Load)) +
   facet_grid(Component_f~.) +
   theme_apa()
 
-pdf("C:/Users/dhen061/Desktop/ThesisWriting/Figures/SAWMLOAD_distERPs.pdf", width = 7, paper = "special")
+pdf("Figures/SAWMLOAD_distERPs.pdf", width = 7, paper = "special")
 distPlot
 dev.off()
 
-pdf("C:/Users/dhen061/Desktop/ThesisWriting/Figures/SAWMLOAD_targERPs.pdf", width = 7, paper = "special")
+pdf("Figures/SAWMLOAD_targERPs.pdf", width = 7, paper = "special")
 targPlot
 dev.off()
 ```
 
 ```{r distERPs, fig.cap = "Subtracted event-related potentials showing the lateralized response to distractors under high and low load. Each component was calculated from the average of a slightly different cluster of electrodes (based on the condition averaged scalp topography of that component's time window).", fig.align = "center"}
-include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/SAWMLOAD_distERPs.pdf", auto_pdf = TRUE)
+include_graphics("Figures/SAWMLOAD_distERPs.pdf", auto_pdf = TRUE)
 ```
 
 ```{r targERPs, fig.cap = "Subtracted event-related potentials showing the lateralized response to targets under high and low load. Each component was calculated from the average of a slightly different cluster of electrodes (based on the condition averaged scalp topography of that component's time window).", fig.align = "center"}
-include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/SAWMLOAD_targERPs.pdf", auto_pdf = TRUE)
+include_graphics("Figures/SAWMLOAD_targERPs.pdf", auto_pdf = TRUE)
 ```
 
 EEG data were processed twice, firstly in a way which was optimized for the performance of independent component analysis (ICA), and secondly in a way which was optimized for the production of ERP components. ICA weights from the first set of data could then be copied across in order to perform artefact correction in the ERP data. All EEG preprocessing was performed using MATLAB (2017a, The Mathworks Inc.) and the EEGLAB toolbox [@DELORME2004].
@@ -302,13 +302,13 @@ VSAcc.violin <- ggplot(data=VSAcc, aes( x=Load,y=value)) +
   #geom_dotplot(binaxis='y', stackdir='center', dotsize=1) +
   geom_boxplot(width=0.1) +
   theme_apa()
-pdf("C:/Users/dhen061/Desktop/ThesisWriting/Figures/behavViolinPlot.pdf", width = 7, paper = "special")
+pdf("Figures/behavViolinPlot.pdf", width = 7, paper = "special")
 plot_grid(WMRT.violin, WMAcc.violin, VSRT.violin, VSAcc.violin, labels = c("A","B","C","D"))
 dev.off()
 ```
 
 ```{r violinPlots, fig.cap = "Violin plots showing the effect of working memory load on A) Working memory response times, B) working memory accuracy, C) visual search response times, and D) visual search accuracy.", fig.align = "center"}
-include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/behavViolinPlot.pdf", auto_pdf = TRUE)
+include_graphics("Figures/behavViolinPlot.pdf", auto_pdf = TRUE)
 ```
 
 Mean response times and percent correct are shown as a function of working memory load for each task (working memory and visual search) in figure\ \@ref(fig:violinPlots). Paired samples T-tests were carried out to test the effect of working memory load on response times (ms) and accuracy (%) in both the working memory and visual search tasks. The results of the T-tests showed that the high-load condition did result in both significantly slower (`r apa_print(wmRT_out)$full`) and less accurate (`r apa_print(wmAcc_out)$full`) responses to the working memory task. The results also showed that participants were significantly slower on the visual search task under high working memory load (`r apa_print(vsRT_out)$full`) however there was no significant effect of working memory load on visual search accuracy (`r apa_print(vsAcc_out)$full`). These data confirm firstly that the working memory task effectively manipulated the load on a participant's working memory, and secondly that this manipulation also affected performance on a concurrent visual search task.
@@ -388,10 +388,10 @@ colnames(low.area.corr$r) <- areaColumns
 colnames(high.area.corr$r) <- areaColumns
 rownames(low.area.corr$r) <- areaColumns
 rownames(high.area.corr$r) <- areaColumns
-pdf("C:/Users/dhen061/Desktop/ThesisWriting/Figures/lowCorrelogram.pdf", width = 7, paper = "special")
+pdf("Figures/lowCorrelogram.pdf", width = 7, paper = "special")
 corrplot(low.area.corr$r, method = "ellipse", type = "lower",p.mat = low.area.corr$P, sig.level = 0.05, insig = "blank")
 dev.off()
-pdf("C:/Users/dhen061/Desktop/ThesisWriting/Figures/highCorrelogram.pdf", width = 7, paper = "special")
+pdf("Figures/highCorrelogram.pdf", width = 7, paper = "special")
 corrplot(high.area.corr$r, method = "ellipse", type = "lower",p.mat = high.area.corr$P, sig.level = 0.05, insig = "blank")
 dev.off()
 
@@ -400,12 +400,12 @@ VSRTbyDISTP <- ggplot(lowAreaData, aes(x=VSRT, y=DistP)) + geom_point() +geom_sm
 VSRTbyDISTN <- ggplot(lowAreaData, aes(x=VSRT, y=DistN)) + geom_point() +geom_smooth(method=lm) +theme_apa()
 VSRTbyTARGP <- ggplot(lowAreaData, aes(x=VSRT, y=TargP)) + geom_point() +geom_smooth(method=lm) +theme_apa()
 WMRTbyDISTP <- ggplot(lowAreaData, aes(x=WMRT, y=DistN)) + geom_point() +geom_smooth(method=lm) +theme_apa()
-pdf("C:/Users/dhen061/Desktop/ThesisWriting/Figures/SAWMLOAD_lowScatterPlot.pdf", width = 7, paper = "special")
+pdf("Figures/SAWMLOAD_lowScatterPlot.pdf", width = 7, paper = "special")
 plot_grid(VSRTbyDISTP,VSRTbyDISTN,VSRTbyTARGP,WMRTbyDISTP, labels = c("A","B","C","D"))
 dev.off()
 
 VSACCbyTARGN  <- ggplot(highAreaData, aes(x=VSAcc, y=TargN)) + geom_point() +geom_smooth(method=lm) +theme_apa()
-pdf("C:/Users/dhen061/Desktop/ThesisWriting/Figures/SAWMLOAD_highScatterPlot.pdf", width = 7, paper = "special")
+pdf("Figures/SAWMLOAD_highScatterPlot.pdf", width = 7, paper = "special")
 VSACCbyTARGN
 dev.off()
 ```
@@ -480,19 +480,19 @@ p < .001 '****'; p < .01 '***'; p < .05 '**'; p < .1 '*'} \\\\"), comment = FALS
 ```
 
 ```{r lowScatterGraphing, fig.cap = "Scatter plots showing the significant relationships between neural responses and behavior in the low working memory load condition. A) visual search response times and distractor positivity, B) visual search response times and distractor negativity, C) visual search response times and target positivity, and D) working memory response times and distractor positivity.", fig.align = "center"}
-include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/SAWMLOAD_lowScatterPlot.pdf", auto_pdf = TRUE)
+include_graphics("Figures/SAWMLOAD_lowScatterPlot.pdf", auto_pdf = TRUE)
 ```
 
 ```{r highScatterGraphing, fig.cap = "Scatter plot showing the significant relationship between visual search accuracy and target negativity in the high working memory load condition.", fig.align = "center"}
-include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/SAWMLOAD_highScatterPlot.pdf", auto_pdf = TRUE)
+include_graphics("Figures/SAWMLOAD_highScatterPlot.pdf", auto_pdf = TRUE)
 ```
 
 ```{r correlogramLow, fig.cap = "Correlogram showing the direction and strength of all significant correlations between behavioral and neural measures under low working memory load. WM = working memory task, VS = visual search task, Acc = accuracy, RT = response time, Targ = lateralized target response, Dist = lateralized distractor response, P = positive area, N = negative area.", fig.align = "center"}
-include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/lowCorrelogram.pdf", auto_pdf = TRUE)
+include_graphics("Figures/lowCorrelogram.pdf", auto_pdf = TRUE)
 ```
 
 ```{r correlogramHigh, fig.cap = "Correlogram showing the direction and strength of all significant correlations between behavioral and neural measures under high working memory load. WM = working memory task, VS = visual search task, Acc = accuracy, RT = response time, Targ = lateralized target response, Dist = lateralized distractor response, P = positive area, N = negative area.", fig.align = "center"}
-include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/highCorrelogram.pdf", auto_pdf = TRUE)
+include_graphics("Figures/highCorrelogram.pdf", auto_pdf = TRUE)
 ```
 
 In order to investigate the relationship between lateralized activity and behavior in the tasks, a correlation matrix was made for each working memory load condition. Each matrix contained the behavioral measures (accuracy and response time) on both tasks (working memory task and visual search task), as well as the total lateralized positive area for each stimulus (targets and distractors) and the total lateralized negative area for each stimulus. Under low working memory load, there is a significant correlation between visual search response times and the positivity to targets, positivity to distractors, and the negativity to distractors. Individuals with larger positivities to targets appear to perform faster on the visual search task (`r low.results.string[1]`) as do individuals with larger positivities to distractors (`r low.results.string[2]`). Individuals with a larger negativity to distractors, however, perform slower (`r low.results.string[4]`). There is also a significant correlation between working memory response times and the distractor negativity such that individuals with larger negativities to distractors perform slower on the working memory task (`r low.results.string[3]`). Scatter plots for these relationships are shown in figure\ \@ref(fig:lowScatterGraphing). Under high load, however, these effects disappear and the only significant relationship between lateralized amplitude and behavior shows that individuals with a larger target negativity tend to perform more accurately on the task  (`r high.results.string[1]`). While we have only reported on the relationships between amplitudes and behavior here, all significant correlations are visualized for the low-load condition in  figure\ \@ref(fig:correlogramLow) and for the high-load condition in figure\ \@ref(fig:correlogramHigh). For the full correlation matrix for the low-load condition see table\ \@ref(tab:lowCorrelationTable), and for the high-load condition see table\ \@ref(tab:highCorrelationTable).
@@ -514,10 +514,10 @@ colnames(low.lat.corr$r) <- latColumns
 colnames(high.lat.corr$r) <- latColumns
 rownames(low.lat.corr$r) <- latColumns
 rownames(high.lat.corr$r) <- latColumns
-pdf("C:/Users/dhen061/Desktop/ThesisWriting/Figures/lowLatCorrelogram.pdf", width = 7, paper = "special")
+pdf("Figures/lowLatCorrelogram.pdf", width = 7, paper = "special")
 corrplot(low.lat.corr$r, method = "ellipse", type = "lower",p.mat = low.lat.corr$P, sig.level = 0.05, insig = "blank")
 dev.off()
-pdf("C:/Users/dhen061/Desktop/ThesisWriting/Figures/highLatCorrelogram.pdf", width = 7, paper = "special")
+pdf("Figures/highLatCorrelogram.pdf", width = 7, paper = "special")
 corrplot(high.lat.corr$r, method = "ellipse", type = "lower",p.mat = high.lat.corr$P, sig.level = 0.05, insig = "blank")
 dev.off()
 
@@ -526,22 +526,22 @@ WMAccbyDISTPLat <- ggplot(lowLatData, aes(x=WMAcc, y=TargNLat)) +geom_point() +g
 WMAccbyDISTNLat <- ggplot(lowLatData, aes(x=WMAcc, y=DistNLat)) +geom_point() +geom_smooth(method=lm) +theme_apa()
 WMRTbyTARGNLat <- ggplot(lowLatData, aes(x=WMRT, y=TargPLat)) +geom_point() +geom_smooth(method=lm) +theme_apa()
 highWMAccbyDISTNLat <- ggplot(highLatData, aes(x=WMAcc, y=TargNLat)) +geom_point() +geom_smooth(method=lm) +theme_apa()
-pdf("C:/Users/dhen061/Desktop/ThesisWriting/Figures/lowLatScatterPlot.pdf", width = 7, paper = "special")
+pdf("Figures/lowLatScatterPlot.pdf", width = 7, paper = "special")
 plot_grid(WMAccbyDISTPLat,WMAccbyDISTNLat,WMRTbyTARGNLat,highWMAccbyDISTNLat, labels = c("A","B","C","D"))
 dev.off()
 
 ```
 
 ```{r lowLatScatterGraphing, fig.cap = "This is where I'd put the figure caption.", fig.align = "center"}
-#include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/lowLatScatterPlot.pdf", auto_pdf = TRUE)
+#include_graphics("Figures/lowLatScatterPlot.pdf", auto_pdf = TRUE)
 ```
 
 ```{r correlogramLowLat, fig.cap = "This is where I'd put the figure caption lowLat.", fig.align = "center"}
-#include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/lowLatCorrelogram.pdf", auto_pdf = TRUE)
+#include_graphics("Figures/lowLatCorrelogram.pdf", auto_pdf = TRUE)
 ```
 
 ```{r correlogramHighLat, fig.cap = "This is where I'd put the figure caption highLat.", fig.align = "center"}
-#include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/highLatCorrelogram.pdf", auto_pdf = TRUE)
+#include_graphics("Figures/highLatCorrelogram.pdf", auto_pdf = TRUE)
 ```
 
 ## Discussion

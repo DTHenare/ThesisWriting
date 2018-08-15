@@ -165,7 +165,7 @@ At this point, the visual search task would begin, first with a fixation cross p
 Once the 4th visual search was completed, the working memory retrieval display would appear on screen for 2000ms and participants had to press 'm' with their left hand if the shape on screen matched the encoded shape, or 'x' if it did not. The shapes matched on half of the trials. Finally, participants would receive feedback on the working memory portion of the task with a 1000ms display of either "Correct!", "Wrong", or "Too Slow" depending on their response. For an example trial, see figure\ \@ref(fig:SDTrialExample).
 
 ```{r SDTrialExample, fig.cap = "Example of a single trial of the experiment. This example shows a working memory distractor present condition. In a working memory distractor absent trial, only the cued shape would be present.", fig.align = "center"}
-include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/SDTrialExample.pdf", auto_pdf = TRUE)
+include_graphics("Figures/SDTrialExample.pdf", auto_pdf = TRUE)
 ```
 
 ### Stimuli.
@@ -179,11 +179,11 @@ EEG activity was recorded continuously at 1000Hz on an Electrical Geodesics Inc.
 ### EEG Processing.
 
 ```{r SDdistERPs, fig.cap = "Subtracted event-related potentials showing the lateralized response to distractors under high and low load. Each component was calculated from the average of a slightly different cluster of electrodes (based on the condition averaged scalp topography of that component's time window).", fig.align = "center"}
-include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/SAWMDIST_Dist_ERPs.pdf", auto_pdf = TRUE)
+include_graphics("Figures/SAWMDIST_Dist_ERPs.pdf", auto_pdf = TRUE)
 ```
 
 ```{r SDtargERPs, fig.cap = "Subtracted event-related potentials showing the lateralized response to targets under high and low load. Each component was calculated from the average of a slightly different cluster of electrodes (based on the condition averaged scalp topography of that component's time window).", fig.align = "center"}
-include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/SAWMDIST_Targ_ERPs.pdf", auto_pdf = TRUE)
+include_graphics("Figures/SAWMDIST_Targ_ERPs.pdf", auto_pdf = TRUE)
 ```
 
 EEG data were processed twice, firstly in a way which was optimized for the performance of independent component analysis (ICA), and secondly in a way which was optimized for the production of ERP components. ICA weights from the first set of data could then be copied across in order to perform artefact correction in the ERP data. All EEG preprocessing was performed using MATLAB (2017a, The Mathworks Inc.) and the EEGLAB toolbox [@DELORME2004].
@@ -241,14 +241,14 @@ VSAcc.violin <- ggplot(data=VSAcc, aes( x=Cond,y=value)) +
   #geom_dotplot(binaxis='y', stackdir='center', dotsize=1) +
   geom_boxplot(width=0.1) +
   theme_apa()
-pdf("C:/Users/dhen061/Desktop/ThesisWriting/Figures/SAWMDIST_behavViolinPlot.pdf", width = 7, paper = "special")
+pdf("Figures/SAWMDIST_behavViolinPlot.pdf", width = 7, paper = "special")
 plot_grid(WMRT.violin, WMAcc.violin, VSRT.violin, VSAcc.violin, labels = c("A","B","C","D"))
 dev.off()
 ```
 
 
 ```{r SDviolinPlots, fig.cap = "Violin plots showing the effect of working memory distractor presence on A) Working memory response times, B) working memory accuracy, C) visual search response times, and D) visual search accuracy.", fig.align = "center"}
-include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/SAWMDIST_behavViolinPlot.pdf", auto_pdf = TRUE)
+include_graphics("Figures/SAWMDIST_behavViolinPlot.pdf", auto_pdf = TRUE)
 ```
 
 Mean response times and percent correct are shown as a function of working memory distractor presence for each task (working memory and visual search) in figure\ \@ref(fig:SDviolinPlots). Paired samples t-tests were carried out to test the effect of working memory distractor presence on response times(ms) and accuracy(%) in both the working memory and visual search tasks. The results of the t-tests showed that the presence of a distractor in the working memory task did result in significantly slower (`r apa_print(wmRT_out)$full`), and less accurate (`r apa_print(wmAcc_out)$full`) responses to the working memory test display (although the latter effect is only trending toward significance). The results also showed that participants were significantly less accurate on the visual search task when a working memory distractor had been presented (`r apa_print(vsAcc_out)$full`) however there was no significant effect of working memory distractor presence on visual search response times (`r apa_print(vsRT_out)$full`). These data confirm firstly that the presence of a distractor during working memory encoding and retrieval affected performance on the working memory task, and secondly that this manipulation also affected performance on a concurrent visual search task.
@@ -333,10 +333,10 @@ colnames(no.area.corr$r) <- areaColumns
 colnames(yes.area.corr$r) <- areaColumns
 rownames(no.area.corr$r) <- areaColumns
 rownames(yes.area.corr$r) <- areaColumns
-pdf("C:/Users/dhen061/Desktop/ThesisWriting/Figures/SAWMDIST_noCorrelogram.pdf", width = 7, paper = "special")
+pdf("Figures/SAWMDIST_noCorrelogram.pdf", width = 7, paper = "special")
 corrplot(no.area.corr$r, method = "ellipse", type = "lower",p.mat = no.area.corr$P, sig.level = 0.05, insig = "blank")
 dev.off()
-pdf("C:/Users/dhen061/Desktop/ThesisWriting/Figures/SAWMDIST_yesCorrelogram.pdf", width = 7, paper = "special")
+pdf("Figures/SAWMDIST_yesCorrelogram.pdf", width = 7, paper = "special")
 corrplot(yes.area.corr$r, method = "ellipse", type = "lower",p.mat = yes.area.corr$P, sig.level = 0.05, insig = "blank")
 dev.off()
 
@@ -345,7 +345,7 @@ VSRTbyDISTP <- ggplot(noAreaData, aes(x=VSRT, y=DistP)) + geom_point() +geom_smo
 VSRTbyDISTN <- ggplot(noAreaData, aes(x=VSRT, y=DistN)) + geom_point() +geom_smooth(method=lm) +theme_apa()
 VSRTbyTARGP <- ggplot(noAreaData, aes(x=VSRT, y=TargP)) + geom_point() +geom_smooth(method=lm) +theme_apa()
 WMRTbyDISTP <- ggplot(noAreaData, aes(x=WMRT, y=DistP)) + geom_point() +geom_smooth(method=lm) +theme_apa()
-pdf("C:/Users/dhen061/Desktop/ThesisWriting/Figures/SAWMDIST_noScatterPlot.pdf", width = 7, paper = "special")
+pdf("Figures/SAWMDIST_noScatterPlot.pdf", width = 7, paper = "special")
 plot_grid(VSRTbyDISTP,VSRTbyDISTN,VSRTbyTARGP,WMRTbyDISTP, labels = c("A","B","C","D"))
 dev.off()
 ```
@@ -424,15 +424,15 @@ p < .001 '****'; p < .01 '***'; p < .05 '**'; p < .1 '*'} \\\\"), comment = FALS
 ```
 
 ```{r SDlowScatterGraphing, fig.cap = "This is where I'd put the figure caption.", fig.align = "center"}
-#include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/SAWMDIST_noScatterPlot.pdf", auto_pdf = TRUE)
+#include_graphics("Figures/SAWMDIST_noScatterPlot.pdf", auto_pdf = TRUE)
 ```
 
 ```{r SDcorrelogramLow, fig.cap = "This is where I'd put the figure caption.", fig.align = "center"}
-#include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/SAWMDIST_noCorrelogram.pdf", auto_pdf = TRUE)
+#include_graphics("Figures/SAWMDIST_noCorrelogram.pdf", auto_pdf = TRUE)
 ```
 
 ```{r SDcorrelogramHigh, fig.cap = "This is where I'd put the figure caption.", fig.align = "center"}
-#include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/SAWMDIST_yesCorrelogram.pdf", auto_pdf = TRUE)
+#include_graphics("Figures/SAWMDIST_yesCorrelogram.pdf", auto_pdf = TRUE)
 ```
 
 In order to investigate the relationship between lateralised activity and behaviour in the tasks, a correlation matrix was made for each level of working memory distractor presence. Each matrix contained the behavioural measures (accuracy and response time) on both tasks (working memory task and visual search task), as well as the total lateralized positive area for each stimulus (targets and distractors) and the total lateralised negative area for each stimulus. The results show no evidence of any association between lateralized amplitude and any behavioral measure. For the full correlation matrix for the working memory distractor absent condition see table\ \@ref(tab:noCorrelationTable), and for the working memory distractor present condition see table\ \@ref(tab:yesCorrelationTable).
@@ -454,10 +454,10 @@ In order to investigate the relationship between lateralised activity and behavi
 #colnames(high.lat.corr$r) <- latColumns
 #rownames(low.lat.corr$r) <- latColumns
 #rownames(high.lat.corr$r) <- latColumns
-#pdf("C:/Users/dhen061/Desktop/ThesisWriting/Figures/lowLatCorrelogram.pdf", width = 7, paper = "special")
+#pdf("Figures/lowLatCorrelogram.pdf", width = 7, paper = "special")
 #corrplot(low.lat.corr$r, method = "ellipse", type = "lower",p.mat = low.lat.corr$P, sig.level = 0.05, insig = "blank")
 #dev.off()
-#pdf("C:/Users/dhen061/Desktop/ThesisWriting/Figures/highLatCorrelogram.pdf", width = 7, paper = "special")
+#pdf("Figures/highLatCorrelogram.pdf", width = 7, paper = "special")
 #corrplot(high.lat.corr$r, method = "ellipse", type = "lower",p.mat = high.lat.corr$P, sig.level = 0.05, insig = "blank")
 #dev.off()
 
@@ -466,22 +466,22 @@ In order to investigate the relationship between lateralised activity and behavi
 #WMAccbyDISTNLat <- ggplot(highLatData, aes(x=VSAcc, y=TargPLat)) +geom_point() +geom_smooth(method=lm) +theme_apa()
 #WMRTbyTARGNLat <- ggplot(lowLatData, aes(x=WMRT, y=TargPLat)) +geom_point() +geom_smooth(method=lm) +theme_apa()
 #highWMAccbyDISTNLat <- ggplot(highLatData, aes(x=WMAcc, y=TargNLat)) +geom_point() +geom_smooth(method=lm) +theme_apa()
-#pdf("C:/Users/dhen061/Desktop/ThesisWriting/Figures/lowLatScatterPlot.pdf", width = 7, paper = "special")
+#pdf("Figures/lowLatScatterPlot.pdf", width = 7, paper = "special")
 #plot_grid(WMAccbyDISTPLat,WMAccbyDISTNLat,WMRTbyTARGNLat,highWMAccbyDISTNLat, labels = c("A","B","C","D"))
 #dev.off()
 
 ```
 
 ```{r SDlowLatScatterGraphing, fig.cap = "This is where I'd put the figure caption.", fig.align = "center"}
-#include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/lowLatScatterPlot.pdf", auto_pdf = TRUE)
+#include_graphics("Figures/lowLatScatterPlot.pdf", auto_pdf = TRUE)
 ```
 
 ```{r SDcorrelogramLowLat, fig.cap = "This is where I'd put the figure caption lowLat.", fig.align = "center"}
-#include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/lowLatCorrelogram.pdf", auto_pdf = TRUE)
+#include_graphics("Figures/lowLatCorrelogram.pdf", auto_pdf = TRUE)
 ```
 
 ```{r SDcorrelogramHighLat, fig.cap = "This is where I'd put the figure caption highLat.", fig.align = "center"}
-#include_graphics("C:/Users/dhen061/Desktop/ThesisWriting/Figures/highLatCorrelogram.pdf", auto_pdf = TRUE)
+#include_graphics("Figures/highLatCorrelogram.pdf", auto_pdf = TRUE)
 ```
 
 ## Discussion
