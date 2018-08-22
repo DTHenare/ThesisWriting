@@ -18,7 +18,7 @@ author:
   - name          : "Dion T. Henare"
 
 affiliation:
-    institution   : "School of Psychology, Univeristy of Auckland"
+    institution   : "School of Psychology, University of Auckland"
 
 author_note: |
   \begin{center} A thesis submitted in fulfilment of the requirements for the degree of Doctorate of Philosophy in Psychology, the University of Auckland, 2018. \\ This thesis is for examination purposes only and is confidential to the examination process. \end{center}
@@ -38,11 +38,11 @@ abstract: |
   
   I am also very grateful to Stuart McGill who had such a large impact on my research practices. You spent a huge amount of time patiently explaining and demonstrating programming skills which became a fundamental part of my degree. The entire lab benefitted from having you around and I'm especially grateful for your ability to put up with all of my stupid questions without ever making me feel like the annoyance that I'm sure I was.
   
-  I am very thankful to all my CogNeuro friends who made my degree so much more enjoyable, providing support and encouragement whenever I needed. Those of you who were ahead of me, especially Katharina, Carolyn, and Haeme who were able to give me advice and information that made my introduction to postgrad so much easier and made me feel so welcome. Those of you who went on the same journey, Nicole and Laura especially. I'm not sure how many bottles of wine were shared between us over the course of the last seven years, but it kept me sane and I look forward to sharing many more. Finally, those who joined in on the madness along the way, especially Eric, Steph, Kristina, Emily, and Nicole with whom I shared a lot of drinks and parks, writing sessions, board games, "N2pc WHAT"'s, and summer hangs respectively. You all turned what would have been an interesting postgrad experience into an interesting, exciting, and joyful seven years.
+  I am very thankful to all my CogNeuro friends who made my degree so much more enjoyable, providing support and encouragement whenever I needed. Those of you who were ahead of me, especially Katharina, Carolyn, and Haeme who were able to give me advice and information that made my introduction to postgrad so much easier and made me feel so welcome. Those of you who went on the same journey, Nicole and Laura especially. I'm not sure how many bottles of wine were shared between us over the course of the last seven years, but it kept me sane and I look forward to sharing many more. Finally, those who joined in on the madness along the way, especially Eric, Steph, Kristina, Emily, and Nicole with whom I shared a lot of drinks and parks, writing sessions, board games, "N2pc WHAT"'s, and summer hangs respectively. You all turned what would have been an interesting postgrad experience into an interesting, exciting, and fun seven years.
   
-  An army of technical and admin staff have smoothed the journey for me, and I would like to highlight the contributions especially of Veema, who kept the EEG lab running smoothly and enabled all of my data collection, and Margaret who kept al of our computers up and running and single-handedly ran the most efficient and responsive IT service there's ever been. Similarly, Michelle contributed a huge amount to my time in postgrad and is one of the few people who truly understood and supported all of the GTAs who worked for her.
+  An army of technical and admin staff have smoothed the journey for me, and I would like to highlight the contributions especially of Veema, who kept the EEG lab running smoothly and enabled all of my data collection, and Margaret who kept all of our computers up and running and single-handedly ran the most efficient and responsive IT service there's ever been. Similarly, Michelle contributed a huge amount to my time in postgrad and is one of the few people who truly respected the GTAs who worked for her.
   
-  Finally, and most importantly, I want to acknowledge and thank my family for their lifetime of support. My parents especially, who have been incredible role models of not only hard work, but of unconditional love and support. I have lived my life with an implicit belief that I could be and do whatever I wanted, and that's because you ingrained that belief in me with your unflinching support. You always fostered my interests and allowed me to follow whatever path I chose, backing me up no matter what and I am so lucky to have had you with me. I hope that I can repay in some way the enormous debt of gratitude that I feel for you both, and everything you've given me. Thank you so much.
+  Finally, and most importantly, I want to acknowledge and thank my family for their lifetime of support. My parents especially, who have been incredible role models of not only hard work, but of unconditional love and support. I have lived my life with an implicit belief that I could be and do whatever I wanted, and that's because you ingrained that belief in me. You always fostered my interests and allowed me to follow whatever path I chose, backing me up no matter what and I am so lucky to have had you with me. I hope that I can repay in some way the enormous debt of gratitude that I feel I owe you both for everything you've given me. Thank you so much.
 
 bibliography      : ["r-references.bib"]
 
@@ -69,7 +69,7 @@ output            : papaja::apa6_pdf
 \listoftables
 \newpage
 ```{r}
-knitr::include_graphics("Figures/Chap2.pdf", auto_pdf = TRUE)
+knitr::include_graphics("Figures/Chap2_Lenore.pdf", auto_pdf = TRUE)
 ```
 
 \newpage
