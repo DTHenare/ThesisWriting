@@ -4,6 +4,7 @@ library(papaja)
 library(reshape)
 library(dplyr)
 library(afex)
+library(emmeans)
 library(multcomp)
 library(stringi)
 library(xtable)
@@ -65,7 +66,7 @@ corstars <-function(x, method=c("pearson", "spearman"), removeTriangle=c("upper"
 # Seed for random number generation
 set.seed(4609948)
 # Load the behavioural data along with the subtracted data
-subData <-read.table("data/SD_non-GFPStats.txt", header = TRUE)
+subData <-read.table("Data/SD_non-GFPStats.txt", header = TRUE)
 
 distData <- subset(subData, select = c(1,2,3,4))
 targData <- subset(subData, select = c(5,6,7,8))
@@ -407,7 +408,7 @@ yes.results.string[i] <- paste("r  = ",curR, ", p = ", curP)
 
 ```
 
-```{r SDcorrelationTables, results='asis'}
+```{r SAWMDist_tab1, results='asis'}
 print(xtable(corstars(noAreaData,method="pearson",removeTriangle = "upper", result = "none"),
              caption = "Correlation matrix for the no distractor condition showing the relationships between all behavioural and ERP measures.", 
              label = "tab:noCorrelationTable"),
@@ -416,6 +417,9 @@ print(xtable(corstars(noAreaData,method="pearson",removeTriangle = "upper", resu
       add.to.row = list(list(8),  
 "\\hline  \\multicolumn{8}{l}{\\text{Note: }
 p < .001 '****'; p < .01 '***'; p < .05 '**'; p < .1 '*'} \\\\"), comment = FALSE)
+```
+
+```{r SAWMDist_tab2, results = 'asis'}
 
 print(xtable(corstars(yesAreaData,method="pearson",removeTriangle = "upper", result = "none"),
              caption = "Correlation matrix for the yes distractor condition showing the relationships between all behavioural and ERP measures.", 

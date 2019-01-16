@@ -4,6 +4,7 @@ library("papaja")
 library(dplyr)
 library(ggplot2)
 library(afex)
+library(emmeans)
 library(knitr)
 library(xtable)
 library(caTools) #split-half data
@@ -382,9 +383,15 @@ dev.off()
 ```
 Next, we focused on blocks in which the number of distractors was fixed for the entire block at either zero, two, four, or six distractors. In order to test for the effect of distractor number on change detection performance, we calculated four behavioral measures (accuracy, working memory capacity, sensitivity, and response bias), and performed a one-way ANOVA for each of these measures with distractor number as the independent variable. The results showed that distractor number had a significant effect on accuracy (`r accuracy.fixed$full_result$DistNum`), capacity (`r capacity.fixed$full_result$DistNum`), and sensitivity (`r sensitivity.fixed$full_result$DistNum`), but not on response bias (`r responseBias.fixed$full_result$DistNum`). Follow up comparisons were performed using Tukey correction for each of the significant effects and the results generally show that in blocks with larger numbers of irrelevant distractors, accuracy is lower (see table\ \@ref(tab:accuracyfixeddistractorstable) for details), capacity estimates are lower (see table\ \@ref(tab:capacityfixeddistractorstable) for details), and sensitivity is lower (see table\ \@ref(tab:sensitivityfixeddistractorstable) for details) however not every follow up comparison is significant.
 
-```{r accuracy_fixed_distractors, results = 'asis'}
+```{r WMBehav_tab1, results = 'asis'}
 print(accuracy.fixed.distractors.table, comment=FALSE, caption.placement = "top", latex.environments="flushleft")
+```
+
+```{r WMBehav_tab2, results = 'asis'}
 print(capacity.fixed.distractors.table, comment=FALSE, caption.placement = "top", latex.environments="flushleft")
+```
+
+```{r WMBehav_tab3, results = 'asis'}
 print(sensitivity.fixed.distractors.table, comment=FALSE, caption.placement = "top", latex.environments="flushleft")
 ```
 
@@ -431,7 +438,7 @@ accuracy.fixVmat.bar <- ggplot(accuracy.fixVmat.summarydata, aes( x=Block,y=corr
   coord_cartesian(ylim=c(50,100)) +
   scale_x_discrete("Block type", labels = c("targEqual" = "Targ-Match", "fixed" = "Fixed")) +
   theme_apa()
-pdf("Figures/WMBehav_accuracyfixvmatPlot.pdf", width = 7, paper = "special")
+pdf("Figures/WMBehav_accuracyfixVmatPlot.pdf", width = 7, paper = "special")
 accuracy.fixVmat.bar
 dev.off()
 ```
@@ -442,14 +449,18 @@ The results showed a main effect of distractor number (`r accuracy.fixVmatch.dis
 #apa_table(accuracy.fixVmatch.distractors.table$table, caption = "FixVMat accuracy: Summary of the 2 x 4 repeated measures ANOVA used to test the effects of block type and distractor number on participant accuracy in the working memory task.", escape = FALSE)
 ```
 
-```{r accuracy_fixVmat_pairwise, results = 'asis'}
+```{r WMBehav_tab4, results = 'asis'}
 print(accuracy.fixVmatch.distractors.distXblock.table, comment=FALSE, caption.placement = "top", latex.environments="flushleft")
+```
+
+```{r WMBehav_tab5, results = 'asis'}
 print(accuracy.fixVmatch.distractors.blockXdist.table, comment=FALSE, caption.placement = "top", latex.environments="flushleft")
 ```
 
 ```{r accuracyfixVmatPlot, fig.cap = "Participant accuracy as a function of set size and number of distractors present at encoding and retrieval.", fig.align = "center"}
 include_graphics("Figures/WMBehav_accuracyfixVmatPlot.pdf", auto_pdf = TRUE)
 ```
+
 #### Capacity.
 ```{r capacity_fixVmat_distractors, include=FALSE, echo=FALSE}
 capacity.fixVmatch.distractors.aov <- aov_ez(
@@ -481,7 +492,7 @@ capacity.fixVmat.bar <- ggplot(capacity.fixVmat.summarydata, aes( x=Block,y=cowa
   scale_y_continuous("Capacity (Cowan C)",expand = c(0, 0)) +
   scale_x_discrete("Block type", labels = c("targEqual" = "Targ-Match", "fixed" = "Fixed")) +
   theme_apa()
-pdf("Figures/WMBehav_capacityfixvmatPlot.pdf", width = 7, paper = "special")
+pdf("Figures/WMBehav_capacityfixVmatPlot.pdf", width = 7, paper = "special")
 capacity.fixVmat.bar
 dev.off()
 ```
@@ -533,7 +544,7 @@ sensitivity.fixVmat.bar <- ggplot(sensitivity.fixVmat.summarydata, aes( x=Block,
   scale_y_continuous("Sensitivity (d')",expand = c(0, 0)) +
   scale_x_discrete("Block type", labels = c("targEqual" = "Targ-Match", "fixed" = "Fixed")) +
   theme_apa()
-pdf("Figures/WMBehav_sensitivityfixvmatPlot.pdf", width = 7, paper = "special")
+pdf("Figures/WMBehav_sensitivityfixVmatPlot.pdf", width = 7, paper = "special")
 sensitivity.fixVmat.bar
 dev.off()
 ```
@@ -544,8 +555,11 @@ The results showed a main effect of distractor number (`r sensitivity.fixVmatch.
 #apa_table(sensitivity.fixVmatch.distractors.table$table, caption = "FixVMat sensitivity: Summary of the 2 x 4 repeated measures ANOVA used to test the effects of block type and distractor number on participant sensitivity in the working memory task.", escape = FALSE)
 ```
 
-```{r sensitivity_fixVmat_pairwise, results = 'asis'}
+```{r WMBehav_tab6, results = 'asis'}
 print(sensitivity.fixVmatch.distractors.distXblock.table, comment=FALSE, caption.placement = "top", latex.environments="flushleft")
+```
+
+```{r WMBehav_tab7, results = 'asis'}
 print(sensitivity.fixVmatch.distractors.blockXdist.table, comment=FALSE, caption.placement = "top", latex.environments="flushleft")
 ```
 
@@ -577,7 +591,7 @@ criterion.fixVmat.bar <- ggplot(criterion.fixVmat.summarydata, aes( x=Block,y=C)
   scale_y_continuous("Criterion (c)",expand = c(0, 0)) +
   scale_x_discrete("Block type", labels = c("targEqual" = "Targ-Match", "fixed" = "Fixed")) +
   theme_apa()
-pdf("Figures/WMBehav_criterionfixvmatPlot.pdf", width = 7, paper = "special")
+pdf("Figures/WMBehav_criterionfixVmatPlot.pdf", width = 7, paper = "special")
 criterion.fixVmat.bar
 dev.off()
 ```
@@ -623,7 +637,7 @@ accuracy.fixVopp.bar <- ggplot(accuracy.fixVopp.summarydata, aes( x=Block,y=corr
   coord_cartesian(ylim=c(50,100)) +
   scale_x_discrete("Block type", labels = c("targOpp" = "Targ-Inverse", "fixed" = "Fixed")) +
   theme_apa()
-pdf("Figures/WMBehav_accuracyfixvoppPlot.pdf", width = 7, paper = "special")
+pdf("Figures/WMBehav_accuracyfixVoppPlot.pdf", width = 7, paper = "special")
 accuracy.fixVopp.bar
 dev.off()
 ```
@@ -667,7 +681,7 @@ capacity.fixVopp.bar <- ggplot(capacity.fixVopp.summarydata, aes( x=Block,y=cowa
   scale_y_continuous("Capacity (Cowan C)",expand = c(0, 0)) +
   scale_x_discrete("Block type", labels = c("targOpp" = "Targ-Inverse", "fixed" = "Fixed")) +
   theme_apa()
-pdf("Figures/WMBehav_capacityfixvoppPlot.pdf", width = 7, paper = "special")
+pdf("Figures/WMBehav_capacityfixVoppPlot.pdf", width = 7, paper = "special")
 capacity.fixVopp.bar
 dev.off()
 ```
@@ -712,7 +726,7 @@ sensitivity.fixVopp.bar <- ggplot(sensitivity.fixVopp.summarydata, aes( x=Block,
   scale_y_continuous("Sensitivity (d')",expand = c(0, 0)) +
   scale_x_discrete("Block type", labels = c("targOpp" = "Targ-Inverse", "fixed" = "Fixed")) +
   theme_apa()
-pdf("Figures/WMBehav_sensitivityfixvoppPlot.pdf", width = 7, paper = "special")
+pdf("Figures/WMBehav_sensitivityfixVoppPlot.pdf", width = 7, paper = "special")
 sensitivity.fixVopp.bar
 dev.off()
 ```
@@ -754,7 +768,7 @@ criterion.fixVopp.bar <- ggplot(criterion.fixVopp.summarydata, aes( x=Block,y=C)
   scale_y_continuous("Criterion (c)",expand = c(0, 0)) +
   scale_x_discrete("Block type", labels = c("targOpp" = "Targ-Inverse", "fixed" = "Fixed")) +
   theme_apa()
-pdf("Figures/WMBehav_criterionfixvoppPlot.pdf", width = 7, paper = "special")
+pdf("Figures/WMBehav_criterionfixVoppPlot.pdf", width = 7, paper = "special")
 criterion.fixVopp.bar
 dev.off()
 ```
@@ -772,6 +786,7 @@ The results showed no significant main effect of distractor number (`r criterion
 ```{r criterionfixVoppPlot, fig.cap = "Participant criterion as a function of set size and number of distractors present at encoding and retrieval.", fig.align = "center"}
 include_graphics("Figures/WMBehav_criterionfixVoppPlot.pdf", auto_pdf = TRUE)
 ```
+
 ### Individual capacity and distraction.
 ```{r reliability,echo=FALSE,include=FALSE}
 #Greate Group

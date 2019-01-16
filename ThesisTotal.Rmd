@@ -18,6 +18,7 @@ author:
   - name          : "Dion T. Henare"
 
 affiliation:
+  - id            : "1"
     institution   : "School of Psychology, University of Auckland"
 
 author_note: |
@@ -46,7 +47,7 @@ abstract: |
 
 bibliography      : ["r-references.bib"]
 
-figsintext        : no
+figsintext        : yes
 figurelist        : no
 tablelist         : no
 footnotelist      : no
@@ -57,8 +58,9 @@ numbersection     : no
 toc               : TRUE
 class             : "man"
 output            : papaja::apa6_pdf
----
 
+---
+\begin{document}
 \raggedbottom
 
 \newpage
@@ -70,15 +72,7 @@ output            : papaja::apa6_pdf
 \newpage
 ```{r}
 knitr::include_graphics("Figures/Chap2_Lenore.pdf", auto_pdf = TRUE)
-```
-
-\newpage
-```{r}
 knitr::include_graphics("Figures/Chap3_Jude.pdf", auto_pdf = TRUE)
-```
-
-\newpage
-```{r}
 knitr::include_graphics("Figures/Chap4.pdf", auto_pdf = TRUE)
 ```
 
@@ -126,3 +120,4 @@ r_refs(file = "r-references.bib")
 
 \setlength{\parindent}{-0.5in}
 \setlength{\leftskip}{0.5in}
+

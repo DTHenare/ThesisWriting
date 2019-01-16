@@ -3,6 +3,7 @@ library(papaja)
 library(reshape)
 library(dplyr)
 library(afex)
+library(emmeans)
 library(multcomp)
 library(stringi)
 library(xtable)
@@ -73,7 +74,7 @@ jTTest <-function(dataSheet, ConditionOne, ConditionTwo,N){
 set.seed(4609948)
 # Load the behavioral data along with the subtracted data
 #subData <-read.table("P:/dhen061/Experiment_1/EEG_Data/RAW_Files/Output-Final/Subtracted/SubtractedStatsAll.txt", header = TRUE)
-subData <-read.table("data/SL_SubtractedStatsAll.txt", header = TRUE)
+subData <-read.table("Data/SL_SubtractedStatsAll.txt", header = TRUE)
 # Divides data up into subsets
 distData = subset(subData, select = c(1,2,3,4,5,6,7,8))
 targData = subset(subData, select = c(9,10,11,12,13,14,15,16))
@@ -189,7 +190,7 @@ EEG activity was recorded continuously at 1000Hz on an Electrical Geodesics Inc.
 ### EEG Processing.
 
 ```{r ERP_Plots, include=FALSE}
-erpData <-read.table("data/SL_Average_ERP_Data.txt", header = TRUE)
+erpData <-read.table("Data/SL_Average_ERP_Data.txt", header = TRUE)
 #Convert to long table format
 longERP = melt(erpData, id="xAxis")
 #Create variables
@@ -368,8 +369,11 @@ In order to test for the effect of working memory load on lateralized ERP compon
 apa_table(dist.result$table, caption = "Summary of the 2 x 4 repeated measures ANOVA used to test the effects of working memory load and component on the lateralized neural response to distractors in the visual search task.", escape = FALSE)
 ```
 
-```{r distANOVAinteractionTable, results='asis'}
+```{r SAWMLoad_tab1, results='asis'}
 print(dist.component.posthoc.table, comment=FALSE, caption.placement = "top", latex.environments="flushleft")
+```
+
+```{r SAWMLoad_tab2, results = 'asis'}
 print(dist.interaction.load.posthoc.table, comment=FALSE, caption.placement = "top", latex.environments="flushleft")
 ```
 
@@ -463,7 +467,7 @@ high.results.string[i] <- paste("r  = ",curR, ", p = ", curP)
 
 ```
 
-```{r correlationTables, results='asis'}
+```{r SAWMLoad_tab3, results='asis'}
 print(xtable(corstars(lowAreaData,method="pearson",removeTriangle = "upper", result = "none"),
              caption = "Correlation matrix for the low-load condition showing the relationships between all behavioral and ERP measures. WM = working memory task, VS = visual search task, Acc = accuracy, RT = response time, Targ = lateralized target response, Dist = lateralized distractor response, P = positive area, N = negative area.",
              label = "tab:lowCorrelationTable"),
@@ -472,6 +476,9 @@ print(xtable(corstars(lowAreaData,method="pearson",removeTriangle = "upper", res
       add.to.row = list(list(8),  
 "\\hline  \\multicolumn{8}{l}{\\text{Note: }
 p < .001 '****'; p < .01 '***'; p < .05 '**'; p < .1 '*'} \\\\"), comment = FALSE)
+```
+
+```{r SAWMLoad_tab4, results = 'asis'}
 
 print(xtable(corstars(highAreaData,method="pearson",removeTriangle = "upper", result = "none"),
              caption = "Correlation matrix for the high-load condition showing the relationships between all behavioral and ERP measures. WM = working memory task, VS = visual search task, Acc = accuracy, RT = response time, Targ = lateralized target response, Dist = lateralized distractor response, P = positive area, N = negative area.", 
