@@ -47,7 +47,7 @@ abstract: |
 
 bibliography      : ["r-references.bib"]
 
-figsintext        : yes
+figsintext        : no
 figurelist        : no
 tablelist         : no
 footnotelist      : no
