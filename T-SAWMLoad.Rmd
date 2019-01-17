@@ -314,7 +314,7 @@ include_graphics("Figures/behavViolinPlot.pdf", auto_pdf = TRUE)
 
 Mean response times and percent correct are shown as a function of working memory load for each task (working memory and visual search) in figure\ \@ref(fig:violinPlots). Paired samples T-tests were carried out to test the effect of working memory load on response times (ms) and accuracy (%) in both the working memory and visual search tasks. The results of the T-tests showed that the high-load condition did result in both significantly slower (`r apa_print(wmRT_out)$full`) and less accurate (`r apa_print(wmAcc_out)$full`) responses to the working memory task. The results also showed that participants were significantly slower on the visual search task under high working memory load (`r apa_print(vsRT_out)$full`) however there was no significant effect of working memory load on visual search accuracy (`r apa_print(vsAcc_out)$full`). These data confirm firstly that the working memory task effectively manipulated the load on a participant's working memory, and secondly that this manipulation also affected performance on a concurrent visual search task.
 
-### Within-subject electrophysiological measures.
+### Electrophysiological measures.
 
 ```{r Subtracted_ANOVA, echo=FALSE, warning =FALSE}
 # Run the distractor ANOVA (two way, Load x Component on distractor amplitudes)
@@ -379,135 +379,6 @@ print(dist.interaction.load.posthoc.table, comment=FALSE, caption.placement = "t
 
 The results for distractors showed a significant main effect of component (`r dist.result$full$Component`), and a significant main effect of working memory load (`r dist.result$full$Load`) indicating that the response to distractors under high load is significantly more negative (M =`r printnum(dist.load.d$value.Mean[dist.load.d$Load == "High"])`, SD = `r printnum(dist.load.d$value.SD[dist.load.d$Load == "Low"])`) than the response to distractors under low load (M = `r printnum(dist.load.d$value.Mean[dist.load.d$Load == "Low"])`, SD = `r printnum(dist.load.d$value.SD[dist.load.d$Load == "Low"])`). There was no significant interaction between working memory load and component (`r dist.result$full$Load_Component`). Pairwise comparisons using Tukey correction were performed in order to follow up the main effect of component. The results showed that the Ptc is significantly more positive in amplitude (M = 0.75, SE = 0.13) when compared to the N2pc (M = -0.63, SE = 0.09,  p <  0.001), SPCNa (M = -0.74, SE = 0.13, p < 0.001), and SPCNb (M = -0.56, SE = 0.11, p < 0.001). There were no other significant differences between the N2pc, SPCNa, and SPCNb (see table\ \@ref(tab:componentMainEffectDistractors)). In order to check for specifity of the effect we performed pairwise comparisons which compared the amplitude of each component under high versus low load. These comparisons suggest that the only component which was significantly affected by working memory load was the Ptc which was smaller under high load (see table\ \@ref(tab:dableLabel)) however the lack of an interaction between load and component in the ANOVA suggests this specific effect could be accounted for by a generally more positive lateralized response to the distractor under low load.
 
-### Between-subject electrophysiological measures.
-
-```{r correlograms, echo=FALSE, warning=FALSE, include=FALSE}
-areaColumns <- c("WMAcc", "WMRT", "VSAcc", "VSRT", "TargP", "TargN", "DistP", "DistN")
-colnames(lowAreaData) <- areaColumns
-colnames(highAreaData) <- areaColumns
-
-low.area.corr <- rcorr(as.matrix(lowAreaData))
-high.area.corr <- rcorr(as.matrix(highAreaData))
-colnames(low.area.corr$r) <- areaColumns
-colnames(high.area.corr$r) <- areaColumns
-rownames(low.area.corr$r) <- areaColumns
-rownames(high.area.corr$r) <- areaColumns
-pdf("Figures/lowCorrelogram.pdf", width = 7, paper = "special")
-corrplot(low.area.corr$r, method = "ellipse", type = "lower",p.mat = low.area.corr$P, sig.level = 0.05, insig = "blank")
-dev.off()
-pdf("Figures/highCorrelogram.pdf", width = 7, paper = "special")
-corrplot(high.area.corr$r, method = "ellipse", type = "lower",p.mat = high.area.corr$P, sig.level = 0.05, insig = "blank")
-dev.off()
-
-# Scatterplots
-VSRTbyDISTP <- ggplot(lowAreaData, aes(x=VSRT, y=DistP)) + geom_point() +geom_smooth(method=lm)  + scale_y_continuous(name =expression(paste("Distractor Positivity (",mu,"v*ms)"))) +
-  scale_x_continuous("Visual Search RT (ms)") + theme_apa()
-VSRTbyDISTN <- ggplot(lowAreaData, aes(x=VSRT, y=DistN)) + geom_point() +geom_smooth(method=lm) + scale_y_continuous(name =expression(paste("Distractor Negativity (",mu,"v*ms)"))) +
-  scale_x_continuous("Visual Search RT (ms)")+theme_apa()
-VSRTbyTARGP <- ggplot(lowAreaData, aes(x=VSRT, y=TargP)) + geom_point() +geom_smooth(method=lm) + scale_y_continuous(name =expression(paste("Target Positivity (",mu,"v*ms)"))) +
-  scale_x_continuous("Visual Search RT (ms)")+theme_apa()
-WMRTbyDISTP <- ggplot(lowAreaData, aes(x=WMRT, y=DistN)) + geom_point() +geom_smooth(method=lm) + scale_y_continuous(name =expression(paste("Distractor Positivity (",mu,"v*ms)"))) +
-  scale_x_continuous("Working Memory RT (ms)")+theme_apa()
-pdf("Figures/SAWMLOAD_lowScatterPlot.pdf", width = 7, paper = "special")
-plot_grid(VSRTbyDISTP,VSRTbyDISTN,VSRTbyTARGP,WMRTbyDISTP, labels = c("A","B","C","D"))
-dev.off()
-
-VSACCbyTARGN  <- ggplot(highAreaData, aes(x=VSAcc, y=TargN)) + geom_point() +geom_smooth(method=lm) +scale_y_continuous(name =expression(paste("Target Negativity (",mu,"v*ms)"))) + scale_x_continuous("Visual Search Acc (%)") +theme_apa()
-pdf("Figures/SAWMLOAD_highScatterPlot.pdf", width = 7, paper = "special")
-VSACCbyTARGN
-dev.off()
-```
-
-```{r correlationText, echo=FALSE, warning=FALSE, include=FALSE}
-low.RowLabels=c()
-low.ColLabels=c()
-high.RowLabels=c()
-high.ColLabels=c()
-# Automatically get stats for significant correlations for low load
-for (row in 5:8){
-  for (col in 1:4){
-    if (row > col){
-      if (low.area.corr$P[row,col] < 0.05){
-        low.RowLabels = c(low.RowLabels,rownames(low.area.corr$P)[row])
-        low.ColLabels = c(low.ColLabels,rownames(low.area.corr$P)[col])
-      }
-    }
-  }
-}
-# Do the same for high load
-for (row in 5:8){
-  for (col in 1:4){
-    if (row > col){
-      if (high.area.corr$P[row,col] < 0.05){
-        high.RowLabels = c(high.RowLabels,rownames(high.area.corr$P)[row])
-        high.ColLabels = c(high.ColLabels,rownames(high.area.corr$P)[col])
-      }
-    }
-  }
-}
-
-# Make low load reults strings
-low.results.string = c()
-for (i in 1:length(low.ColLabels)){
-row.match.log = rownames(low.area.corr$P)==low.RowLabels[i]
-col.match.log = colnames(low.area.corr$P)==low.ColLabels[i]
-curR <- toString(round(low.area.corr$r[row.match.log,col.match.log], 3))
-curP <- toString(round(low.area.corr$P[row.match.log,col.match.log], 3))
-low.results.string[i] <- paste("r  = ",curR, ", p = ", curP)
-}
-# Make high load reults strings
-high.results.string = c()
-for (i in 1:length(high.ColLabels)){
-row.match.log = rownames(high.area.corr$P)==high.RowLabels[i]
-col.match.log = colnames(high.area.corr$P)==high.ColLabels[i]
-curR <- toString(round(high.area.corr$r[row.match.log,col.match.log], 3))
-curP <- toString(round(high.area.corr$P[row.match.log,col.match.log], 3))
-high.results.string[i] <- paste("r  = ",curR, ", p = ", curP)
-}
-
-```
-
-```{r SAWMLoad_tab3, results='asis'}
-print(xtable(corstars(lowAreaData,method="pearson",removeTriangle = "upper", result = "none"),
-             caption = "Correlation matrix for the low-load condition showing the relationships between all behavioral and ERP measures. WM = working memory task, VS = visual search task, Acc = accuracy, RT = response time, Targ = lateralized target response, Dist = lateralized distractor response, P = positive area, N = negative area.",
-             label = "tab:lowCorrelationTable"),
-      caption.placement = "top",
-      latex.environments = "flushleft",
-      add.to.row = list(list(8),  
-"\\hline  \\multicolumn{8}{l}{\\text{Note: }
-p < .001 '****'; p < .01 '***'; p < .05 '**'; p < .1 '*'} \\\\"), comment = FALSE)
-```
-
-```{r SAWMLoad_tab4, results = 'asis'}
-
-print(xtable(corstars(highAreaData,method="pearson",removeTriangle = "upper", result = "none"),
-             caption = "Correlation matrix for the high-load condition showing the relationships between all behavioral and ERP measures. WM = working memory task, VS = visual search task, Acc = accuracy, RT = response time, Targ = lateralized target response, Dist = lateralized distractor response, P = positive area, N = negative area.", 
-             label = "tab:highCorrelationTable"),
-      caption.placement = "top",
-      latex.environments = "flushleft",
-      add.to.row = list(list(8),
-"\\hline  \\multicolumn{8}{l}{\\text{Note: }
-p < .001 '****'; p < .01 '***'; p < .05 '**'; p < .1 '*'} \\\\"), comment = FALSE)
-```
-
-```{r lowScatterGraphing, fig.cap = "Scatter plots showing the significant relationships between neural responses and behavior in the low working memory load condition. A) visual search response times and distractor positivity, B) visual search response times and distractor negativity, C) visual search response times and target positivity, and D) working memory response times and distractor positivity.", fig.align = "center"}
-include_graphics("Figures/SAWMLOAD_lowScatterPlot.pdf", auto_pdf = TRUE)
-```
-
-```{r highScatterGraphing, fig.cap = "Scatter plot showing the significant relationship between visual search accuracy and target negativity in the high working memory load condition.", fig.align = "center"}
-include_graphics("Figures/SAWMLOAD_highScatterPlot.pdf", auto_pdf = TRUE)
-```
-
-```{r correlogramLow, fig.cap = "Correlogram showing the direction and strength of all significant correlations between behavioral and neural measures under low working memory load. WM = working memory task, VS = visual search task, Acc = accuracy, RT = response time, Targ = lateralized target response, Dist = lateralized distractor response, P = positive area, N = negative area.", fig.align = "center"}
-include_graphics("Figures/lowCorrelogram.pdf", auto_pdf = TRUE)
-```
-
-```{r correlogramHigh, fig.cap = "Correlogram showing the direction and strength of all significant correlations between behavioral and neural measures under high working memory load. WM = working memory task, VS = visual search task, Acc = accuracy, RT = response time, Targ = lateralized target response, Dist = lateralized distractor response, P = positive area, N = negative area.", fig.align = "center"}
-include_graphics("Figures/highCorrelogram.pdf", auto_pdf = TRUE)
-```
-
-In order to investigate the relationship between lateralized activity and behavior in the tasks, a correlation matrix was made for each working memory load condition. Each matrix contained the behavioral measures (accuracy and response time) on both tasks (working memory task and visual search task), as well as the total lateralized positive area for each stimulus (targets and distractors) and the total lateralized negative area for each stimulus. Under low working memory load, there is a significant correlation between visual search response times and the positivity to targets, positivity to distractors, and the negativity to distractors. Individuals with larger positivities to targets appear to perform faster on the visual search task (`r low.results.string[1]`) as do individuals with larger positivities to distractors (`r low.results.string[2]`). Individuals with a larger negativity to distractors, however, perform slower (`r low.results.string[4]`). There is also a significant correlation between working memory response times and the distractor negativity such that individuals with larger negativities to distractors perform slower on the working memory task (`r low.results.string[3]`). Scatter plots for these relationships are shown in figure\ \@ref(fig:lowScatterGraphing). Under high load, however, these effects disappear and the only significant relationship between lateralized amplitude and behavior shows that individuals with a larger target negativity tend to perform more accurately on the task  (`r high.results.string[1]`). While we have only reported on the relationships between amplitudes and behavior here, all significant correlations are visualized for the low-load condition in  figure\ \@ref(fig:correlogramLow) and for the high-load condition in figure\ \@ref(fig:correlogramHigh). For the full correlation matrix for the low-load condition see table\ \@ref(tab:lowCorrelationTable), and for the high-load condition see table\ \@ref(tab:highCorrelationTable).
-
 ```{r latencyTtests}
 LDistP.minus.HDistP.D <- mean(lowLatData$LDist_PLat-highLatData$HDist_PLat)
 LDistP.minus.HDistP.se <- sqrt((19/20)*sum(((lowLatData$LDist_PLat-highLatData$HDist_PLat)-LDistP.minus.HDistP.D)^2))
@@ -563,13 +434,9 @@ The effect of working memory load on the neural response to distractors raises s
 
 The reason for differences in the extent to which Ptc overlaps with other components depends on how Ptc manifests at the single trial level. A sustained positivity in the average ERP could reflect either a sustained positive component at the single trial level or variability in the latency of the component at the single trial level. In the former case, Ptc reflects the presence of a sustained lateralized positivity, the bulk of which is typically masked by a series of overlapping, punctuated, lateralized negativities. Differences across experiments in the extent of observable overlap could, therefore, be the result of differences in the proportion of negative to positive activity in the task. Alternatively, the lateralized positivity we recorded may be short in duration but highly variable in latency across trials, therefore the sustained positivity in the average waveform is the product of convolving this variable signal across the epoch. Differences in overlap across experiments, in this case, could instead be due to differences in the amount of latency variability induced by the specific task. In both cases, the interpretation of our results remains the same; that increased working memory load impacts specifically on the amplitude of the lateralized positivity to distractors, and that this reflects impairments of distractor disengagement. Our experiment didn't allow for teasing apart these two scenarios, nonetheless, our result does support the use of signed area approaches for quantifying the amplitude of these lateralized positivities as suggested by @sawaki_common_2012. Whether the lateralized positivity is a large sustained component or highly variable across trials, the signed-area approach would be well suited to capturing and quantifying its amplitude.
 
-With respect to individual differences in performance on the visual search task and the working memory task, the effects are broader. Under low load, individuals who perform faster on the visual search task appeared to have larger lateralized positivities in response to both targets and distractors, as well as smaller lateralized negativities to distractors. This finding indicates that stimulus disengagement is an important individual characteristic related to response times under load. Whether an object is a target or distractor, the larger the disengagement signal, the faster participants responded in the visual search task. It's worth noting that faster response times do not appear to come at the expense of accuracy on the task as demonstrated by a lack of correlation between speed and accuracy. The correlation with distractor negativities also supports the notion that individuals who attend to and store the distractor representation less, gain an advantage in target response times. Under high load, the relationships between distractor processing and performance as well as target positivity and performance disappear. Instead, we observe that increased target negativity is related to more accurate responses on the visual search task. These individual differences are consistent with the within-subject effects described above which show that increased lateralized positivities are associated with better performance. The between-subject findings, however, introduce the idea that target disengagement is an important factor for distinguishing individuals.
-
-Individual differences in working memory capacity and their relationship to lateralized ERP components have also been carried out previously by @gaspar_inability_2016. In their experiment, working memory capacity was measured in a change detection task that was performed separately to the visual search task used to evoke the lateralized components. @gaspar_inability_2016 showed that positivity to distractors was correlated with working memory capacity yet there was no evidence for a relationship between target processing and working memory capacity. At first glance, our between-subjects analyses appear to contradict the results of @gaspar_inability_2016. We found relationships between individual performance and the processing of both targets and distractors. However, differences in both task design and analysis between our study and that of @gaspar_inability_2016 could account for differences in the results. For instance, our study explored correlations between component amplitudes and performance on the visual search task, not the working memory task. In fact, when we looked at the relationship between component amplitude and working memory performance, the only significant effect we observed was between distractor processing and working memory response times which mirrors the results of @gaspar_inability_2016. Gaspar and colleagues also correlated ERP measures and performance across two independent tasks, whereas the tasks in our study were performed concurrently. Given the changes we observed in our correlations across load conditions, we wouldn't expect our correlational findings to be consistent with those from the task used by @gaspar_inability_2016 (which would represent a no-load condition).
-
 Unexpectedly we detected an early positivity in the lateralized response to targets. Although the P1pc has been observed in other paradigms, its functional role is less well understood. Current hypotheses to explain the occurrence of a P1pc don't seem to apply to our findings. One feature of visual search tasks that can elicit a P1pc is sensory imbalance across the visual display [@edwards_scalp_1987]. If a luminant stimulus is presented in one visual field without a luminance matched stimulus in the opposite visual field location then we would observe an increased P1 contralateral to the lateralized target. This would manifest in the lateralized ERPs as P1pc. In our task, all targets were presented opposite gray fillers which were physically matched for luminance. Although this is not guaranteed to prevent the target color from eliciting a larger P1, the lack of any P1pc for distractors in our task (which had the exact same colors as targets and in the same proportions) suggests that the P1pc is not a result of stimulus imbalance. Alternatively, growing evidence suggests that P1pc may be elicited in response to stimulus change [@verleger_time-course_2012]. Although the target color changed across trials in our study, this is unlikely to explain the P1pc in our task. First, because target color changed at the exact same frequency as distractor color which did not elicit a P1pc. Second, the target-decoy task used in our study is a replication of the task used by @hilimire_dynamics_2011 who did not record a P1pc to targets. The P1pc we observe in our task is, therefore, more likely to be a result of the concurrent working memory task.
 
-One explanation for how the working memory task could elicit a target P1pc in our target-decoy task is that the P1pc that we measured in our task is functionally distinct from the P1pc that has been investigated by other researchers [@verleger_time-course_2012]. The P1pc in our task occurred slightly later than the typically observed P1pc in other studies and may be related to the process of stimulus disengagement that we associate with the Ptc. Support for this explanation comes from similarities between the target positivity and distractor positivity in terms of their relationships to other measures in the task. For example, target positivity was inversely correlated with target negativity. This was also the case for distractor positivity and distractor negativity. Target positivity was also inversely correlated with visual search response times under low load but not under high load, mirroring the correlations we saw between distractor positivity and behavior. Another source of evidence for our explanation that target positivity in our task reflects disengagement is that under low load, the correlation between target and distractor positivity is approaching significance (see table\ \@ref(tab:lowCorrelationTable)). This finding indicates that individuals with a larger distractor positivity also tend to have a larger target positivity. Although previous studies have found a Ptc elicited by targets, it has not been observed in as early a time window as in our study. The role of a concurrent working memory task in eliciting an early, target related positivity, and the functional significance of this component requires further investigation.
+The relationship between working memory and lateralized ERP components has been investigated previously using a between-subjects design [@gaspar_inability_2016]. In their experiment, participants performed a change detection task that was used to estimate their individual working memory capacity. Subsequently, participants performed a visual search task with display containing a uniquely colored target, amongst 14 homogeneously colored fillers, and one uniquely colored distractor. Target and distractor locations were arranged in such a way that only one of the objects was lateralized and therefore the lateralized response to targets and distractors could be dissociated. Their results showed that individual differences in working memory capacity were significantly correlated with the amplitude of the lateralized positivity to distractors. These results provide a between-subject complement to the results we have shown with our within-subjects design. In both cases, increased working memory availability is associated with an increased lateralized positivity to distractors. Both within-subject, and between-subject investigations of the role that working memory plays in the allocation of attention therefore support the suggestion that working memory is specifically important for the processing of distraction.
 
 ## Conclusion
 

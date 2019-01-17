@@ -258,7 +258,7 @@ include_graphics("Figures/SAWMDIST_behavViolinPlot.pdf", auto_pdf = TRUE)
 
 Mean response times and percent correct are shown as a function of working memory distractor presence for each task (working memory and visual search) in figure\ \@ref(fig:SDviolinPlots). Paired samples t-tests were carried out to test the effect of working memory distractor presence on response times(ms) and accuracy(%) in both the working memory and visual search tasks. The results of the t-tests showed that the presence of a distractor in the working memory task did result in significantly slower (`r apa_print(wmRT_out)$full`), and less accurate (`r apa_print(wmAcc_out)$full`) responses to the working memory test display (although the latter effect is only trending toward significance). The results also showed that participants were significantly less accurate on the visual search task when a working memory distractor had been presented (`r apa_print(vsAcc_out)$full`) however there was no significant effect of working memory distractor presence on visual search response times (`r apa_print(vsRT_out)$full`). These data confirm firstly that the presence of a distractor during working memory encoding and retrieval affected performance on the working memory task, and secondly that this manipulation also affected performance on a concurrent visual search task.
 
-### Within-subject electrophysiological measures.
+### Electrophysiological measures.
 
 ```{r SDSubtracted_ANOVA, echo=FALSE, warning =FALSE}
 # Run the distractor ANOVA (two way, Load x Component on distractor amplitudes)
@@ -324,126 +324,6 @@ In order to test for the effect of working memory load on lateralised ERP compon
 ```
 
 The results for distractors showed a significant main effect of component (`r dist.result$full$Component`) with N2pc being more negative than Ptc, but no significant main effect of working memory distractor presence (`r dist.result$full$Cond`), nor a significant interaction between component and working memory distractor presence (`r dist.result$full$Cond_Component`).
-
-### Between-subject electrophysiological measures.
-
-```{r SDcorrelograms, echo=FALSE, warning=FALSE, include=FALSE}
-areaColumns <- c("WMAcc", "WMRT", "VSAcc", "VSRT", "TargP", "TargN", "DistP", "DistN")
-colnames(noAreaData) <- areaColumns
-colnames(yesAreaData) <- areaColumns
-
-no.area.corr <- rcorr(as.matrix(noAreaData))
-yes.area.corr <- rcorr(as.matrix(yesAreaData))
-colnames(no.area.corr$r) <- areaColumns
-colnames(yes.area.corr$r) <- areaColumns
-rownames(no.area.corr$r) <- areaColumns
-rownames(yes.area.corr$r) <- areaColumns
-pdf("Figures/SAWMDIST_noCorrelogram.pdf", width = 7, paper = "special")
-corrplot(no.area.corr$r, method = "ellipse", type = "lower",p.mat = no.area.corr$P, sig.level = 0.05, insig = "blank")
-dev.off()
-pdf("Figures/SAWMDIST_yesCorrelogram.pdf", width = 7, paper = "special")
-corrplot(yes.area.corr$r, method = "ellipse", type = "lower",p.mat = yes.area.corr$P, sig.level = 0.05, insig = "blank")
-dev.off()
-
-# Scatterplots
-VSRTbyDISTP <- ggplot(noAreaData, aes(x=VSRT, y=DistP)) + geom_point() +geom_smooth(method=lm) +theme_apa()
-VSRTbyDISTN <- ggplot(noAreaData, aes(x=VSRT, y=DistN)) + geom_point() +geom_smooth(method=lm) +theme_apa()
-VSRTbyTARGP <- ggplot(noAreaData, aes(x=VSRT, y=TargP)) + geom_point() +geom_smooth(method=lm) +theme_apa()
-WMRTbyDISTP <- ggplot(noAreaData, aes(x=WMRT, y=DistP)) + geom_point() +geom_smooth(method=lm) +theme_apa()
-pdf("Figures/SAWMDIST_noScatterPlot.pdf", width = 7, paper = "special")
-plot_grid(VSRTbyDISTP,VSRTbyDISTN,VSRTbyTARGP,WMRTbyDISTP, labels = c("A","B","C","D"))
-dev.off()
-```
-
-```{r SDcorrelationText, echo=FALSE, warning=FALSE, include=FALSE}
-no.RowLabels=c()
-no.ColLabels=c()
-yes.RowLabels=c()
-yes.ColLabels=c()
-# Automatically get stats for significant correlations for low load
-for (row in 5:8){
-  for (col in 1:4){
-    if (row > col){
-      if (no.area.corr$P[row,col] < 0.05){
-        no.RowLabels = c(no.RowLabels,rownames(no.area.corr$P)[row])
-        no.ColLabels = c(no.ColLabels,rownames(no.area.corr$P)[col])
-      }
-    }
-  }
-}
-# Do the same for high load
-for (row in 5:8){
-  for (col in 1:4){
-    if (row > col){
-      if (yes.area.corr$P[row,col] < 0.05){
-        yes.RowLabels = c(yes.RowLabels,rownames(yes.area.corr$P)[row])
-        yes.ColLabels = c(yes.ColLabels,rownames(yes.area.corr$P)[col])
-      }
-    }
-  }
-}
-
-# Make low load reults strings
-if (length(no.RowLabels)>0) {
-no.results.string = c()
-for (i in 1:length(no.ColLabels)){
-row.match.log = rownames(no.area.corr$P)==no.RowLabels[i]
-col.match.log = colnames(no.area.corr$P)==no.ColLabels[i]
-curR <- toString(round(no.area.corr$r[row.match.log,col.match.log], 3))
-curP <- toString(round(no.area.corr$P[row.match.log,col.match.log], 3))
-no.results.string[i] <- paste("r  = ",curR, ", p = ", curP)
-}
-}
-# Make high load reults strings
-if (length(yes.RowLabels)>0) {
-yes.results.string = c()
-for (i in 1:length(yes.ColLabels)){
-row.match.log = rownames(yes.area.corr$P)==yes.RowLabels[i]
-col.match.log = colnames(yes.area.corr$P)==yes.ColLabels[i]
-curR <- toString(round(yes.area.corr$r[row.match.log,col.match.log], 3))
-curP <- toString(round(yes.area.corr$P[row.match.log,col.match.log], 3))
-yes.results.string[i] <- paste("r  = ",curR, ", p = ", curP)
-}
-}
-
-```
-
-```{r SAWMDist_tab1, results='asis'}
-print(xtable(corstars(noAreaData,method="pearson",removeTriangle = "upper", result = "none"),
-             caption = "Correlation matrix for the no distractor condition showing the relationships between all behavioural and ERP measures.", 
-             label = "tab:noCorrelationTable"),
-      caption.placement = "top",
-      latex.environments = "flushleft",
-      add.to.row = list(list(8),  
-"\\hline  \\multicolumn{8}{l}{\\text{Note: }
-p < .001 '****'; p < .01 '***'; p < .05 '**'; p < .1 '*'} \\\\"), comment = FALSE)
-```
-
-```{r SAWMDist_tab2, results = 'asis'}
-
-print(xtable(corstars(yesAreaData,method="pearson",removeTriangle = "upper", result = "none"),
-             caption = "Correlation matrix for the yes distractor condition showing the relationships between all behavioural and ERP measures.", 
-             label = "tab:yesCorrelationTable"),
-      caption.placement = "top",
-      latex.environments = "flushleft",
-      add.to.row = list(list(8),
-"\\hline  \\multicolumn{8}{l}{\\text{Note: }
-p < .001 '****'; p < .01 '***'; p < .05 '**'; p < .1 '*'} \\\\"), comment = FALSE)
-```
-
-```{r SDlowScatterGraphing, fig.cap = "This is where I'd put the figure caption.", fig.align = "center"}
-#include_graphics("Figures/SAWMDIST_noScatterPlot.pdf", auto_pdf = TRUE)
-```
-
-```{r SDcorrelogramLow, fig.cap = "This is where I'd put the figure caption.", fig.align = "center"}
-#include_graphics("Figures/SAWMDIST_noCorrelogram.pdf", auto_pdf = TRUE)
-```
-
-```{r SDcorrelogramHigh, fig.cap = "This is where I'd put the figure caption.", fig.align = "center"}
-#include_graphics("Figures/SAWMDIST_yesCorrelogram.pdf", auto_pdf = TRUE)
-```
-
-In order to investigate the relationship between lateralised activity and behaviour in the tasks, a correlation matrix was made for each level of working memory distractor presence. Each matrix contained the behavioural measures (accuracy and response time) on both tasks (working memory task and visual search task), as well as the total lateralized positive area for each stimulus (targets and distractors) and the total lateralised negative area for each stimulus. The results show no evidence of any association between lateralized amplitude and any behavioral measure. For the full correlation matrix for the working memory distractor absent condition see table\ \@ref(tab:noCorrelationTable), and for the working memory distractor present condition see table\ \@ref(tab:yesCorrelationTable).
 
 ```{r SDlatencyTtests}
 #LDistP.minus.HDistP.D <- mean(lowLatData$LDist_PLat-highLatData$HDist_PLat)

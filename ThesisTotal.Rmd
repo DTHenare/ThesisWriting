@@ -1,7 +1,6 @@
 ---
 header-includes: 
   - \pagenumbering{roman}
-#  - \AtBeginDocument{\let\maketitle\relax}
   - \thispagestyle{empty}
   - \usepackage{setspace}
   - \setstretch{2}
