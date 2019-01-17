@@ -18,11 +18,10 @@ author:
   - name          : "Dion T. Henare"
 
 affiliation:
-  - id            : "1"
-    institution   : "School of Psychology, University of Auckland"
+  - institution   : "School of Psychology, University of Auckland"
 
-author_note: |
-  \begin{center} A thesis submitted in fulfilment of the requirements for the degree of Doctorate of Philosophy in Psychology, the University of Auckland, 2018. \\ This thesis is for examination purposes only and is confidential to the examination process. \end{center}
+authornote: |
+  \begin{center} A thesis submitted in fulfilment of the requirements for the degree of Doctorate of Philosophy in Psychology, the University of Auckland, 2018. \end{center}
 
 abstract: |
   Optimal performance of everyday tasks like driving depend critically on both the ability to store and retrieve small amounts of information in the short term, and the ability to selectively find and process relevant objects while preventing distraction. These two abilities have traditionally been viewed as distinct processes in human cognition, however research now demonstrates significant overlap between the constructs of working memory and selective attention. Previous work has established a role for working memory resources in the successful control of attention, however there are many processes underlying successful attentional control, and affecting any one of them would produce the pattern of results that have been observed. In this thesis we used behavioural and electroencephalographic evidence to investigate working memory and selective attention. We aim to provide a more detailed understanding of the processes underlying the relationship between these two constructs.
