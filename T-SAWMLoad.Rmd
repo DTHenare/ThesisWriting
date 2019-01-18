@@ -142,6 +142,11 @@ longTarg$variable <- NULL
 longBehav$variable <- NULL
 longLat$variable <- NULL
 ```
+## Prologue
+
+\textit{Study One} gave us a detailed understanding of how subtle differences in the design of a change detection task can affect participant performance. In \textit{Study Two} we wanted to use EEG measures of attention in order to be more specific about the relationship between attention processing and working memory availability. Our idea was to use a dual task format where participants would perform a change detection task and an attention based task simultaneously. We could then vary the working memory load on the change detection task while recording the concomitant effects in the neural response to the attention task. Previous work had established some ideal neural measures of the attention processes that we wanted to dissociate, and therefore the attention task was based on designs from those studies. For the change detection task, we decided to use a version which was most equivalent to the target-inverse blocks from \textit{Study One}. \textit{Study One} showed that these blocks produced robust working memory effects and we had observed no significant differences in performance between target-inverse blocks and fixed distractor blocks. This version of the change detection task also had the added benefit of keeping the number of stimuli on screen consistent across all trials, which is ideal for EEG studies where the number of stimuli on screen can have significant effects on neural responses. 
+
+\newpage
 
 ## Introduction
 
