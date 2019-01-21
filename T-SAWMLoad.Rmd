@@ -435,26 +435,26 @@ dev.off()
 To increase the specificity of our inferences we ran some bayesian folloW-up tests. Bayesian analyses allow us to quantify the evidence we have in favor of the null hypothesis (compared to the alternative), rather than just the probability of observing differences as extreme as those in our data given that the null hypothesis is true. As a result, we are able to estimate the probability that there is no effect of load on each component, rather than simply concluding that we have insufficient evidence to show that there was an effect. We used Bayesian paired samples \textit{t}-tests in order to compare component amplitude under high versus low load, and each \textit{t}-test was run with the default Cauchy scale (\textit{r} = 0.707, @R-BayesFactor). We did this for each component elicited by lateralized targets (as shown in table\ \@ref(tab:SL_BayesTargFollowup)), as well as each component elicited by lateralized distractors (shown in table table\ \@ref(tab:SL_BayesDistFollowup)). The results mirrored the results of the ANOVA above in showing that the only component which was more likely under the alternate hypothesis was the Ptc elicited by distractors. For all other components, the probability of there being no effect of working memory load was higher when compared to the probability of an difference between high and low load conditions. Although the probabilities range from anecdotal to moderate, they provide some confidence that the lack of an effect observed for other components is not the result of a lack of power, in which case we would expect to see inconclusive or weak evidence in favor of the alternate hypothesis.
 
 \begin{table}[h]
-	\centering
-	\caption{Bayesian paired samples T-Tests comparing the effect of working memory load on the amplitude of target-related components}
-	\label(tab:SL_BayesTargFollowup)
+	\begin{center}
+	\caption{Comparison of the effect that working memory load has on the amplitude of target-lateralised components using Bayesian Paired Samples T-Test}
 	\begin{tabular}{lrrrr}
 		\hline
-		 &  &  & BF$_{1}$$_{0}$ & BF$_{0}$$_{1}$ & error \%  \\
+		 &  &  & BF$_{1}$$_{0}$ & error \%  \\
 		\hline
-		High Load P1pc & - & Low Load P1pc & 0.379 & 2.636 & 0.017  \\
-		High Load N2pc & - & Low Load N2pc & 0.240 & 4.175 & 0.022  \\
-		High Load SPCN & - & Low Load SPCN & 0.232 & 4.304 & 0.022  \\
-		High Load SPCN2 & - & Low Load SPCN2 & 0.883 & 1.133 & 0.002  \\
+		High Load N2pc & - & Low Load N2pc & 0.279 & 0.021  \\
+		High Load Ptc & - & Low Load Ptc & 3.304 & 0.003  \\
+		High Load SPCN & - & Low Load SPCN & 0.621 & 0.006  \\
+		High Load SPCN2 & - & Low Load SPCN2 & 0.646 & 0.005  \\
 		\hline
 	\end{tabular} 
+	\end{center}
 \end{table}
 
 \begin{table}[h]
 	\centering
-	\caption{Bayesian paired samples T-Tests comparing the effect of working memory load on the amplitude of target-related components}
-	\label(tab:SL_BayesDistFollowup)
-	\begin{tabular}{lrrrr}
+	\caption{Comparison of the effect that working memory load has on the amplitude of distractor-lateralised components using Bayesian Paired Samples T-Test}
+	\label{tab:SL_BayesDistFollowup}
+	\begin{tabular}{lrrrrr}
 		\hline
 		 &  &  & BF$_{1}$$_{0}$ & BF$_{0}$$_{1}$ & error \%  \\
 		\hline
@@ -465,7 +465,6 @@ To increase the specificity of our inferences we ran some bayesian folloW-up tes
 		\hline
 	\end{tabular} 
 \end{table}
-
 
 ## Discussion
 
