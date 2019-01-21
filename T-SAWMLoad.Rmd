@@ -142,6 +142,7 @@ longTarg$variable <- NULL
 longBehav$variable <- NULL
 longLat$variable <- NULL
 ```
+
 ## Prologue
 
 \textit{Study One} gave us a detailed understanding of how subtle differences in the design of a change detection task can affect participant performance. In \textit{Study Two} we wanted to use EEG measures of attention in order to be more specific about the relationship between attention processing and working memory availability. Our idea was to use a dual task format where participants would perform a change detection task and an attention based task simultaneously. We could then vary the working memory load on the change detection task while recording the concomitant effects in the neural response to the attention task. Previous work had established some ideal neural measures of the attention processes that we wanted to dissociate, and therefore the attention task was based on designs from those studies. For the change detection task, we decided to use a version which was most equivalent to the target-inverse blocks from \textit{Study One}. \textit{Study One} showed that these blocks produced robust working memory effects and we had observed no significant differences in performance between target-inverse blocks and fixed distractor blocks. This version of the change detection task also had the added benefit of keeping the number of stimuli on screen consistent across all trials, which is ideal for EEG studies where the number of stimuli on screen can have significant effects on neural responses. 
@@ -430,6 +431,41 @@ dev.off()
 ```{r correlogramHighLat, fig.cap = "This is where I'd put the figure caption highLat.", fig.align = "center"}
 #include_graphics("Figures/highLatCorrelogram.pdf", auto_pdf = TRUE)
 ```
+
+To increase the specificity of our inferences we ran some bayesian folloW-up tests. Bayesian analyses allow us to quantify the evidence we have in favor of the null hypothesis (compared to the alternative), rather than just the probability of observing differences as extreme as those in our data given that the null hypothesis is true. As a result, we are able to estimate the probability that there is no effect of load on each component, rather than simply concluding that we have insufficient evidence to show that there was an effect. We used Bayesian paired samples \textit{t}-tests in order to compare component amplitude under high versus low load, and each \textit{t}-test was run with the default Cauchy scale (\textit{r} = 0.707, @R-BayesFactor). We did this for each component elicited by lateralized targets (as shown in table\ \@ref(tab:SL_BayesTargFollowup)), as well as each component elicited by lateralized distractors (shown in table table\ \@ref(tab:SL_BayesDistFollowup)). The results mirrored the results of the ANOVA above in showing that the only component which was more likely under the alternate hypothesis was the Ptc elicited by distractors. For all other components, the probability of there being no effect of working memory load was higher when compared to the probability of an difference between high and low load conditions. Although the probabilities range from anecdotal to moderate, they provide some confidence that the lack of an effect observed for other components is not the result of a lack of power, in which case we would expect to see inconclusive or weak evidence in favor of the alternate hypothesis.
+
+\begin{table}[h]
+	\centering
+	\caption{Bayesian paired samples T-Tests comparing the effect of working memory load on the amplitude of target-related components}
+	\label(tab:SL_BayesTargFollowup)
+	\begin{tabular}{lrrrr}
+		\hline
+		 &  &  & BF$_{1}$$_{0}$ & BF$_{0}$$_{1}$ & error \%  \\
+		\hline
+		High Load P1pc & - & Low Load P1pc & 0.379 & 2.636 & 0.017  \\
+		High Load N2pc & - & Low Load N2pc & 0.240 & 4.175 & 0.022  \\
+		High Load SPCN & - & Low Load SPCN & 0.232 & 4.304 & 0.022  \\
+		High Load SPCN2 & - & Low Load SPCN2 & 0.883 & 1.133 & 0.002  \\
+		\hline
+	\end{tabular} 
+\end{table}
+
+\begin{table}[h]
+	\centering
+	\caption{Bayesian paired samples T-Tests comparing the effect of working memory load on the amplitude of target-related components}
+	\label(tab:SL_BayesDistFollowup)
+	\begin{tabular}{lrrrr}
+		\hline
+		 &  &  & BF$_{1}$$_{0}$ & BF$_{0}$$_{1}$ & error \%  \\
+		\hline
+		High Load N2pc & - & Low Load N2pc & 0.279 & 3.588 & 0.021  \\
+		High Load Ptc & - & Low Load Ptc & 3.304 & 0.303 & 0.003  \\
+		High Load SPCN & - & Low Load SPCN & 0.621 & 1.611 & 0.006  \\
+		High Load SPCN2 & - & Low Load SPCN2 & 0.646 & 1.547 & 0.005  \\
+		\hline
+	\end{tabular} 
+\end{table}
+
 
 ## Discussion
 
