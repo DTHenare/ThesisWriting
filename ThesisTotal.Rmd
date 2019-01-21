@@ -19,7 +19,7 @@ author:
 affiliation:
   - institution   : "School of Psychology, University of Auckland"
 
-authornote: |
+author_note: |
   \begin{center} A thesis submitted in fulfilment of the requirements for the degree of Doctorate of Philosophy in Psychology, the University of Auckland, 2018. \end{center}
 
 abstract: |
