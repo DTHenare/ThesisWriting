@@ -9,6 +9,7 @@ header-includes:
   - \AtBeginEnvironment{tablenotes}{\doublespacing}
   - \captionsetup[table]{font={stretch=1.5}}
   - \captionsetup[figure]{font={stretch=1.5}}
+  - \usepackage{booktabs}
 
 title             : "Investigating the Relationship Between Working Memory and Selective Attention"
 shorttitle        : "."
