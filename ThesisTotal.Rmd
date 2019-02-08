@@ -59,7 +59,7 @@ class             : "man"
 output            : papaja::apa6_pdf
 
 ---
-\begin{document}
+
 \raggedbottom
 
 \newpage
