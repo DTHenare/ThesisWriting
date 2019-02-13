@@ -57,6 +57,7 @@ numbersection     : no
 toc               : TRUE
 class             : "man"
 output            : papaja::apa6_pdf
+urlcolor: black
 
 ---
 
